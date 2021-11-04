@@ -2,43 +2,40 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Concerns\UsesUuidPrimary;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+/**
+ * @mixin \Eloquent
+ * @property string userId
+ * @property string language
+ * @property string theme
+ */
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+	use HasFactory, Notifiable, UsesUuidPrimary;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+	protected $primaryKey = 'userId';
+	protected $fillable = [
+		'userId',
+		'language',
+		'theme',
+	];
+	protected $hidden = [
+		'created_at',
+		'updated_at',
+	];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	public function id(): string
+	{
+		return $this->userId;
+	}
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+	public function vaults(): BelongsToMany
+	{
+		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId');
+	}
 }
