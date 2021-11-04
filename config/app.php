@@ -39,7 +39,7 @@ return [
 	|
 	*/
 
-	'debug' => (bool)env('APP_DEBUG', false),
+	'debug' => (bool) env('APP_DEBUG', false),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -80,7 +80,15 @@ return [
 	|
 	*/
 
-	'locale' => 'en',
+	'locale'            => 'en',
+	'available_locales' => [
+		'en',
+		'de',
+	],
+
+	'available_themes' => [
+		'light',
+	],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -166,16 +174,16 @@ return [
 		 * Package Service Providers...
 		 */
 
-        /*
-         * Application Service Providers...
-         */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+		/*
+		 * Application Service Providers...
+		 */
+		App\Providers\AppServiceProvider::class,
+		App\Providers\AuthServiceProvider::class,
+		// app\Providers\BroadcastServiceProvider::class,
+		App\Providers\EventServiceProvider::class,
+		App\Providers\RouteServiceProvider::class,
 
-    ],
+	],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -189,7 +197,7 @@ return [
 	*/
 
 	'aliases' => [
-		'App'          => Illuminate\Support\Facades\App::class,
+		'app'          => Illuminate\Support\Facades\App::class,
 		'Arr'          => Illuminate\Support\Arr::class,
 		'Artisan'      => Illuminate\Support\Facades\Artisan::class,
 		'Auth'         => Illuminate\Support\Facades\Auth::class,

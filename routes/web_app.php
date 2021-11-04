@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Api\Controller\SetupController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('setup', [SetupController::class, 'setup'])
+	->name('setup');

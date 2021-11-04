@@ -9,7 +9,7 @@ class CreateUsersTable extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('userId')->primary();
             $table->string('language')->default('en');
             $table->string('theme')->default('light');
             $table->timestamps();

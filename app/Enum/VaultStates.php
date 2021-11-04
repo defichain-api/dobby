@@ -1,6 +1,6 @@
 <?php
 
-namespace Enum;
+namespace App\Enum;
 
 class VaultStates
 {
