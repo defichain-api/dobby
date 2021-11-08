@@ -5,6 +5,7 @@ namespace App\Api\Controller;
 use App\Api\Requests\SetupRequest;
 use App\Api\Service\SetupService;
 use App\Api\Service\VaultService;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,8 +25,6 @@ class SetupController
 			$userVaultService->setVaultsForUser($user, $request->getOwnerAddresses());
 		}
 
-		return response()->json([
-			'user' => $user,
-		], Response::HTTP_OK);
+		return response()->json(new UserResource($user), Response::HTTP_OK);
 	}
 }
