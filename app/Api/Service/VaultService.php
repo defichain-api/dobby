@@ -37,9 +37,14 @@ class VaultService
 	/**
 	 * @throws \App\Api\Exceptions\DefichainApiException
 	 */
-	public function setVaultForUser(User $user, string $ownerAddresses): bool
+	public function setVaultForUser(User $user, string $vaultId): bool
 	{
-		return $this->setVaultsForUser($user, [$ownerAddresses]);
+		return $this->setVaultsForUser($user, [$vaultId]);
+	}
+
+	public function detachVaultFromUser(User $user, string $vaultId): void
+	{
+		$user->vaults()->detach([$vaultId]);
 	}
 
 	protected function attachVaultToUser(Vault $vault, User $user): void

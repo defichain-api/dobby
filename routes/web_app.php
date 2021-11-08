@@ -14,4 +14,7 @@ Route::middleware(['webapp_auth'])->group(function () {
 
 	Route::post('user/vault', [VaultController::class, 'createUserVault'])
 		->name('vault.create');
+
+	Route::delete('user/vault', [VaultController::class, 'deleteUserVault'])
+		->name('vault.delete');
 });

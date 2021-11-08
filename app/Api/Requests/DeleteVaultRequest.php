@@ -3,14 +3,15 @@
 namespace App\Api\Requests;
 
 use JetBrains\PhpStorm\ArrayShape;
+use Validator;
 
-class VaultRequest extends ApiRequest
+class DeleteVaultRequest extends ApiRequest
 {
 	#[ArrayShape(['vaultId' => "string[]"])]
 	public function rules(): array
 	{
 		return [
-			'vaultId' => ['required', 'string'],
+			'vaultId' => ['required', 'string', 'exists:user_vault,vaultId'],
 		];
 	}
 

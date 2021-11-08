@@ -3,14 +3,15 @@
 namespace App\Api\Controller;
 
 use App\Api\Exceptions\DefichainApiException;
-use App\Api\Requests\VaultRequest;
+use App\Api\Requests\CreateVaultRequest;
+use App\Api\Requests\DeleteVaultRequest;
 use App\Api\Service\VaultService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class VaultController
 {
-	public function createUserVault(VaultRequest $request, VaultService $vaultService): JsonResponse
+	public function createUserVault(CreateVaultRequest $request, VaultService $vaultService): JsonResponse
 	{
 		try {
 			if (!$vaultService->setVaultForUser($request->get('user'), $request->getVaultId())) {
@@ -28,7 +29,17 @@ class VaultController
 
 		return response()->json([
 			'state'   => 'ok',
-			'message' => 'vault added to user',
+			'message' => 'vault added to users repository',
+		], Response::HTTP_OK);
+	}
+
+	public function deleteUserVault(DeleteVaultRequest $request, VaultService $vaultService): JsonResponse
+	{
+		$vaultService->detachVaultFromUser($request->get('user'), $request->getVaultId());
+
+		return response()->json([
+			'state'   => 'ok',
+			'message' => 'removed vault from users repository',
 		], Response::HTTP_OK);
 	}
 }
