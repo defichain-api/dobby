@@ -11,6 +11,8 @@ Route::post('setup', [SetupController::class, 'setup'])
 Route::middleware(['webapp_auth'])->group(function () {
 	Route::get('user', [UserController::class, 'getUser'])
 		->name('user.get');
+	Route::delete('user', [UserController::class, 'deleteUser'])
+		->name('user.delete');
 
 	Route::post('user/vault', [VaultController::class, 'createUserVault'])
 		->name('vault.create');

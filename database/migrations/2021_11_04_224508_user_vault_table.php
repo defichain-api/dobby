@@ -12,6 +12,14 @@ class UserVaultTable extends Migration
 			$table->string('userId');
 			$table->string('vaultId');
 			$table->unique(['userId', 'vaultId']);
+
+			$table->foreign('userId')
+				->references('userId')
+				->on('users')
+				->cascadeOnDelete();
+			$table->foreign('vaultId')
+				->references('vaultId')
+				->on('vaults');
 		});
 	}
 

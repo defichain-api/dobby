@@ -3,7 +3,7 @@
 namespace App\Api\Controller;
 
 use App\Api\Requests\SetupRequest;
-use App\Api\Service\SetupService;
+use App\Api\Service\UserService;
 use App\Api\Service\VaultService;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -16,7 +16,7 @@ class SetupController
 	 */
 	public function setup(
 		SetupRequest $request,
-		SetupService $setupService,
+		UserService  $setupService,
 		VaultService $userVaultService
 	): JsonResponse {
 		$user = $setupService->createUser($request);
