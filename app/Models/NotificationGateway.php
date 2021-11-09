@@ -19,11 +19,12 @@ class NotificationGateway extends Model
 
 	protected $hidden = [
 		'id',
+		'userId',
 	];
 
 	public function user(): BelongsTo
 	{
-		return $this->belongsTo(User::class);
+		return $this->belongsTo(User::class, 'userId', 'userId');
 	}
 
 	public function triggers(): BelongsToMany

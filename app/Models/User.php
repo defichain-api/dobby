@@ -6,6 +6,7 @@ use App\Models\Concerns\UsesUuidPrimary;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -37,5 +38,10 @@ class User extends Model
 	public function vaults(): BelongsToMany
 	{
 		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId');
+	}
+
+	public function notificationGateways(): HasMany
+	{
+		return $this->hasMany(NotificationGateway::class, 'userId', 'userId');
 	}
 }
