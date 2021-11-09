@@ -52,7 +52,7 @@ return [
 	|
 	*/
 
-	'url' => env('APP_URL', 'http://defichain-dobby.test'),
+	'url' => env('APP_URL', 'defichain-dobby.test'),
 
 	'asset_url' => env('ASSET_URL', null),
 

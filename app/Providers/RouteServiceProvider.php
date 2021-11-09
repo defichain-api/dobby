@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::domain(sprintf('app-api.%s', config('app.url')))
+            Route::domain(sprintf('api.%s', config('app.url')))
 	            ->name('web_app.')
                 ->middleware('api')
                 ->namespace($this->namespace)
