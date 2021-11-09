@@ -15,10 +15,12 @@ class CreateNotificationGatewayTriggerTable extends Migration
 
 			$table->foreign('gatewayId')
 				->references('id')
-				->on('notification_gateways');
+				->on('notification_gateways')
+				->cascadeOnDelete();
 			$table->foreign('triggerId')
 				->references('id')
-				->on('notification_triggers');
+				->on('notification_triggers')
+				->cascadeOnDelete();
 		});
 	}
 
