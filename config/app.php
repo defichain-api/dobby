@@ -181,6 +181,7 @@ return [
 		App\Providers\AuthServiceProvider::class,
 		// app\Providers\BroadcastServiceProvider::class,
 		App\Providers\EventServiceProvider::class,
+        App\Providers\HorizonServiceProvider::class,
 		App\Providers\RouteServiceProvider::class,
 
 	],
