@@ -19,7 +19,7 @@ class UserController
 	{
 		/** @var \App\Models\User $user */
 		$user = $request->get('user');
-		if (!$service->deleteUser($user)) {
+		if (!$service->delete($user)) {
 			return response()->json([
 				'state'   => 'error',
 				'message' => 'could not delete user',

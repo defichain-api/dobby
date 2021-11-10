@@ -17,22 +17,22 @@ class SetupRequest extends ApiRequest
 		];
 	}
 
-	public function getLanguage(): string
+	public function language(): string
 	{
 		return $this->input('language');
 	}
 
-	public function getTheme(): string
+	public function theme(): string
 	{
 		return $this->input('theme');
 	}
 
 	public function hasOwnerAddresses(): bool
 	{
-		return count($this->input('ownerAddresses') ?? []) > 0;
+		return count($this->ownerAddresses()) > 0;
 	}
 
-	public function getOwnerAddresses(): array
+	public function ownerAddresses(): array
 	{
 		return $this->input('ownerAddresses') ?? [];
 	}

@@ -14,7 +14,7 @@ class CreateVaultRequest extends ApiRequest
 		];
 	}
 
-	public function getVaultId(): string
+	public function vaultId(): string
 	{
 		return $this->input('vaultId');
 	}

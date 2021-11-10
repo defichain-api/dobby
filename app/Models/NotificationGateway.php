@@ -9,16 +9,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @mixin \Eloquent
  * @property NotificationTrigger trigger
+ * @property int                 id
  * @property User                user
+ * @property string              userId
  * @property string              type
  * @property string              value
  */
 class NotificationGateway extends Model
 {
 	public $timestamps = false;
-
+	protected $fillable = [
+		'userId',
+		'type',
+		'value',
+	];
 	protected $hidden = [
-		'id',
 		'userId',
 	];
 

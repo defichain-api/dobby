@@ -19,10 +19,10 @@ class SetupController
 		UserService  $setupService,
 		VaultService $userVaultService
 	): JsonResponse {
-		$user = $setupService->createUser($request);
+		$user = $setupService->create($request);
 
 		if ($request->hasOwnerAddresses()) {
-			$userVaultService->setVaultsForUser($user, $request->getOwnerAddresses());
+			$userVaultService->setVaultsForUser($user, $request->ownerAddresses());
 		}
 
 		return response()->json(new UserResource($user), Response::HTTP_OK);

@@ -27,7 +27,7 @@ class VaultService
 		}
 
 		foreach ($vaults['data'] as $vaultRaw) {
-			$vault = $this->createVault($vaultRaw);
+			$vault = $this->create($vaultRaw);
 			$this->attachVaultToUser($vault, $user);
 		}
 
@@ -52,7 +52,7 @@ class VaultService
 		$user->vaults()->attach([$vault->vaultId]);
 	}
 
-	protected function createVault(array $data): Vault
+	protected function create(array $data): Vault
 	{
 		$loanSchemes = LoanScheme::all();
 

@@ -7,15 +7,15 @@ use App\Models\User;
 
 class UserService
 {
-	public function createUser(SetupRequest $request): User
+	public function create(SetupRequest $request): User
 	{
 		return User::create([
-			'language' => $request->getLanguage(),
-			'theme'    => $request->getTheme(),
+			'language' => $request->language(),
+			'theme'    => $request->theme(),
 		]);
 	}
 
-	public function deleteUser(User $user): bool
+	public function delete(User $user): bool
 	{
 		return $user->delete();
 	}

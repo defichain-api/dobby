@@ -14,7 +14,7 @@ class VaultController
 	public function createUserVault(CreateVaultRequest $request, VaultService $vaultService): JsonResponse
 	{
 		try {
-			if (!$vaultService->setVaultForUser($request->get('user'), $request->getVaultId())) {
+			if (!$vaultService->setVaultForUser($request->get('user'), $request->vaultId())) {
 				return response()->json([
 					'state'   => 'error',
 					'message' => 'vault id not valid',
@@ -35,7 +35,7 @@ class VaultController
 
 	public function deleteUserVault(DeleteVaultRequest $request, VaultService $vaultService): JsonResponse
 	{
-		$vaultService->detachVaultFromUser($request->get('user'), $request->getVaultId());
+		$vaultService->detachVaultFromUser($request->get('user'), $request->vaultId());
 
 		return response()->json([
 			'state'   => 'ok',
