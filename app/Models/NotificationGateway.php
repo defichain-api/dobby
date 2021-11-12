@@ -34,6 +34,6 @@ class NotificationGateway extends Model
 
 	public function triggers(): BelongsToMany
 	{
-		return $this->belongsToMany(NotificationTrigger::class, 'notification_gateway_trigger', 'gatewayId', 'id');
+		return $this->belongsToMany(NotificationTrigger::class, 'notification_gateway_trigger', 'gatewayId', 'triggerId');
 	}
 }

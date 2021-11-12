@@ -18,7 +18,7 @@ class NotificationGatewayController
 		$user = $request->get('user');
 
 		return new NotificationGatewayCollection(
-			$user->notificationGatewaysWithInactive
+			$user->notificationGateways
 		);
 	}
 

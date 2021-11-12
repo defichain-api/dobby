@@ -9,8 +9,9 @@ use Illuminate\Support\Collection;
 
 /**
  * @mixin \Eloquent
+ * @property int        id
  * @property Vault      vault
- * @property string     userId
+ * @property string     vaultId
  * @property Collection gateways
  * @property int        ratio
  */
@@ -18,7 +19,6 @@ class NotificationTrigger extends Model
 {
 	public $timestamps = false;
 	protected $fillable = [
-		'userId',
 		'vaultId',
 		'ratio',
 	];
@@ -35,6 +35,7 @@ class NotificationTrigger extends Model
 
 	public function gateways(): BelongsToMany
 	{
-		return $this->belongsToMany(NotificationGateway::class, 'notification_gateway_trigger', 'triggerId', 'id');
+		return $this->belongsToMany(NotificationGateway::class, 'notification_gateway_trigger', 'triggerId',
+			'gatewayId');
 	}
 }

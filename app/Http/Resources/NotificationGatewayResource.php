@@ -10,9 +10,9 @@ class NotificationGatewayResource extends JsonResource
 	public function toArray($request): array
 	{
 		return [
-			'id'       => $this->id,
-			'type'     => $this->type,
-			'value'    => $this->value,
+			'gatewayId' => $this->id,
+			'type'      => $this->type,
+			'value'     => $this->value,
 		];
 	}
 }

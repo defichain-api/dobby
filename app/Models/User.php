@@ -18,7 +18,6 @@ use Illuminate\Support\Collection;
  * @property string     theme
  * @property Collection vaults
  * @property Collection notificationGateways
- * @property Collection notificationGatewaysWithInactive
  */
 class User extends Model
 {
@@ -45,14 +44,22 @@ class User extends Model
 		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId');
 	}
 
-	public function notificationGateways(): HasMany
+	public function notificationTrigger(): Collection
 	{
-		return $this->hasMany(NotificationGateway::class, 'userId', 'userId');
+		$gateways = $this->notificationGateways;
+		$notificationTrigger = new Collection();
+		$gateways->each(function (NotificationGateway $gateway) use (&$notificationTrigger) {
+			$gateway->triggers->each(function (NotificationTrigger $trigger) use (&$notificationTrigger) {
+				$notificationTrigger->add($trigger);
+			});
+		});
+
+		return $notificationTrigger->unique('id')->flatten();
 	}
 
-	public function notificationGatewaysWithInactive(): HasMany
+	public function notificationGateways(): HasMany
 	{
 		return $this->hasMany(NotificationGateway::class, 'userId', 'userId')
-			->withoutGlobalScope(IsActive::class);
+			->with('triggers');
 	}
 }

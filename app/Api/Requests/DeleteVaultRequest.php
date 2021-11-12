@@ -3,7 +3,6 @@
 namespace App\Api\Requests;
 
 use JetBrains\PhpStorm\ArrayShape;
-use Validator;
 
 class DeleteVaultRequest extends ApiRequest
 {
