@@ -29,12 +29,12 @@ class SetupConversation extends Conversation
 
 		if ($this->userId === '') {
 			$this->send(__('bot/setup.enter_user_key', ['url' => config('app.url')]));
+		} elseif ($gatewayService->hasGatewayWithValue($this->senderId, NotificationGatewayType::TELEGRAM)) {
+			$this->send(__('bot/setup.already_registered'));
 		} elseif (!Str::isUuid($this->userId)
 			|| User::where('userId', $this->userId)->count() === 0) {
 			// not registered yet
 			$this->send(__('bot/setup.not_registered', ['url' => config('app.url')]));
-		} elseif ($gatewayService->hasGatewayForUser($this->userId, NotificationGatewayType::TELEGRAM)) {
-			$this->send(__('bot/setup.already_registered'));
 		} else {
 			$this->send(__('bot/setup.registering.collect_data'));
 			$gatewayService->createTelegramGateway($this->userId, $this->senderId);

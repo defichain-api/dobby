@@ -47,10 +47,10 @@ class NotificationGatewayService
 		return $notificationGateway->delete();
 	}
 
-	public function hasGatewayForUser(string $userId, string $gatewayType): bool
+	public function hasGatewayWithValue(string $senderId, string $gatewayType): bool
 	{
 		try {
-			NotificationGateway::where('userId', $userId)
+			NotificationGateway::where('value', $senderId)
 				->where('type', $gatewayType)->firstOrFail();
 
 			return true;
