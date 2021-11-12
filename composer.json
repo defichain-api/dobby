@@ -8,6 +8,8 @@
         "php": "^8.0",
         "ext-json": "*",
         "fruitcake/laravel-cors": "^2.0",
+        "botman/botman": "^2.6.1",
+        "botman/driver-telegram": "^1.6.2",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.65",
         "laravel/horizon": "^5.7",
