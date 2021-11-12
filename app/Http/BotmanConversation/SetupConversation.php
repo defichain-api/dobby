@@ -32,14 +32,17 @@ class SetupConversation extends Conversation
 		$userId = trim(Str::replace('/start', '', $message->getText()));
 
 		if ($userId === '') {
+			// default state: clicking on /start
 			$this->telegramMessageService->send(__('bot/setup.enter_user_key', ['url' => config('app.url')]), $senderId);
 		} elseif ($this->gatewayService->hasGatewayWithValue($senderId, NotificationGatewayType::TELEGRAM)) {
+			// already connected
 			$this->telegramMessageService->send(__('bot/setup.already_registered'), $senderId);
 		} elseif (!Str::isUuid($userId)
 			|| User::where('userId', $userId)->count() === 0) {
 			// not registered yet
 			$this->telegramMessageService->send(__('bot/setup.not_registered', ['url' => config('app.url')]), $senderId);
 		} else {
+			// start registering the user
 			$this->telegramMessageService->send(__('bot/setup.registering.collect_data'), $senderId);
 			$this->gatewayService->createTelegramGateway($userId, $senderId);
 			$this->bot->typesAndWaits(2);
