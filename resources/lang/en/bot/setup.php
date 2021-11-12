@@ -7,6 +7,6 @@ return [
 
 	'registering' => [
 		'collect_data'   => "*DOBBY* is busy doing magic(al?) things, please give him some seconds...",
-		'setup_finished' => "Now *DOBBY* knows how to reach you. Keep on configuring your notifications on :url",
+		'setup_finished' => "Now *DOBBY* knows how to reach you.\r\n\r\nKeep on configuring your notifications on :url",
 	],
 ];
