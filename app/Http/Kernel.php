@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\WebAppAuthMiddleware;
+use Fruitcake\Cors\HandleCors;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -30,6 +31,7 @@ class Kernel extends HttpKernel
 		'api' => [
 			// \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
 			'throttle:api',
+			HandleCors::class,
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
 		],
 	];
