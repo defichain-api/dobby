@@ -26,6 +26,7 @@ Route::middleware(['webapp_auth'])->group(function () {
 		Route::get('/', [UserController::class, 'getUser'])
 			->name('get');
 		Route::delete('/', [UserController::class, 'deleteUser'])
+			->middleware('uneditable_demo')
 			->name('delete');
 	});
 
@@ -34,8 +35,10 @@ Route::middleware(['webapp_auth'])->group(function () {
 	 */
 	Route::name('vault.')->prefix('user/vault')->group(function () {
 		Route::post('/', [VaultController::class, 'createUserVault'])
+			->middleware('uneditable_demo')
 			->name('create');
 		Route::delete('/', [VaultController::class, 'deleteUserVault'])
+			->middleware('uneditable_demo')
 			->name('delete');
 	});
 
@@ -46,8 +49,10 @@ Route::middleware(['webapp_auth'])->group(function () {
 		Route::get('/', [NotificationGatewayController::class, 'getGateways'])
 			->name('get');
 		Route::post('/', [NotificationGatewayController::class, 'createGateway'])
+			->middleware('uneditable_demo')
 			->name('create');
 		Route::delete('/', [NotificationGatewayController::class, 'deleteGateway'])
+			->middleware('uneditable_demo')
 			->name('delete');
 	});
 
@@ -58,10 +63,13 @@ Route::middleware(['webapp_auth'])->group(function () {
 		Route::get('/', [NotificationTriggerController::class, 'getTrigger'])
 			->name('get');
 		Route::post('/', [NotificationTriggerController::class, 'createTrigger'])
+			->middleware('uneditable_demo')
 			->name('create');
 		Route::put('/', [NotificationTriggerController::class, 'updateTrigger'])
+			->middleware('uneditable_demo')
 			->name('update');
 		Route::delete('/', [NotificationTriggerController::class, 'deleteTrigger'])
+			->middleware('uneditable_demo')
 			->name('delete');
 	});
 });
