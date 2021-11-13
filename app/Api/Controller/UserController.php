@@ -10,9 +10,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController
 {
+	/**
+	 * @throws \Exception
+	 */
 	public function getUser(Request $request): JsonResponse
 	{
-		return response()->json(new UserResource($request->get('user')), Response::HTTP_OK);
+		/** @var \App\Models\User $user */
+		$user = $request->get('user');
+		return cache()->remember(sprintf('get_user_%s', $user->id()), now()->addMinute(), function () use ($user) {
+			return response()->json(new UserResource($user), Response::HTTP_OK);
+		});
 	}
 
 	public function deleteUser(Request $request, UserService $service): JsonResponse
