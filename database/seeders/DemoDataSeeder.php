@@ -13,7 +13,7 @@ class DemoDataSeeder extends Seeder
 	public function run()
 	{
 		$user = User::create([
-			'userId'   => 'demo-510c-431f-bd34-54640cd4a928',
+			'userId'   => 'demo-demo-demo-demo-demodemodemo',
 			'language' => 'en',
 			'theme'    => 'dark',
 		]);
