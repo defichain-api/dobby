@@ -15,7 +15,7 @@ class UpdateLoanSchemeCommand extends Command
 	public function handle(DefiChainApiClient $apiClient, LoanSchemeService $loanSchemeService)
 	{
 		try {
-			$rawLoanSchemes = $apiClient->getLoanSchemes()['data'];
+			$rawLoanSchemes = $apiClient->getLoanSchemes();
 		} catch (DefichainApiException $e) {
 			return;
 		}

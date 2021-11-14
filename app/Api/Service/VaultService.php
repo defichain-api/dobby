@@ -22,11 +22,11 @@ class VaultService
 	public function setVaultsForUser(User $user, array $ownerAddresses): bool
 	{
 		$vaults = $this->apiClient->getMultipleVaults($ownerAddresses);
-		if (count($vaults['data']) === 0) {
+		if (count($vaults) === 0) {
 			return false;
 		}
 
-		foreach ($vaults['data'] as $vaultRaw) {
+		foreach ($vaults as $vaultRaw) {
 			$vault = $this->createOrUpdate($vaultRaw);
 			$this->attachVaultToUser($vault, $user);
 		}
@@ -40,11 +40,11 @@ class VaultService
 	public function updateVaults(array $vaultIds): bool
 	{
 		$vaults = $this->apiClient->getMultipleVaults($vaultIds);
-		if (count($vaults['data']) === 0) {
+		if (count($vaults) === 0) {
 			return false;
 		}
 
-		foreach ($vaults['data'] as $vaultRaw) {
+		foreach ($vaults as $vaultRaw) {
 			$this->createOrUpdate($vaultRaw);
 		}
 
