@@ -27,8 +27,25 @@ class VaultService
 		}
 
 		foreach ($vaults['data'] as $vaultRaw) {
-			$vault = $this->create($vaultRaw);
+			$vault = $this->createOrUpdate($vaultRaw);
 			$this->attachVaultToUser($vault, $user);
+		}
+
+		return true;
+	}
+
+	/**
+	 * @throws \App\Api\Exceptions\DefichainApiException
+	 */
+	public function updateVaults(array $vaultIds): bool
+	{
+		$vaults = $this->apiClient->getMultipleVaults($vaultIds);
+		if (count($vaults['data']) === 0) {
+			return false;
+		}
+
+		foreach ($vaults['data'] as $vaultRaw) {
+			$this->createOrUpdate($vaultRaw);
 		}
 
 		return true;
@@ -52,7 +69,7 @@ class VaultService
 		$user->vaults()->attach([$vault->vaultId]);
 	}
 
-	protected function create(array $data): Vault
+	protected function createOrUpdate(array $data): Vault
 	{
 		$loanSchemes = LoanScheme::all();
 
