@@ -35,7 +35,7 @@ class DefiChainApiClient
 			throw DefichainApiException::message('multiple_vault', $e);
 		}
 
-		return json_decode($response->getBody()->getContents(), true);
+		return json_decode($response->getBody()->getContents(), true)['data'];
 	}
 
 	/**
@@ -44,11 +44,25 @@ class DefiChainApiClient
 	public function getLoanSchemes(): array
 	{
 		try {
-			$response = $this->client->get(config('defichain_api.loan_scheme.get'));
+			$response = $this->client->get(config('defichain_api.loan_schemes.get'));
 		} catch (GuzzleException $e) {
 			throw DefichainApiException::message('loan_scheme', $e);
 		}
 
-		return json_decode($response->getBody()->getContents(), true);
+		return json_decode($response->getBody()->getContents(), true)['data'];
+	}
+
+	/**
+	 * @throws \App\Api\Exceptions\DefichainApiException
+	 */
+	public function getFixedIntervalPrices(): array
+	{
+		try {
+			$response = $this->client->get(config('defichain_api.fixed_interval_prices.get'));
+		} catch (GuzzleException $e) {
+			throw DefichainApiException::message('fixed_interval_prices', $e);
+		}
+
+		return json_decode($response->getBody()->getContents(), true)['data'];
 	}
 }
