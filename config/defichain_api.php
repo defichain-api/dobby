@@ -7,7 +7,11 @@ return [
 		'id_or_address' => 'vaults/id/%s',
 		'multiple'      => 'vaults/addresses',
 	],
-	'loan_scheme' => [
+	'loan_schemes' => [
 		'get' => 'loan_schemes',
+	],
+
+	'fixed_interval_prices' => [
+		'get' => 'fixed_price_intervals',
 	],
 ];
