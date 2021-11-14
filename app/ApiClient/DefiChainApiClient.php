@@ -37,4 +37,18 @@ class DefiChainApiClient
 
 		return json_decode($response->getBody()->getContents(), true);
 	}
+
+	/**
+	 * @throws \App\Api\Exceptions\DefichainApiException
+	 */
+	public function getLoanSchemes(): array
+	{
+		try {
+			$response = $this->client->get(config('defichain_api.loan_scheme.get'));
+		} catch (GuzzleException $e) {
+			throw DefichainApiException::message('loan_scheme', $e);
+		}
+
+		return json_decode($response->getBody()->getContents(), true);
+	}
 }

@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\UpdateVaultDataCommand;
+use App\Console\Commands\UpdateLoanSchemeCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -10,11 +11,13 @@ class Kernel extends ConsoleKernel
 {
     protected $commands = [
 	    UpdateVaultDataCommand::class,
+	    UpdateLoanSchemeCommand::class,
     ];
 
     protected function schedule(Schedule $schedule): void
     {
          $schedule->command(UpdateVaultDataCommand::class, ['--max=100'])->everyFiveMinutes();
+         $schedule->call(UpdateLoanSchemeCommand::class)->daily();
     }
 
     protected function commands(): void
