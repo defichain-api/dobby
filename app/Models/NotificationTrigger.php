@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
  * @property string     vaultId
  * @property Collection gateways
  * @property int        ratio
+ * @property string     type
  */
 class NotificationTrigger extends Model
 {
@@ -21,6 +22,7 @@ class NotificationTrigger extends Model
 	protected $fillable = [
 		'vaultId',
 		'ratio',
+		'type',
 	];
 	protected $hidden = [
 		'id',

@@ -36,6 +36,9 @@ class NotificationTriggerController
 		], Response::HTTP_OK);
 	}
 
+	/**
+	 * @throws \Throwable
+	 */
 	public function updateTrigger(
 		UpdateNotificationTriggerRequest $request,
 		NotificationTriggerService       $service
