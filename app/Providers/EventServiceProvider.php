@@ -2,20 +2,19 @@
 
 namespace App\Providers;
 
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Events\VaultUpdatingEvent;
+use App\Listeners\VaultUpdatingListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
-    ];
+	protected $listen = [
+		VaultUpdatingEvent::class => [
+			VaultUpdatingListener::class,
+		],
+	];
 
-    public function boot(): void
-    {
-        //
-    }
+	public function boot(): void
+	{
+	}
 }

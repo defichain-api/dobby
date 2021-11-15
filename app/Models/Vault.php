@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\VaultUpdatingEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -54,6 +55,9 @@ class Vault extends Model
 		'loanAmounts'       => 'array',
 		'interestAmounts'   => 'array',
 		'batches'           => 'array',
+	];
+	protected $dispatchesEvents = [
+		'updated' => VaultUpdatingEvent::class,
 	];
 
 	public function getVaultIdAttribute(): string
