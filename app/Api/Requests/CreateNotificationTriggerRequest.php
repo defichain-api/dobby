@@ -23,11 +23,12 @@ class CreateNotificationTriggerRequest extends ApiRequest
 		];
 	}
 
-	#[ArrayShape(['vaultId.exists' => "string"])]
+	#[ArrayShape(['vaultId.exists' => "string", 'type.in' => "string"])]
 	public function messages(): array
 	{
 		return [
 			'vaultId.exists' => 'The vault has to be setup first',
+			'type.in'        => sprintf('possible values are: %s', implode(', ', NotificationTriggerType::ALL)),
 		];
 	}
 

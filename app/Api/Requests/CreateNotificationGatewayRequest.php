@@ -25,6 +25,15 @@ class CreateNotificationGatewayRequest extends ApiRequest
 		];
 	}
 
+	#[ArrayShape(['type.in' => "string"])]
+	public function messages(): array
+	{
+		return [
+			'type.in' => sprintf('possible values are: %s',
+				implode(', ', NotificationGatewayType::ACTIVE_NOTIFICATIONS)),
+		];
+	}
+
 	public function type(): string
 	{
 		return $this->input('type');
