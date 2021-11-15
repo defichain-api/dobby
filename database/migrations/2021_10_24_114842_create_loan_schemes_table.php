@@ -13,7 +13,6 @@ class CreateLoanSchemesTable extends Migration
             $table->string('name')->unique();
             $table->unsignedInteger('minCollaterationRatio');
             $table->unsignedFloat('interestRate', 10, 8);
-            $table->boolean('isDefault')->default(false);
 			$table->timestamps();
 		});
 	}

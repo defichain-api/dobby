@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Enum\NotificationGatewayType;
+use App\Exceptions\NotificationGatewayException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
 /**
@@ -18,6 +22,8 @@ use Illuminate\Support\Collection;
  */
 class NotificationTrigger extends Model
 {
+	use Notifiable;
+
 	public $timestamps = false;
 	protected $fillable = [
 		'vaultId',
@@ -39,5 +45,17 @@ class NotificationTrigger extends Model
 	{
 		return $this->belongsToMany(NotificationGateway::class, 'notification_gateway_trigger', 'triggerId',
 			'gatewayId');
+	}
+
+	/**
+	 * @throws \App\Exceptions\NotificationGatewayException
+	 */
+	public function telegramGateway()
+	{
+		try {
+			return $this->gateways()->where('type', NotificationGatewayType::TELEGRAM)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			throw NotificationGatewayException::message(NotificationGatewayType::TELEGRAM, 'not available');
+		}
 	}
 }
