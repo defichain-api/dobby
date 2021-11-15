@@ -12,6 +12,7 @@ class NotificationTriggerResource extends JsonResource
 		return [
 			'triggerId' => $this->id,
 			'ratio'     => $this->ratio,
+			'type'      => $this->type,
 			'gateways'  => NotificationGatewayResource::collection($this->gateways),
 			'vault'     => new VaultResource($this->whenLoaded('vault')),
 		];
