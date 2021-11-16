@@ -20,18 +20,20 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 			->content(
 				__('notifications/telegram/info.message', [
 					'ratio'             => $notificationTrigger->ratio,
-					'current_ratio'     => round($vault->collateralRatio, 2),
+					'current_ratio'     => $vault->collateralRatio,
 					'collateral_amount' => round($vault->collateralValue, 2),
-					'loan_value'        => $vault->loanValue,
+					'loan_value'        => round($vault->loanValue, 2),
 					'difference'        => round(abs($vault->collateralValue - $vault->loanValue), 2),
 				])
 			)
 			->file(storage_path('app/notification_images/telegram_info.png'), 'photo')
-			->buttonWithCallback(__('bot/snooze.cooldown_times.30'), sprintf('snooze_%s_30', $notificationTrigger->id))
-			->buttonWithCallback(__('bot/snooze.cooldown_times.60'), sprintf('snooze_%s_60', $notificationTrigger->id))
-			->buttonWithCallback(__('bot/snooze.cooldown_times.180'),
+			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.30'),
+				sprintf('snooze_%s_30', $notificationTrigger->id))
+			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.60'),
+				sprintf('snooze_%s_60', $notificationTrigger->id))
+			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.180'),
 				sprintf('snooze_%s_180', $notificationTrigger->id))
-			->buttonWithCallback(__('bot/snooze.cooldown_times.360'),
+			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.360'),
 				sprintf('snooze_%s_360', $notificationTrigger->id))
 			->button(__('notifications/telegram/info.button'), config('app.url'));
 	}

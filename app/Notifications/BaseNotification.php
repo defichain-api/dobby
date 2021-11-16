@@ -6,6 +6,7 @@ use App\Enum\CooldownTypes;
 use App\Enum\NotificationGatewayType;
 use App\Enum\QueueName;
 use App\Models\NotificationTrigger;
+use App\Models\Vault;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
@@ -15,6 +16,9 @@ use NotificationChannels\Telegram\TelegramFile;
 
 class BaseNotification extends Notification
 {
+	public function __construct(protected Vault $vault)
+	{}
+
 	public function via(NotificationTrigger $notifiable): array
 	{
 		$methods = [];
@@ -25,7 +29,8 @@ class BaseNotification extends Notification
 		if ($notifiable->hasGateway(NotificationGatewayType::WEBHOOK)) {
 			$methods[] = NotificationGatewayType::WEBHOOK;
 		}
-		if ($notifiable->hasGateway(NotificationGatewayType::MAIL)) {
+		if ($notifiable->hasGateway(NotificationGatewayType::MAIL)
+			&& $notifiable->cooldown(CooldownTypes::MAIL_NOTIFICATION)->passed()) {
 			$methods[] = NotificationGatewayType::MAIL;
 		}
 
