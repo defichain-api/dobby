@@ -13,7 +13,7 @@ class CreateNotificationGatewayRequest extends ApiRequest
 	{
 		$type = $this->input('type');
 		$valueRules = '';
-		if ($type === NotificationGatewayType::EMAIL) {
+		if ($type === NotificationGatewayType::MAIL) {
 			$valueRules = 'email:rfc,dns';
 		} elseif ($type === NotificationGatewayType::WEBHOOK) {
 			$valueRules = 'active_url';

@@ -169,8 +169,11 @@ return [
 		'supervisor-1' => [
 			'connection'      => 'redis',
 			'queue'           => [
-				QueueName::NOTIFICATION_QUEUE,
+				QueueName::NOTIFICATION_TELEGRAM_QUEUE,
+				QueueName::NOTIFICATION_EMAIL_QUEUE,
+				QueueName::NOTIFICATION_WEBHOOK_QUEUE,
 				QueueName::API_CALLS_QUEUE,
+				QueueName::UPDATE_VAULTS_QUEUE,
 			],
 			'balance'         => 'auto',
 			'minProcesses'    => env('HORIZON_MIN_PROCESSES', 1),
