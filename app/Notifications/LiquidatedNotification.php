@@ -34,7 +34,7 @@ class LiquidatedNotification extends BaseNotification implements ShouldQueue
 			->payload([
 				'type' => NotificationTriggerType::LIQUIDATED,
 				'data' => [
-					'vault_id'     => $this->vault->vaultId,
+					'vault_id' => $this->vault->vaultId,
 				],
 			])->useSecret($notificationTrigger->vaultId);
 	}
