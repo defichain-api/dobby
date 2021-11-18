@@ -2,11 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use NotificationChannels\Telegram\TelegramFile;
+use Spatie\WebhookServer\WebhookCall;
 
 class VaultWarningNotification extends BaseNotification implements ShouldQueue
 {
@@ -33,5 +35,25 @@ class VaultWarningNotification extends BaseNotification implements ShouldQueue
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.360'),
 				sprintf('snooze_%s_360', $notificationTrigger->id))
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
+	}
+
+	/**
+	 * @throws \App\Exceptions\NotificationGatewayException
+	 */
+	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
+	{
+		return WebhookCall::create()
+			->url($notificationTrigger->webhookGateway()->value)
+			->payload([
+				'type' => NotificationTriggerType::WARNING,
+				'data' => [
+					'vault_id'          => $this->vault->vaultId,
+					'ratio'             => $notificationTrigger->ratio,
+					'current_ratio'     => $this->vault->collateralRatio,
+					'collateral_amount' => round($this->vault->collateralValue, 2),
+					'loan_value'        => round($this->vault->loanValue,2),
+					'difference'        => round(abs($this->vault->collateralValue - $this->vault->loanValue), 2),
+				],
+			])->useSecret($notificationTrigger->vaultId);
 	}
 }
