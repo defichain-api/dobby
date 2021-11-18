@@ -14,7 +14,6 @@ class LoanSchemeService
 			], [
 				'minCollaterationRatio' => $rawLoanScheme['minCollaterationRatio'],
 				'interestRate'          => $rawLoanScheme['interestRate'],
-				'isDefault'             => $rawLoanScheme['isDefault'],
 			]);
 		}
 	}

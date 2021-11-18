@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string  name
  * @property integer minCollaterationRatio
  * @property float   interestRate
- * @property boolean isDefault
  */
 class LoanScheme extends Model
 {
@@ -17,7 +16,6 @@ class LoanScheme extends Model
         'name',
         'minCollaterationRatio',
         'interestRate',
-        'isDefault',
     ];
     protected $hidden = ['id', 'created_at', 'updated_at'];
 }

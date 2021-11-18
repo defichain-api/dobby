@@ -24,7 +24,7 @@ class UpdateVaultDataCommand extends Command
 		Vault::select('vaultId')
 			->chunk($max, function (Collection $vaults) {
 				dispatch(new UpdateVaultJob(Arr::flatten($vaults->toArray())))
-					->onQueue(QueueName::UPDATE_VAULTS);
+					->onQueue(QueueName::UPDATE_VAULTS_QUEUE);
 			});
 	}
 }
