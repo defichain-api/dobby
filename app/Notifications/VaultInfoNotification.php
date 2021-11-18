@@ -38,12 +38,15 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 			->button(__('notifications/telegram/info.button'), config('app.url'));
 	}
 
-	public function toMail(NotificationTrigger $notifiable): MailMessage
+	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
 	{
 		return (new MailMessage)
 			->subject(__('notifications/mail/info.subject'))
-			->line('The introduction to the notification.')
-			->action('Notification Action', url('/'))
+			->greeting('Hey Buddy!')
+			->line(__('notifications/mail/info.message', [
+				'ratio' => $notificationTrigger->ratio,
+			]))
+			->action(__('notifications/telegram/buttons.visit_website'), config('app.url'))
 			->line('Thank you for using our application!');
 	}
 
