@@ -6,7 +6,6 @@ use App\Models\NotificationTrigger;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use NotificationChannels\Telegram\TelegramFile;
-use Str;
 
 class DailySummaryNotification extends BaseNotification implements ShouldQueue
 {
