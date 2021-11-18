@@ -2,11 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use NotificationChannels\Telegram\TelegramFile;
+use Spatie\WebhookServer\WebhookCall;
 
 class VaultInfoNotification extends BaseNotification implements ShouldQueue
 {
@@ -14,16 +16,14 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 
 	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramFile
 	{
-		$vault = $notificationTrigger->vault;
-
 		return TelegramFile::create()
 			->content(
 				__('notifications/telegram/info.message', [
 					'ratio'             => $notificationTrigger->ratio,
-					'current_ratio'     => $vault->collateralRatio,
-					'collateral_amount' => round($vault->collateralValue, 2),
-					'loan_value'        => round($vault->loanValue, 2),
-					'difference'        => round(abs($vault->collateralValue - $vault->loanValue), 2),
+					'current_ratio'     => $this->vault->collateralRatio,
+					'collateral_amount' => round($this->vault->collateralValue, 2),
+					'loan_value'        => round($this->vault->loanValue, 2),
+					'difference'        => round(abs($this->vault->collateralValue - $this->vault->loanValue), 2),
 				])
 			)
 			->file(storage_path('app/notification_images/telegram_info.png'), 'photo')
@@ -47,8 +47,23 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 			->line('Thank you for using our application!');
 	}
 
-	public function toWebhook(NotificationTrigger $notifiable): void
+	/**
+	 * @throws \App\Exceptions\NotificationGatewayException
+	 */
+	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
-
+		return WebhookCall::create()
+			->url($notificationTrigger->webhookGateway()->value)
+			->payload([
+				'type' => NotificationTriggerType::INFO,
+				'data' => [
+					'vault_id'          => $this->vault->vaultId,
+					'ratio'             => $notificationTrigger->ratio,
+					'current_ratio'     => $this->vault->collateralRatio,
+					'collateral_amount' => round($this->vault->collateralValue, 2),
+					'loan_value'        => round($this->vault->loanValue, 2),
+					'difference'        => round(abs($this->vault->collateralValue - $this->vault->loanValue), 2),
+				],
+			])->useSecret($notificationTrigger->vaultId);
 	}
 }

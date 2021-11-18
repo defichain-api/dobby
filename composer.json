@@ -11,11 +11,12 @@
         "botman/driver-telegram": "^1.6.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "kurozora/laravel-cooldown": "dev-master",
         "laravel-notification-channels/telegram": "^0.8.0",
         "laravel/framework": "^8.65",
         "laravel/horizon": "^5.7",
         "laravel/tinker": "^2.5",
-        "kurozora/laravel-cooldown": "dev-master"
+        "spatie/laravel-webhook-server": "^3.1"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
