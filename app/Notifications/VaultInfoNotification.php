@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Service\VaultService;
 use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -23,7 +24,7 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 					'current_ratio'     => $this->vault->collateralRatio,
 					'collateral_amount' => round($this->vault->collateralValue, 2),
 					'loan_value'        => round($this->vault->loanValue, 2),
-					'difference'        => round(abs($this->vault->collateralValue - $this->vault->loanValue), 2),
+					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault, $notificationTrigger->ratio),
 				])
 			)
 			->file(storage_path('app/notification_images/telegram_info.png'), 'photo')
@@ -41,13 +42,11 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
 	{
 		return (new MailMessage)
-			->subject(__('notifications/mail/info.subject'))
-			->greeting('Hey Buddy!')
-			->line(__('notifications/mail/info.message', [
-				'ratio' => $notificationTrigger->ratio,
-			]))
-			->action(__('notifications/telegram/buttons.visit_website'), config('app.url'))
-			->line('Thank you for using our application!');
+			->subject(sprintf('%s - %s', __('notifications/mail/warning.subject'), config('app.name')))
+			->markdown('mail.notification.info', [
+				'notificationTrigger' => $notificationTrigger,
+				'vault'               => $this->vault,
+			]);
 	}
 
 	/**
@@ -65,7 +64,7 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 					'current_ratio'     => $this->vault->collateralRatio,
 					'collateral_amount' => round($this->vault->collateralValue, 2),
 					'loan_value'        => round($this->vault->loanValue, 2),
-					'difference'        => round(abs($this->vault->collateralValue - $this->vault->loanValue), 2),
+					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault, $notificationTrigger->ratio),
 				],
 			])->useSecret($notificationTrigger->vaultId);
 	}
