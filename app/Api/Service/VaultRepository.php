@@ -7,7 +7,7 @@ use App\Models\LoanScheme;
 use App\Models\User;
 use App\Models\Vault;
 
-class VaultService
+class VaultRepository
 {
 	protected DefiChainApiClient $apiClient;
 

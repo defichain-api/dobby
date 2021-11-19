@@ -105,7 +105,7 @@ class NotificationTrigger extends Model
 	/**
 	 * @throws \App\Exceptions\NotificationGatewayException
 	 */
-	public function routeNotificationForMail(): int
+	public function routeNotificationForMail(): string
 	{
 		return $this->mailGateway()->value;
 	}

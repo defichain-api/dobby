@@ -10,7 +10,8 @@ class NotificationGatewayType
 	const WEBPUSH = 'webpush';
 	const ACTIVE_NOTIFICATIONS = [
 		self::TELEGRAM,
-		self::MAIL,
+//		self::MAIL,
+//		self::WEBPUSH,
 		self::WEBHOOK,
 	];
 }

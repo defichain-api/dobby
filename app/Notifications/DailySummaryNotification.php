@@ -6,6 +6,7 @@ use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use NotificationChannels\Telegram\TelegramFile;
 use Spatie\WebhookServer\WebhookCall;
 
