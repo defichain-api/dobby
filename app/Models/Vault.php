@@ -6,10 +6,12 @@ use App\Events\VaultUpdatingEvent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use \Illuminate\Database\Eloquent\Collection;
 
 /**
  * @mixin \Eloquent
  * @property string     vaultId
+ * @property Collection users
  * @property LoanScheme loanScheme
  * @property string     loanSchemeId
  * @property string     ownerAddress
