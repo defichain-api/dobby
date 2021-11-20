@@ -17,7 +17,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
 	protected function gate(): void
 	{
 		Horizon::auth(function ($request) {
-			return auth()->check();
+			return true;
 		});
 	}
 }
