@@ -25,10 +25,8 @@ class VaultUpdatingListener
 			}
 
 			if ($trigger->type === NotificationTriggerType::INFO) {
-				ray('trigger INFO for user '.$user->id());
 				$trigger->notify(new VaultInfoNotification($vault));
 			} elseif ($trigger->type === NotificationTriggerType::WARNING) {
-				ray('trigger WARNING for user '.$user->id());
 				$trigger->notify(new VaultWarningNotification($vault));
 			}
 		});
