@@ -57,7 +57,7 @@ return [
 
 	'prefix' => env(
 		'HORIZON_PREFIX',
-		Str::slug(env('APP_NAME', 'dobby'), '_') . '_queues:'
+		Str::slug(sprintf('%s %s',env('APP_NAME', 'dobby'), env('app_env', 'local')), '_') . '_queues:'
 	),
 
 	/*
@@ -168,13 +168,7 @@ return [
 	'defaults' => [
 		'supervisor-1' => [
 			'connection'      => 'redis',
-			'queue'           => [
-				QueueName::NOTIFICATION_TELEGRAM_QUEUE,
-				QueueName::NOTIFICATION_EMAIL_QUEUE,
-				QueueName::NOTIFICATION_WEBHOOK_QUEUE,
-				QueueName::API_CALLS_QUEUE,
-				QueueName::UPDATE_VAULTS_QUEUE,
-			],
+			'queue'           => QueueName::QUEUES_ALL,
 			'balance'         => 'auto',
 			'minProcesses'    => env('HORIZON_MIN_PROCESSES', 1),
 			'maxProcesses'    => env('HORIZON_MAX_PROCESSES', 20),
