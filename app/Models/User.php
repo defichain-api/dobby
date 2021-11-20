@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\Concerns\UsesUuidPrimary;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\ItemNotFoundException;
 
 /**
  * @mixin \Eloquent
@@ -53,6 +55,21 @@ class User extends Model
 		});
 
 		return $notificationTrigger->unique('id')->flatten();
+	}
+
+	/**
+	 * @throws NotificationTriggerNotAvailableException
+	 */
+	public function nearestTriggerBelowRatio(int $ratio): NotificationTrigger
+	{
+		try {
+			return $this->notificationTrigger()
+				->sortBy('ratio')
+				->where('ratio', '>=', $ratio)
+				->firstOrFail();
+		} catch (ItemNotFoundException $e) {
+			throw new NotificationTriggerNotAvailableException();
+		}
 	}
 
 	public function notificationGateways(): HasMany
