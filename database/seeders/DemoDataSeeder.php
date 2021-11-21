@@ -19,7 +19,7 @@ class DemoDataSeeder extends Seeder
 		]);
 		$vaultActive = Vault::create([
 			'vaultId'            => 'active_demo__e888c4ea3dd06bd1bf30a4dfa38c625f8fd430e9d321607',
-			'loanSchemeId'       => LoanScheme::where('name', '=', 'C150')->first()->id,
+			'loanSchemeId'       => LoanScheme::where('name', '=', 'MIN200')->first()->id,
 			'ownerAddress'       => 'tedT9idRxCzmmxT4sST9gHmAZ5Mh24a2Wm',
 			'state'              => VaultStates::ACTIVE,
 			'collateralAmounts'  => ["4000.00000000@DFI"],
@@ -37,7 +37,7 @@ class DemoDataSeeder extends Seeder
 		]);
 		$vaultInLiquidation = Vault::create([
 			'vaultId'            => 'in_liquidation_demo__e888c4ea3dd06bd1bf30a4dfa38c625f8fd430e9d321607',
-			'loanSchemeId'       => LoanScheme::where('name', '=', 'C150')->first()->id,
+			'loanSchemeId'       => LoanScheme::where('name', '=', 'MIN200')->first()->id,
 			'ownerAddress'       => 'trGCtcntm42AMLw3fhaDPwBMYTikTMYzFm',
 			'state'              => VaultStates::INLIQUIDATION,
 			'collateralAmounts'  => [],
@@ -55,7 +55,7 @@ class DemoDataSeeder extends Seeder
 		]);
 		$vaultMayLiquidate = Vault::create([
 			'vaultId'            => 'may_liquidate_demo__e888c4ea3dd06bd1bf30a4dfa38c625f8fd430e9d321607',
-			'loanSchemeId'       => LoanScheme::where('name', '=', 'C150')->first()->id,
+			'loanSchemeId'       => LoanScheme::where('name', '=', 'MIN200')->first()->id,
 			'ownerAddress'       => 'tedT9idRxCzmmxT4sST9gHmAZ5Mh24a2Wm',
 			'state'              => VaultStates::MAYLIQUIDATE,
 			'collateralAmounts'  => ["3906.94274903@DFI"],
