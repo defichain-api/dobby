@@ -42,9 +42,9 @@ class NotificationTrigger extends Model
 		return $this->belongsTo(Vault::class, 'vaultId', 'vaultId');
 	}
 
-	public function user(): User
+	public function user(): ?User
 	{
-		return $this->gateways()->first()->user;
+		return $this->gateways()?->first()->user;
 	}
 
 	public function gateways(): BelongsToMany

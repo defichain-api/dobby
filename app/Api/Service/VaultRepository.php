@@ -6,6 +6,7 @@ use App\ApiClient\DefiChainApiClient;
 use App\Models\LoanScheme;
 use App\Models\User;
 use App\Models\Vault;
+use Exception;
 
 class VaultRepository
 {
@@ -28,7 +29,11 @@ class VaultRepository
 
 		foreach ($vaults as $vaultRaw) {
 			$vault = $this->createOrUpdate($vaultRaw);
-			$this->attachVaultToUser($vault, $user);
+			try {
+				$this->attachVaultToUser($vault, $user);
+			} catch (Exception) {
+				return false;
+			}
 		}
 
 		return true;

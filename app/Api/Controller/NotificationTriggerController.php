@@ -3,6 +3,7 @@
 namespace App\Api\Controller;
 
 use App\Api\Requests\CreateNotificationTriggerRequest;
+use App\Api\Requests\DeleteNotificationTriggerRequest;
 use App\Api\Requests\UpdateNotificationTriggerRequest;
 use App\Api\Service\NotificationTriggerService;
 use App\Http\Resources\NotificationTriggerCollection;
@@ -52,8 +53,22 @@ class NotificationTriggerController
 		], Response::HTTP_OK);
 	}
 
-	public function deleteTrigger()
-	{
+	public function deleteTrigger(
+		DeleteNotificationTriggerRequest $request,
+		NotificationTriggerService       $service
+	): JsonResponse {
+		$success = $service->delete($request);
 
+		if (!$success) {
+			return response()->json([
+				'state'   => 'error',
+				'message' => 'user can\'t delete this notification trigger',
+			], Response::HTTP_BAD_REQUEST);
+		}
+
+		return response()->json([
+			'state'   => 'ok',
+			'message' => 'notification trigger deleted',
+		], Response::HTTP_OK);
 	}
 }

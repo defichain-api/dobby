@@ -3,9 +3,10 @@
 namespace App\Api\Service;
 
 use App\Api\Requests\CreateNotificationTriggerRequest;
+use App\Api\Requests\DeleteNotificationTriggerRequest;
 use App\Api\Requests\UpdateNotificationTriggerRequest;
 use App\Models\NotificationTrigger;
-use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class NotificationTriggerService
 {
@@ -35,5 +36,21 @@ class NotificationTriggerService
 		$trigger->gateways()->sync($request->gateways());
 
 		return $trigger;
+	}
+
+	public function delete(DeleteNotificationTriggerRequest $request): bool
+	{
+		try {
+			$notificationTrigger = NotificationTrigger::with('gateways')->where('id', $request->triggerId())
+				->firstOrFail();
+		} catch (ModelNotFoundException) {
+			return false;
+		}
+
+		if ($notificationTrigger->user()?->userId !== $request->get('user')?->userId) {
+			return false;
+		}
+
+		return $notificationTrigger->delete();
 	}
 }

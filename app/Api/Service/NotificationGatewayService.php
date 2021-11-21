@@ -20,7 +20,7 @@ class NotificationGatewayService
 			]);
 
 			return true;
-		} catch (\Exception $e) {
+		} catch (\Exception) {
 			return false;
 		}
 	}
@@ -40,7 +40,7 @@ class NotificationGatewayService
 		try {
 			$notificationGateway = NotificationGateway::where('userId', $request->get('user')->userId)
 				->where('id', $request->gatewayId())->firstOrFail();
-		} catch (ModelNotFoundException $e) {
+		} catch (ModelNotFoundException) {
 			return false;
 		}
 
@@ -54,7 +54,7 @@ class NotificationGatewayService
 				->where('type', $gatewayType)->firstOrFail();
 
 			return true;
-		} catch (ModelNotFoundException $e) {
+		} catch (ModelNotFoundException) {
 			return false;
 		}
 	}
