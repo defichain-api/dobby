@@ -57,7 +57,7 @@ return [
 
 	'prefix' => env(
 		'HORIZON_PREFIX',
-		Str::slug(sprintf('%s %s',env('APP_NAME', 'dobby'), env('app_env', 'local')), '_') . '_queues:'
+		Str::slug(sprintf('%s %s', env('APP_NAME', 'dobby'), env('app_env', 'local')), '_') . '_queues:'
 	),
 
 	/*
@@ -71,7 +71,20 @@ return [
 	|
 	*/
 
-	'middleware' => ['web'],
+	'middleware' => ['web', 'horizonBasicAuth'],
+
+	/*
+	|--------------------------------------------------------------------------
+	| Basic Auth
+	|--------------------------------------------------------------------------
+	|
+	| to protect the backend, we're using basic auth
+	*/
+
+	'basic_auth' => [
+		'username' => env('HORIZON_BASIC_AUTH_USERNAME', 'testing_dobby'),
+		'password' => env('HORIZON_BASIC_AUTH_PASSWORD', 'testing_dobby'),
+	],
 
 	/*
 	|--------------------------------------------------------------------------
