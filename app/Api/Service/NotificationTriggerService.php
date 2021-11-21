@@ -6,7 +6,6 @@ use App\Api\Requests\CreateNotificationTriggerRequest;
 use App\Api\Requests\DeleteNotificationTriggerRequest;
 use App\Api\Requests\UpdateNotificationTriggerRequest;
 use App\Models\NotificationTrigger;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class NotificationTriggerService
@@ -44,7 +43,7 @@ class NotificationTriggerService
 		try {
 			$notificationTrigger = NotificationTrigger::with('gateways')->where('id', $request->triggerId())
 				->firstOrFail();
-		} catch (ModelNotFoundException $e) {
+		} catch (ModelNotFoundException) {
 			return false;
 		}
 
