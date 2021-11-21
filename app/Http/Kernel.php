@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\HorizonBasicAuthMiddleware;
 use App\Http\Middleware\UneditableDemoMiddleware;
 use App\Http\Middleware\WebAppAuthMiddleware;
 use Fruitcake\Cors\HandleCors;
@@ -31,7 +32,7 @@ class Kernel extends HttpKernel
 
 		'api' => [
 			// \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-//			'throttle:api',
+			//			'throttle:api',
 			HandleCors::class,
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
 		],
@@ -48,5 +49,6 @@ class Kernel extends HttpKernel
 		'verified'         => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 		'webapp_auth'      => WebAppAuthMiddleware::class,
 		'uneditable_demo'  => UneditableDemoMiddleware::class,
+		'horizonBasicAuth' => HorizonBasicAuthMiddleware::class,
 	];
 }

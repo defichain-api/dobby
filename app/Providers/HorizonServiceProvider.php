@@ -14,7 +14,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
 		Horizon::night();
 	}
 
-	protected function authorization()
+	protected function authorization(): void
 	{
 		Horizon::auth(function () {
 			return true;
