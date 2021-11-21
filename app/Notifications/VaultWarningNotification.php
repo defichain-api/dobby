@@ -28,7 +28,7 @@ class VaultWarningNotification extends BaseNotification implements ShouldQueue
 						$notificationTrigger->ratio),
 				])
 			)
-			->file(storage_path('app/images/notifications/telegram_warning.png'), 'photo')
+			->file(storage_path('app/img/notification/telegram_warning.png'), 'photo')
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.30'),
 				sprintf('snooze_%s_30', $notificationTrigger->id))
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.60'), sprintf('snooze_%s_60',
