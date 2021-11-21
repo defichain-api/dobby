@@ -33,6 +33,9 @@ class PruneInactiveUsersCommand extends Command
 			$afterDays
 		));
 		$users->each(function (User $user) {
+			if (\Str::contains($user->id(), 'demo')) {
+				return;
+			}
 			$user->notificationGateways()->delete();
 			$this->info(sprintf('deleted notification gateways for user %s', $user->id()));
 			if ($user->delete()) {
