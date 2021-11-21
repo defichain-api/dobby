@@ -27,7 +27,7 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault, $notificationTrigger->ratio),
 				])
 			)
-			->file(storage_path('app/notification_images/telegram_info.png'), 'photo')
+			->file(storage_path('app/images/notifications/telegram_info.png'), 'photo')
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.30'),
 				sprintf('snooze_%s_30', $notificationTrigger->id))
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.60'),

@@ -26,7 +26,7 @@ class DailySummaryNotification extends BaseNotification implements ShouldQueue
 					'loan_value'        => round($this->vault->loanValue, 2),
 				])
 			)
-			->file(storage_path('app/notification_images/telegram_daily.png'), 'photo')
+			->file(storage_path('app/images/notifications/telegram_daily.png'), 'photo')
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
 	}
 
