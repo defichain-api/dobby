@@ -17,7 +17,7 @@ export function initFromLocalStorage ({ commit }) {
     }
 
     if (settings && Object.keys(settings).length > 0) {
-        commit('IMPORT_ALL', settings)
+        commit('importAll', settings)
     }
     */
 }
@@ -30,5 +30,5 @@ export function initFromLocalStorage ({ commit }) {
  * @param {*} value
  */
 export function set({ commit }, key, value) {
-    commit('SET', key, value)
+    commit('set', key, value)
 }

@@ -1,13 +1,13 @@
 /**
  * Mutations for Settings
  */
-export function SET(state, key, value) {
+export function set(state, key, value) {
 
     //Vue.set(state, key, value)
     state = { ...state, key: value };
 
     // add setting to local storage
-    localStorage.setItem('settings', JSON.stringify(state.settings))
+    localStorage.setItem('dobbySettings', JSON.stringify(state.settings))
 
 }
 
@@ -18,6 +18,6 @@ export function SET(state, key, value) {
  * @param {*} state
  * @param {*} settings
  */
-export function IMPORT_ALL(state, settings) {
-    Vue.set(state, 'settings', settings)
+export function importAll(state, settings) {
+    Vue.set(state, 'dobbySettings', settings)
 }

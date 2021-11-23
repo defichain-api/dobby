@@ -1,6 +1,6 @@
 export default function () {
     return {
-        userId: "demo-demo-demo-demo-demodemodemo",
+        userId: 'demo-demo-demo-demo-demodemodemo',
         vaults: [
             /*
             {
