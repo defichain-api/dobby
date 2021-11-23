@@ -46,7 +46,12 @@ module.exports = configure(function (ctx) {
       vueRouterMode: "hash", // available values: 'hash', 'history'
 
       // Enable .env file for configuration
-      env: require('dotenv').config().parsed,
+      env: {
+        API_URL: 'https://api.defichain-dobby.com',
+        LOCAL_STORAGE_ACCOUNT_ID_KEY: 'dobbyAccount',
+        LOCAL_SETTINGS_KEY: 'dobbySettings',
+        ...(require('dotenv').config().parsed),
+      },
 
       // transpile: false,
       // publicPath: '/',
