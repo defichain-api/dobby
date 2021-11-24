@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\PruneInactiveUsersCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
 use App\Console\Commands\UpdateVaultDataCommand;
 use App\Console\Commands\UpdateLoanSchemeCommand;
@@ -10,23 +11,30 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    protected $commands = [
-	    UpdateVaultDataCommand::class,
-	    UpdateLoanSchemeCommand::class,
-	    UpdateFixedIntervalPriceCommand::class,
-    ];
+	protected $commands = [
+		UpdateVaultDataCommand::class,
+		UpdateLoanSchemeCommand::class,
+		UpdateFixedIntervalPriceCommand::class,
+		PruneInactiveUsersCommand::class,
+	];
 
-    protected function schedule(Schedule $schedule): void
-    {
-         $schedule->command(UpdateVaultDataCommand::class, ['--max=100'])->everyFiveMinutes();
-         $schedule->call(UpdateLoanSchemeCommand::class)->daily();
-         $schedule->call(UpdateFixedIntervalPriceCommand::class)->everyThirtyMinutes();
-    }
+	protected function schedule(Schedule $schedule): void
+	{
+		$schedule->command(UpdateVaultDataCommand::class, ['--max=100'])
+			->everyFiveMinutes()
+			->withoutOverlapping();
+		$schedule->command(UpdateLoanSchemeCommand::class)
+			->daily();
+		$schedule->command(UpdateFixedIntervalPriceCommand::class)
+			->everyThirtyMinutes();
+		$schedule->command(PruneInactiveUsersCommand::class)
+			->weekly();
+	}
 
-    protected function commands(): void
-    {
-        $this->load(__DIR__.'/Commands');
+	protected function commands(): void
+	{
+		$this->load(__DIR__ . '/Commands');
 
-        require base_path('routes/console.php');
-    }
+		require base_path('routes/console.php');
+	}
 }
