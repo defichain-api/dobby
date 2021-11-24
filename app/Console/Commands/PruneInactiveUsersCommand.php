@@ -36,7 +36,7 @@ class PruneInactiveUsersCommand extends Command
 			if (\Str::contains($user->id(), 'demo')) {
 				return;
 			}
-			$user->notificationGateways()->delete();
+			$user->gateways()->delete();
 			$this->info(sprintf('deleted notification gateways for user %s', $user->id()));
 			if ($user->delete()) {
 				$this->info(sprintf('deleted user %s', $user->id()));

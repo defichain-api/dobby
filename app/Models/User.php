@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Exceptions\NotificationTriggerNotAvailableException;
+use App\Models\Concerns\UseNotificationConfig;
 use App\Models\Concerns\UsesUuidPrimary;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
 
@@ -21,7 +23,7 @@ use Illuminate\Support\ItemNotFoundException;
  */
 class User extends Model
 {
-	use HasFactory, UsesUuidPrimary;
+	use HasFactory, UsesUuidPrimary, Notifiable, UseNotificationConfig;
 
 	protected $primaryKey = 'userId';
 	protected $fillable = [
@@ -67,14 +69,19 @@ class User extends Model
 				->sortBy('ratio')
 				->where('ratio', '>=', $ratio)
 				->firstOrFail();
-		} catch (ItemNotFoundException $e) {
+		} catch (ItemNotFoundException) {
 			throw new NotificationTriggerNotAvailableException();
 		}
 	}
 
-	public function notificationGateways(): HasMany
+	public function gateways(): HasMany
 	{
 		return $this->hasMany(NotificationGateway::class, 'userId', 'userId')
 			->with('triggers');
+	}
+
+	public function preferredLocale(): string
+	{
+		return $this->language ?? config('app.locale');
 	}
 }
