@@ -15,7 +15,7 @@ class WebAppAuthMiddleware
 		$webAppUserId = $request->header('x-user-auth', null);
 		try {
 			$webAppUser = User::findOrFail($webAppUserId);
-		} catch (ModelNotFoundException $e) {
+		} catch (ModelNotFoundException) {
 			return response()->json([
 				'state'  => 'error',
 				'reason' => 'not authorized',

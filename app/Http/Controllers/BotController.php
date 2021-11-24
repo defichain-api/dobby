@@ -18,7 +18,7 @@ class BotController
 
 		try {
 			$message = $botMan->getMessages()[0]->getText();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return;
 		}
 

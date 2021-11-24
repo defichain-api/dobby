@@ -16,7 +16,7 @@ class UpdateFixedIntervalPriceCommand extends Command
 	{
 		try {
 			$rawPrices = $apiClient->getFixedIntervalPrices();
-		} catch (DefichainApiException $e) {
+		} catch (DefichainApiException) {
 			return;
 		}
 

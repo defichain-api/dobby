@@ -16,7 +16,7 @@ class UpdateLoanSchemeCommand extends Command
 	{
 		try {
 			$rawLoanSchemes = $apiClient->getLoanSchemes();
-		} catch (DefichainApiException $e) {
+		} catch (DefichainApiException) {
 			return;
 		}
 
