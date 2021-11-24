@@ -11,7 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use NotificationChannels\Telegram\TelegramFile;
 use Spatie\WebhookServer\WebhookCall;
 
-class VaultInfoNotification extends BaseNotification implements ShouldQueue
+class VaultInfoTriggerNotification extends BaseTriggerNotification implements ShouldQueue
 {
 	use Queueable;
 

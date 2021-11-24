@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use NotificationChannels\Telegram\TelegramMessage;
 use Spatie\WebhookServer\WebhookCall;
 
-class LiquidatedNotification extends BaseNotification implements ShouldQueue
+class InLiquidationTriggerNotification extends BaseTriggerNotification implements ShouldQueue
 {
 	use Queueable;
 
@@ -17,8 +17,9 @@ class LiquidatedNotification extends BaseNotification implements ShouldQueue
 	{
 		return TelegramMessage::create()
 			->content(
-				__('notifications/telegram/liquidated.message', [
-					'vault_id' => str_truncate_middle($this->vault->vaultId, 15, '...'),
+				__('notifications/telegram/in_liquidation.message', [
+					'vault_id'     => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'block_height' => $this->vault->liquidationHeight,
 				])
 			)
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
@@ -32,9 +33,10 @@ class LiquidatedNotification extends BaseNotification implements ShouldQueue
 		return WebhookCall::create()
 			->url($notificationTrigger->webhookGateway()->value)
 			->payload([
-				'type' => NotificationTriggerType::LIQUIDATED,
+				'type' => NotificationTriggerType::IN_LIQUIDATION,
 				'data' => [
-					'vault_id' => $this->vault->vaultId,
+					'vault_id'     => $this->vault->vaultId,
+					'block_height' => $this->vault->liquidationHeight,
 				],
 			])->useSecret($notificationTrigger->vaultId);
 	}

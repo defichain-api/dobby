@@ -6,8 +6,8 @@ use App\Enum\NotificationTriggerType;
 use App\Events\VaultUpdatingEvent;
 use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\User;
-use App\Notifications\VaultInfoNotification;
-use App\Notifications\VaultWarningNotification;
+use App\Notifications\VaultInfoTriggerNotification;
+use App\Notifications\VaultWarningTriggerNotification;
 
 class VaultUpdatingListener
 {
@@ -25,9 +25,9 @@ class VaultUpdatingListener
 			}
 
 			if ($trigger->type === NotificationTriggerType::INFO) {
-				$trigger->notify(new VaultInfoNotification($vault));
+				$trigger->notify(new VaultInfoTriggerNotification($vault));
 			} elseif ($trigger->type === NotificationTriggerType::WARNING) {
-				$trigger->notify(new VaultWarningNotification($vault));
+				$trigger->notify(new VaultWarningTriggerNotification($vault));
 			}
 		});
 	}

@@ -6,11 +6,10 @@ use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use NotificationChannels\Telegram\TelegramFile;
 use Spatie\WebhookServer\WebhookCall;
 
-class DailySummaryNotification extends BaseNotification implements ShouldQueue
+class DailySummaryTriggerNotification extends BaseTriggerNotification implements ShouldQueue
 {
 	use Queueable;
 

@@ -11,7 +11,7 @@ use App\Models\Vault;
 use Illuminate\Notifications\Notification;
 use JetBrains\PhpStorm\ArrayShape;
 
-class BaseNotification extends Notification
+class BaseTriggerNotification extends Notification
 {
 	public function __construct(protected Vault $vault)
 	{
