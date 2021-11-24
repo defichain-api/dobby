@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property int     id
  * @property string  priceFeedId
+ * @property string  priceBase
  * @property float   activePrice
  * @property float   nextPrice
  * @property Carbon  timestamp
@@ -24,6 +25,7 @@ class FixedIntervalPrice extends Model
 	];
 	protected $fillable = [
 		'priceFeedId',
+		'priceBase',
 		'activePrice',
 		'nextPrice',
 		'timestamp',
