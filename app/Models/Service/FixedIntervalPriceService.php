@@ -4,6 +4,7 @@ namespace App\Models\Service;
 
 use App\Models\FixedIntervalPrice;
 use Carbon\Carbon;
+use Str;
 
 class FixedIntervalPriceService
 {
@@ -13,6 +14,7 @@ class FixedIntervalPriceService
 			FixedIntervalPrice::updateOrCreate([
 				'priceFeedId' => $rawPrice['priceFeedId'],
 			], [
+				'priceBase'   => Str::of($rawPrice['priceFeedId'])->explode('/')->first(),
 				'activePrice' => $rawPrice['activePrice'],
 				'nextPrice'   => $rawPrice['nextPrice'],
 				'timestamp'   => Carbon::parse($rawPrice['timestamp']),
