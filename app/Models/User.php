@@ -48,7 +48,7 @@ class User extends Model
 
 	public function notificationTrigger(): Collection
 	{
-		$gateways = $this->notificationGateways;
+		$gateways = $this->gateways;
 		$notificationTrigger = new Collection();
 		$gateways->each(function (NotificationGateway $gateway) use (&$notificationTrigger) {
 			$gateway->triggers->each(function (NotificationTrigger $trigger) use (&$notificationTrigger) {
