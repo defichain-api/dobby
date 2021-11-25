@@ -2,8 +2,10 @@
 
 namespace App\Models\Service;
 
+use App\Exceptions\FixedIntervalPriceNotAvailableException;
 use App\Models\FixedIntervalPrice;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Str;
 
 class FixedIntervalPriceService
@@ -21,5 +23,19 @@ class FixedIntervalPriceService
 				'isLive'      => $rawPrice['isLive'],
 			]);
 		}
+	}
+
+	/**
+	 * @throws FixedIntervalPriceNotAvailableException
+	 */
+	public function calculateValueForToken(string $token, float $amount): float
+	{
+		try {
+			$fixedPrice = FixedIntervalPrice::where('priceBase', $token)->firstOrFail();
+		} catch (ModelNotFoundException) {
+			throw FixedIntervalPriceNotAvailableException::token($token);
+		}
+
+		return $amount * $fixedPrice->activePrice;
 	}
 }
