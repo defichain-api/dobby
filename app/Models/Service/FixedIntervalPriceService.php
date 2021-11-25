@@ -36,6 +36,6 @@ class FixedIntervalPriceService
 			throw FixedIntervalPriceNotAvailableException::token($token);
 		}
 
-		return $amount * $fixedPrice->activePrice;
+		return round($amount * $fixedPrice->activePrice, 2);
 	}
 }
