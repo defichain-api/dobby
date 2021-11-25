@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
+use Kurozora\Cooldown\HasCooldowns;
 
 /**
  * @mixin \Eloquent
@@ -23,7 +24,7 @@ use Illuminate\Support\ItemNotFoundException;
  */
 class User extends Model
 {
-	use HasFactory, UsesUuidPrimary, Notifiable, UseNotificationConfig;
+	use HasFactory, UsesUuidPrimary, Notifiable, UseNotificationConfig, HasCooldowns;
 
 	protected $primaryKey = 'userId';
 	protected $fillable = [
