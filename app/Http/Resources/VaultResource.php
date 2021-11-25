@@ -2,8 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Service\FixedIntervalPriceService;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Request;
+use Str;
 
 /** @mixin \App\Models\Vault */
 class VaultResource extends JsonResource
@@ -18,9 +19,9 @@ class VaultResource extends JsonResource
 				'minCollateral' => $this->loanScheme->minCollaterationRatio,
 			],
 			'state'              => $this->state,
-			'collateralAmounts'  => $this->collateralAmounts,
-			'loanAmounts'        => $this->loanAmounts,
-			'interestAmounts'    => $this->interestAmounts,
+			'collateralAmounts'  => $this->amountsToArray($this->collateralAmounts),
+			'loanAmounts'        => $this->amountsToArray($this->loanAmounts),
+			'interestAmounts'    => $this->amountsToArray($this->interestAmounts),
 			'collateralValue'    => $this->collateralValue,
 			'loanValue'          => $this->loanValue,
 			'interestValue'      => $this->interestValue,
@@ -31,5 +32,25 @@ class VaultResource extends JsonResource
 			'liquidationPenalty' => $this->liquidationPenalty,
 			'batches'            => $this->batches,
 		];
+	}
+
+	public function amountsToArray(array $rawData): array
+	{
+		$data = [];
+		foreach ($rawData as $item) {
+			$explodedItem = Str::of($item)->explode('@');
+			$amount = (float) $explodedItem->first();
+			$token = $explodedItem->last();
+			$valueUsd = rescue(fn() => app(FixedIntervalPriceService::class)->calculateValueForToken($token, $amount)
+				, null, false);
+			$data[] = [
+				'raw'      => $item,
+				'amount'   => $amount,
+				'token'    => $token,
+				$this->mergeWhen(isset($valueUsd), ['valueUsd' => $valueUsd]),
+			];
+		}
+
+		return $data;
 	}
 }
