@@ -20,6 +20,8 @@ class VaultWarningNotification extends BaseNotification implements ShouldQueue
 		return TelegramFile::create()
 			->content(
 				__('notifications/telegram/warning.message', [
+					'vault_id'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
 					'collateral_amount' => round($this->vault->collateralValue, 2),
