@@ -124,7 +124,7 @@ return [
 		'options' => [
 			'cluster' => env('REDIS_CLUSTER', 'redis'),
 			'prefix'  => env('REDIS_PREFIX',
-				sprintf('%s %s', env('APP_NAME', 'dobby'), env('app_env', 'local')) . '_database_'),
+				sprintf('%s_%s', env('APP_NAME', 'dobby'), env('APP_ENV', 'local')) . '_database_'),
 		],
 
 		'default' => [
