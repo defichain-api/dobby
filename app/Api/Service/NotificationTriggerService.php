@@ -27,7 +27,7 @@ class NotificationTriggerService
 	 */
 	public function update(UpdateNotificationTriggerRequest $request): NotificationTrigger
 	{
-		$trigger = NotificationTrigger::where('vaultId', $request->vaultId())
+		$trigger = NotificationTrigger::whereId($request->triggerId())
 			->first();
 		$trigger->update([
 			'ratio' => $request->ratio(),
@@ -47,7 +47,7 @@ class NotificationTriggerService
 			return false;
 		}
 
-		if ($notificationTrigger->user()?->userId !== $request->get('user')?->userId) {
+		if ($notificationTrigger->user()?->id !== $request->get('user')?->id) {
 			return false;
 		}
 

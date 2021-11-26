@@ -10,7 +10,7 @@ class UserResource extends JsonResource
 	public function toArray($request): array
 	{
 		return [
-			'userId'   => $this->userId,
+			'userId'   => $this->id,
 			'language' => $this->language,
 			'theme'    => $this->theme,
 			'vaults'   => VaultResource::collection($this->vaults),

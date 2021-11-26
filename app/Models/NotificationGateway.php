@@ -29,7 +29,7 @@ class NotificationGateway extends Model
 
 	public function user(): BelongsTo
 	{
-		return $this->belongsTo(User::class, 'userId', 'userId');
+		return $this->belongsTo(User::class, 'userId', 'id');
 	}
 
 	public function triggers(): BelongsToMany

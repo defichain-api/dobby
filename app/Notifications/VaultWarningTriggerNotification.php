@@ -48,7 +48,7 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
 		return WebhookCall::create()
-			->url($notificationTrigger->webhookGateway()->value)
+			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([
 				'type' => NotificationTriggerType::WARNING,
 				'data' => [

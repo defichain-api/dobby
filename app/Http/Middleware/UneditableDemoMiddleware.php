@@ -13,7 +13,7 @@ class UneditableDemoMiddleware
 		/** @var \App\Models\User $user */
 		$user = $request->get('user', null);
 
-		if (isset($user) && \Str::contains($user->id(), 'demo')) {
+		if (isset($user) && \Str::contains($user->id, 'demo')) {
 			return response()->json([
 				'state'   => 'error',
 				'message' => 'demo data cant be modified',

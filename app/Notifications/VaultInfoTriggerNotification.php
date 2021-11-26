@@ -58,7 +58,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
 		return WebhookCall::create()
-			->url($notificationTrigger->webhookGateway()->value)
+			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([
 				'type' => NotificationTriggerType::INFO,
 				'data' => [

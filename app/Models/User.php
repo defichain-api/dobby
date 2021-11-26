@@ -16,7 +16,7 @@ use Kurozora\Cooldown\HasCooldowns;
 
 /**
  * @mixin \Eloquent
- * @property string     userId
+ * @property string     id
  * @property string     language
  * @property string     theme
  * @property Collection vaults
@@ -26,9 +26,8 @@ class User extends Model
 {
 	use HasFactory, UsesUuidPrimary, Notifiable, UseNotificationConfig, HasCooldowns;
 
-	protected $primaryKey = 'userId';
 	protected $fillable = [
-		'userId',
+		'id',
 		'language',
 		'theme',
 	];
@@ -36,11 +35,6 @@ class User extends Model
 		'created_at',
 		'updated_at',
 	];
-
-	public function id(): string
-	{
-		return $this->userId;
-	}
 
 	public function vaults(): BelongsToMany
 	{
@@ -77,7 +71,7 @@ class User extends Model
 
 	public function gateways(): HasMany
 	{
-		return $this->hasMany(NotificationGateway::class, 'userId', 'userId')
+		return $this->hasMany(NotificationGateway::class, 'userId', 'id')
 			->with('triggers');
 	}
 

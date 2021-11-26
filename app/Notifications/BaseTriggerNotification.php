@@ -5,13 +5,10 @@ namespace App\Notifications;
 use App\Channel\WebhookChannel;
 use App\Enum\CooldownTypes;
 use App\Enum\NotificationGatewayType;
-use App\Enum\QueueName;
 use App\Models\NotificationTrigger;
 use App\Models\Vault;
-use Illuminate\Notifications\Notification;
-use JetBrains\PhpStorm\ArrayShape;
 
-class BaseTriggerNotification extends Notification
+class BaseTriggerNotification extends BaseNotification
 {
 	public function __construct(protected Vault $vault)
 	{
@@ -33,15 +30,5 @@ class BaseTriggerNotification extends Notification
 		}
 
 		return $methods;
-	}
-
-	#[ArrayShape(['telegram' => "string", 'mail' => "string", WebhookChannel::class => "string"])]
-	public function viaQueues(): array
-	{
-		return [
-			'telegram'            => QueueName::NOTIFICATION_TELEGRAM_QUEUE,
-			'mail'                => QueueName::NOTIFICATION_EMAIL_QUEUE,
-			WebhookChannel::class => QueueName::NOTIFICATION_WEBHOOK_QUEUE,
-		];
 	}
 }

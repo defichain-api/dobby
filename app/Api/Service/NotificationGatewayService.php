@@ -14,7 +14,7 @@ class NotificationGatewayService
 	{
 		try {
 			NotificationGateway::create([
-				'userId' => $request->get('user')->userId,
+				'userId' => $request->get('user')->id,
 				'type'   => $request->type(),
 				'value'  => $request->value(),
 			]);
@@ -38,7 +38,7 @@ class NotificationGatewayService
 	{
 
 		try {
-			$notificationGateway = NotificationGateway::where('userId', $request->get('user')->userId)
+			$notificationGateway = NotificationGateway::where('userId', $request->get('user')->id)
 				->where('id', $request->gatewayId())->firstOrFail();
 		} catch (ModelNotFoundException) {
 			return false;
