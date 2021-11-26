@@ -19,7 +19,8 @@ class UserVaultTable extends Migration
 				->cascadeOnDelete();
 			$table->foreign('vaultId')
 				->references('vaultId')
-				->on('vaults');
+				->on('vaults')
+				->cascadeOnDelete();
 		});
 	}
 

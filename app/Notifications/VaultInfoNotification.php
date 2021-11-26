@@ -20,11 +20,14 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 		return TelegramFile::create()
 			->content(
 				__('notifications/telegram/info.message', [
+					'vault_id'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
 					'collateral_amount' => round($this->vault->collateralValue, 2),
 					'loan_value'        => round($this->vault->loanValue, 2),
-					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault, $notificationTrigger->ratio),
+					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault,
+						$notificationTrigger->ratio),
 				])
 			)
 			->file(storage_path('app/img/notification/telegram_info.png'), 'photo')
@@ -36,7 +39,7 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 				sprintf('snooze_%s_180', $notificationTrigger->id))
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.360'),
 				sprintf('snooze_%s_360', $notificationTrigger->id))
-			->button(__('notifications/telegram/info.button'), config('app.url'));
+			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
 	}
 
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
@@ -64,7 +67,8 @@ class VaultInfoNotification extends BaseNotification implements ShouldQueue
 					'current_ratio'     => $this->vault->collateralRatio,
 					'collateral_amount' => round($this->vault->collateralValue, 2),
 					'loan_value'        => round($this->vault->loanValue, 2),
-					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault, $notificationTrigger->ratio),
+					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault,
+						$notificationTrigger->ratio),
 				],
 			])->useSecret($notificationTrigger->vaultId);
 	}
