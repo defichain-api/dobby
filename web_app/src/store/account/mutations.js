@@ -7,8 +7,8 @@ import { LocalStorage } from 'quasar'
 /**
  * Set a dobby user id
  *
- * @param {*} state
- * @param {*} userId
+ * @param {object} state
+ * @param {string} userId
  */
 export function setUserId(state, userId) {
     state.userId = userId
@@ -16,8 +16,66 @@ export function setUserId(state, userId) {
     LocalStorage.set(process.env.LOCAL_STORAGE_ACCOUNT_ID_KEY, userId)
 }
 
-/*
+// ----------------------------------------------------------------------------------
+
+/**
+ * Add another vault to the vault list
+ *
+ * @param {object} state
+ * @param {object} vaultData
+ */
 export function addVault(state, vaultData) {
-    state.vaults.push(vaultData)
+    if (state.vaults.length == 0) {
+        // vault list is empty
+        state.vaults = [...state.vaults, vaultData]
+        if (process.env.DEV) { console.log("[DEBUG] ... successfully added " + vaultData.vaultId) }
+    } else {
+
+        // check if this vault already exists, update data if already existing
+        state.vaults.forEach((vault, index) => {
+            if (vault.vaultId == vaultData.vaultId) {
+                // Update existing vault
+                state.vaults[index] = { ...state.vaults[index], vaultData }
+                if (process.env.DEV) { console.log("[DEBUG] ... successfully updated " + vaultData.vaultId) }
+                return
+            }
+        })
+
+        // Add new vault entry
+        state.vaults = [...state.vaults, vaultData]
+        if (process.env.DEV) { console.log("[DEBUG] ... successfully added " + vaultData.vaultId) }
+    }
 }
-*/
+
+// ----------------------------------------------------------------------------------
+
+/**
+ * Add a loan to the loan list in state
+ * @param {object} state
+ * @param {object} loanData
+ */
+export function addLoan(state, loanData) {
+    if (state.loans.length == 0) {
+        // vault list is empty
+        state.loans = [...state.loans, loanData]
+        if (process.env.DEV) { console.log("[DEBUG] ... successfully added " + loanData.vaultId) }
+    } else {
+        /*
+        // check if this vault already exists, update data if already existing
+        state.vaults.forEach((vault, index) => {
+            if (vault.vaultId == vaultData.vaultId) {
+                // Update existing vault
+                state.vaults[index] = { ...state.vaults[index], vaultData }
+                if (process.env.DEV) { console.log("[DEBUG] ... successfully updated " + vaultData.vaultId) }
+                return
+            }
+        })
+
+        // Add new vault entry
+        state.vaults = [...state.vaults, vaultData]
+        if (process.env.DEV) { console.log("[DEBUG] ... successfully added " + vaultData.vaultId) }
+        */
+    }
+}
+
+// ----------------------------------------------------------------------------------

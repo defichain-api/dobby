@@ -8,8 +8,8 @@
       <div class="q-pa-lg" v-if="!showSetup">
         <div class="text-h4 q-my-lg">Hello, friend <q-icon name="fas fa-hat-wizard" /></div>
         <div class="text-body1 text-italic q-mt-lg">
-          This is Dobby - your personal DeFiChain house elf. Dobby is happy because you found your way to him.
-          He is very useful because he keeps you informed about your DeFiChain loans when they get in trouble
+          This is Dobby - your personal <a href="https://defichain.com/">DeFiChain</a> house elf. Dobby is happy because you found your way to him.
+          He is very useful because he keeps you informed about your <a href="https://defichain.com/">DeFiChain</a> loans when they get in trouble
           <br />
           <q-chip v-if="!showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-info-circle" @click="showMore = !showMore">Read more...</q-chip>
           <q-chip v-if="showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-compress-alt" @click="showMore = !showMore">Show less</q-chip>
@@ -37,8 +37,14 @@
         </transition>
         <q-card flat bordered class="q-mt-xl text-center">
           <q-card-section>
-            <q-icon name="fas fa-socks" size="xl" />
+            <!-- <q-icon name="fas fa-socks" size="xl" /> -->
+            <q-img
+            src="/img/dobby-logo.png"
+            spinner-color="white"
+            style="height: 60px; max-width: 60px"
+          />
           </q-card-section>
+          <q-separator inset />
           <q-card-section>
               <q-btn
                 unelevated
@@ -46,7 +52,7 @@
                 color="primary"
                 label="Start Setup (It's easy)"
                 class="full-width "
-                icon="fas fa-magic"
+                icon="fal fa-wand-magic"
                 @click="showSetup = !showSetup"
               ></q-btn>
               <div class="q-my-md">
@@ -148,11 +154,17 @@
               icon="fas fa-question"
               :done="step > 1"
             >
-              Dobby will ask you for your vaults and automatically create a pseudo-anonymous dobby
-              account for you. This account is neccessary for connecting your vaults with
-              your notification channels. This app can't maniplulate your loans.
-              It just shows and uses publicly available data.
-
+              <p>
+                Dobby will ask you for your vaults and automatically create a pseudo-anonymous dobby
+                account for you.
+              </p>
+              <p>
+                This account is free and neccessary for connecting your vaults with your notification channels.
+              </p>
+              <p>
+                This app can't maniplulate your loans and does not track your activities.
+                It just shows and uses publicly available data.
+              </p>
               <q-stepper-navigation>
                 <q-btn unelevated rounded @click="step = 2" color="primary" label="Continue" />
               </q-stepper-navigation>
@@ -272,16 +284,16 @@ export default defineComponent({
   name: 'PageIndex',
   data () {
     return {
-      showMore: (process.env.DEV) ? false : false,
-      showSetup: (process.env.DEV) ? true : false,
-      step: (process.env.DEV) ? 2 : 1,
-      addresses: (process.env.DEV) ? [
+      showMore: (process.env.DEV && process.env.PREFILL_SETUP) ? false : false,
+      showSetup: (process.env.DEV && process.env.PREFILL_SETUP) ? false : false,
+      step: (process.env.DEV && process.env.PREFILL_SETUP) ? 2 : 1,
+      addresses: (process.env.DEV && process.env.PREFILL_SETUP) ? [
         //'tedT9idRxCzmmxT4sST9gHmAZ5Mh24a2Wm',
         '054d66b6837355384e888c4ea3dd06bd1bf30a4dfa38c625f8fd430e9d321607',
       ] : [],
-      userId: (process.env.DEV) ? 'c00e07e1-0705-47a1-aef5-8544fe13adc1' : '',
+      userId: (process.env.DEV && process.env.PREFILL_SETUP) ? 'c00e07e1-0705-47a1-aef5-8544fe13adc1' : '',
 
-      addressToAdd: (process.env.DEV) ? 'tedT9idRxCzmmxT4sST9gHmAZ5Mh24a2Wm' : '',
+      addressToAdd: (process.env.DEV && process.env.PREFILL_SETUP) ? 'tedT9idRxCzmmxT4sST9gHmAZ5Mh24a2Wm' : '',
     }
   },
   methods: {
@@ -289,8 +301,12 @@ export default defineComponent({
      * Set dobby to demo mode.
      * Essentially, this means setting the user id to a specific one
      */
-    prepareDemo: function () {
-      this.userId = "demo-demo-demo-demo-demodemodemo"
+    prepareDemo: async function () {
+
+      await this.$store.dispatch('account/setUserId', process.env.DEMO_ACCOUNT_ID)
+      this.$store.dispatch('account/loadUserData')
+
+      this.$router.push({ name: 'dashboard' })
     },
     /**
      * Adding a new addres to the addresses array at first position.

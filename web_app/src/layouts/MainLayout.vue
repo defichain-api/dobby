@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" :class="{'bg-blue-grey-2': !darkMode }">
     <q-ajax-bar
       ref="bar"
       position="top"
@@ -7,7 +7,7 @@
       size="3px"
       skip-hijack
     />
-    <q-header elevated class="q-py-xs" height-hint="58">
+    <q-header class="q-py-xs" height-hint="58">
       <q-toolbar>
         <q-btn
           flat
@@ -19,43 +19,23 @@
         />
 
         <q-btn flat no-caps no-wrap class="q-ml-xs">
-          <q-icon name="fas fa-socks" size="28px" />
+          <q-icon name="fad fa-socks" size="28px" />
+          <!-- <q-img
+            src="/img/dobby-logo-white-border.png"
+            spinner-color="white"
+            style="height: 32px; max-width: 32px"
+          /> -->
           <q-toolbar-title shrink class="text-weight-bold">
             D.O.B.B.Y.
           </q-toolbar-title>
         </q-btn>
-        <!--
-        <q-space />
-
-        <div class="YL__toolbar-input-container row no-wrap">
-          <q-input dense outlined square v-model="search" placeholder="Search" class="bg-white col" />
-          <q-btn class="YL__toolbar-input-btn" color="grey-3" text-color="grey-8" icon="search" unelevated />
-        </div>
-        -->
 
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <!--
-          <q-btn round dense flat color="grey-8" icon="video_call" v-if="$q.screen.gt.sm">
-            <q-tooltip>Create a video or post</q-tooltip>
-          </q-btn>
-          <q-btn round dense flat color="grey-8" icon="apps" v-if="$q.screen.gt.sm">
-            <q-tooltip>Apps</q-tooltip>
-          </q-btn>
-          <q-btn round dense flat color="grey-8" icon="message" v-if="$q.screen.gt.sm">
-            <q-tooltip>Messages</q-tooltip>
-          </q-btn>
-          -->
-          <q-btn round dense flat icon="fas fa-bell">
-            <q-badge color="accent" floating>
-              2
-            </q-badge>
-            <q-tooltip>Notifications</q-tooltip>
-          </q-btn>
           <q-btn round flat>
-            <q-avatar size="26px">
-              <q-icon name="fas fa-user-astronaut" />
+            <q-avatar size="35px" class="text-caption">
+              <q-icon name="far fa-hat-wizard" style="font-size: 1.5em" />
             </q-avatar>
             <q-tooltip>Account</q-tooltip>
             <q-menu
@@ -81,7 +61,7 @@
 
                 <div class="column items-center">
                   <q-avatar size="72px">
-                    <q-icon name="fas fa-user-astronaut" />
+                    <q-icon name="far fa-hat-wizard" />
                   </q-avatar>
 
                   <div class="text-subtitle1 q-mt-md q-mb-xs">F4B...3CB</div>
@@ -192,7 +172,7 @@ export default {
     const leftDrawerOpen = ref(false)
     const search = ref('')
     const bar = ref(null)
-    $q.dark.set(true)
+    //$q.dark.set(true)
 
     function toggleLeftDrawer () {
       leftDrawerOpen.value = !leftDrawerOpen.value
@@ -205,11 +185,13 @@ export default {
 
       toggleLeftDrawer,
 
+      darkMode: $q.dark.isActive,
       colorScheme: false,
       autoReload: true,
       links1: [
         { icon: 'fab fa-fort-awesome-alt', text: 'Dashboard' },
-        { icon: 'fas fa-dumpster-fire', text: 'Needs Your Attention', badge: 2 },
+        // { icon: 'fas fa-dumpster-fire', text: 'Needs Your Attention', badge: 2 },
+        { icon: 'fas fa-dumpster-fire', text: 'Needs Your Attention' },
       ],
       /*
       links2: [
@@ -274,127 +256,3 @@ export default {
     &:hover
       color: #000
 </style>
-
-
-
-
-
-<!--
-<template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
-</template>
-
-<script>
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
-
-import { defineComponent, ref } from 'vue'
-
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
-
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
-</script>
--->
