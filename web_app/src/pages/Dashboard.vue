@@ -1,261 +1,235 @@
 <template>
-  <div class="q-pa-md text-h4">Your Vaults <q-icon name="fas fa-archive" /> </div>
+  <div class="q-pa-md text-h4" v-if="vaults.lenght > 0">Your Vaults <q-icon name="fas fa-archive" /> </div>
   <div class="q-pa-md row items-start q-gutter-md">
-    <q-card flat>
-      <q-card-section>
-        <q-btn color="primary" icon="chat" label="Change notification settings"></q-btn>
-      </q-card-section>
-    </q-card>
-    <q-card v-for="vault in vaults" :key="vault.vaultId" flat>
-      <q-card-section>
-        <div class="row items-center no-wrap">
-          <div class="col">
-            <div class="text-h6">{{ vault.collateralValue.toLocaleString($root.$i18n.locale, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} {{ vault.name }}</div>
-            <div class="text-subtitle2">{{ vault.currentRatio / 100 }}</div>
-          </div>
+
+    <!-- Show hint when no user is set -->
+    <q-card flat v-if="vaults.length == 0">
+      <q-img src="/img/banner.jpg">
+        <div class="absolute-bottom text-h6">
+          No vaults set yet
         </div>
-      </q-card-section>
+      </q-img>
 
       <q-card-section>
-        <q-linear-progress size="xs" :value="vault.currentRatio / 100" color="positive" />
-      </q-card-section>
-
-      <q-card-section class="row">
-        <div class="col-6">
-          <span class="text-h6 text-primary">$ {{ vault.loanValue.toLocaleString($root.$i18n.locale, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
-          <br>
-          <span class="text-caption">Per Share</span>
-        </div>
-        <p class="col-6 text-subtitle2">
+        <p>
+          Seems like you're new. Welcome, friend!
+        </p>
+        <p>
+          There's nothing to see on the dashboard until you have set up you dobby account.
         </p>
       </q-card-section>
+      <q-card-actions class="text-center">
+        <q-btn
+          to="setup"
+          unelevated
+          color="primary"
+          label="Go To Setup Wizard"
+          icon="fal fa-wand-magic"
+          class="full-width"
+        />
+        <q-btn
+          outline
+          rounded
+          color="accent"
+          label="Just Show Me A Demo"
+          class="q-mt-md full-width"
+          icon="fas fa-quidditch"
+          size="sm"
+          @click="prepareDemo"
+        />
+      </q-card-actions>
+    </q-card>
 
-      <q-separator />
+    <!-- Show hint when demo user is active -->
+    <!-- <q-banner  class="text-white bg-accent col-11" v-if="userId == 'demo-demo-demo-demo-demodemodemo'">
+      <p>
+        Alright, take your time to look around. Dobby will be ready to monitor your own vaults when you are. Just go to the setup wizard again whenever you like.
+      </p>
+      <template v-slot:action>
+        <q-btn to="setup" unelevated color="primary" label="Go To Setup Wizard" icon="fal fa-wand-magic" class="full-width" />
+      </template>
+    </q-banner> -->
+    <q-card flat v-if="userId == demoAccountID">
+      <q-card-section>
+        <div class="text-h6">Demo Mode</div>
+        <div class="text-subtitle2">take your time to look around :)</div>
+      </q-card-section>
 
-      <q-card-section class="q-py-xs bg-positive" >
+      <q-separator inset />
 
+      <q-card-section>
+        <p>
+          Dobby will be ready to monitor your own vaults when you are. Just go to the setup wizard again whenever you like.
+        </p>
+        <q-btn to="setup" unelevated color="primary" label="Go To Setup Wizard" icon="fal fa-wand-magic" class="full-width"></q-btn>
       </q-card-section>
     </q-card>
   </div>
-
-  <q-separator />
-
-  <div class="q-pa-md text-h4">Your Loans <q-icon name="fas fa-hand-holding-usd" /></div>
-
   <div class="q-pa-md row items-start q-gutter-md">
-
-    <q-card v-for="loan in loans" :key="loan.name" flat>
+    <!-- <q-card flat>
       <q-card-section>
-        <div class="row items-center no-wrap">
-          <div class="col-auto">
-            <q-avatar>
-              <q-icon :name="loan.icon"></q-icon>
-            </q-avatar>
-          </div>
-          <div class="col">
-            <div class="text-h6">{{ loan.amount.toLocaleString($root.$i18n.locale, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }} {{ loan.name }}</div>
-            <div class="text-subtitle2">{{ loan.symbol }}</div>
+        <q-btn color="primary" icon="chat" label="Change notification settings"></q-btn>
+      </q-card-section>
+    </q-card>-->
+    <q-card v-for="vault in vaults" :key="vault.vaultId" flat>
+      <q-card-section
+        class="q-py-xs"
+        style="height: 15px"
+        :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'mayLiquidate', 'bg-negative': vault.state == 'inLiquidation'}"
+      >
+      </q-card-section>
+
+      <q-card-section>
+        <div class="row no-wrap text-center">
+          <div class="col-12">
+            <div class="text-caption">{{ vault.ownerAddress }}</div>
           </div>
         </div>
       </q-card-section>
 
-      <q-card-section>
-        <q-linear-progress size="xs" :value="loan.indicatorNumber" :color="loan.indicatorColor" />
+      <q-separator />
+
+      <q-card-section class="main-info" v-if="vault.state != 'inLiquidation'">
+        <div class="row items-center no-wrap">
+          <div :class="{'col-6': vault.state != 'inLiquidation', 'col-12': vault.state == 'inLiquidation'}">
+            <div class="text-h6">{{ vault.loanValue.toLocaleString(locale, numberFormats.currency) }}</div>
+            <div class="caption">Loan Value</div>
+          </div>
+          <div v-if="vault.state != 'inLiquidation'" class="col-6">
+            <div class="text-h3 text-primary">{{ vault.collateralRatio }} %</div>
+            <div class="caption">Coll. Ratio</div>
+          </div>
+        </div>
       </q-card-section>
 
-      <q-card-section class="row">
+      <q-card-section class="main-info" v-if="vault.state == 'inLiquidation'">
+        <div class="row items-center no-wrap">
+          <div class="col">
+            <div class="text-h6">In Liquidation</div>
+            <div class="text-subtitle2">At Block Height {{ vault.liquidationHeight }}</div>
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-card-section class="coll-progress">
+        <div class="row">
+          <!-- <div class="col-2 text-left" style="font-size: 0.8em">{{ vault.loanScheme.minCollateral }} %</div> -->
+          <div class="col-12 text-center text-subtitle2">
+            <span v-if="vault.state != 'inLiquidation'" style="font-size: 1em" class="text-primary">{{ awayFromLiqudation(vault) }} % To Liquidation</span>
+            <span v-if="vault.state == 'inLiquidation'">oh, oh 😭</span>
+          </div>
+          <!-- <div class="col-2 text-right" style="font-size: 0.8em">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div> -->
+        </div>
+
+        <q-linear-progress v-if="vault.state != 'inLiquidation'" size="md" :value="awayFromLiqudationRelative(vault)" :color="trackColor(vault)" :track-color="trackColor(vault)" />
+        <q-linear-progress v-if="vault.state == 'inLiquidation'" size="md" :value="0" :color="trackColor(vault)" :track-color="trackColor(vault)" />
+        <div class="row">
+          <div class="col-6 text-left">{{ vault.loanScheme.minCollateral }} %</div>
+          <div class="col-6 text-right">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div>
+        </div>
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-section class="coll-info row">
         <div class="col-6">
-          <span class="text-h6 text-primary">$ {{ loan.price.toLocaleString($root.$i18n.locale, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}</span>
-          <br>
-          <span class="text-caption">Per Share</span>
+          <span class="text-h6 text-primary" v-if="vault.state != 'inLiquidation'">{{ vault.collateralValue.toLocaleString(locale, numberFormats.currency) }}</span>
+          <span class="text-h6 text-primary" v-if="vault.state == 'inLiquidation'">Funds Frozen</span>
+          <div class="caption">Collateral Amount</div>
+        </div>
+        <div class="col-6" v-if="vault.state != 'inLiquidation'">
+          <span class="text-h6 text-primary" v-if="vault.state != 'inLiquidation'">{{ vault.loanScheme.minCollateral }} %</span>
+          <span class="text-h6 text-primary" v-if="vault.state == 'inLiquidation'">Funds Frozen</span>
+          <div class="caption">Min Coll. Ratio</div>
         </div>
         <p class="col-6 text-subtitle2">
-           $ {{ (loan.price * loan.amount).toLocaleString($root.$i18n.locale, {minimumFractionDigits: 2, maximumFractionDigits: 2}) }}
-           <!--
-          <br>
-          <span class="text-caption"><q-icon name="fas fa-wallet"></q-icon> Worth</span>-->
         </p>
       </q-card-section>
 
       <q-separator />
 
-      <q-card-section class="q-py-xs" :class="'bg-' + loan.indicatorColor">
-
+      <q-card-section class="coll-info row">
+        Add collateral worth $14444 to reach 400%
       </q-card-section>
+      <!--
+      <q-card-section
+        class="q-py-xs"
+        style="height: 15px"
+        :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'mayLiquidate', 'bg-negative': vault.state == 'inLiquidation'}" >
+      </q-card-section>
+      -->
     </q-card>
-    <!--
-    <q-card flat>
-      <q-card-section>
-        <div class="row items-center no-wrap">
-          <div class="col-auto">
-            <q-avatar>
-              <q-icon name="fab fa-twitter-square"></q-icon>
-            </q-avatar>
-          </div>
-          <div class="col">
-            <div class="text-h6">1337 Twitter</div>
-            <div class="text-subtitle2">TWTR / USD</div>
-          </div>
-        </div>
-      </q-card-section>
-
-      <q-card-section>
-        <q-linear-progress size="xs" value="0.1" color="warning" />
-      </q-card-section>
-
-      <q-card-section class="text-right">
-        <p>
-          <span class="text-h6 text-primary">$ 54.83</span>
-          <br>
-          <span class="text-caption">Per Share</span>
-        </p>
-        <p class="text-subtitle2">
-           $ 7330.771
-
-        </p>
-      </q-card-section>
-
-      <q-separator />
-
-      <q-card-section class="bg-warning q-py-xs">
-
-      </q-card-section>
-    </q-card>
-    -->
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import { mapGetters, mapActions } from 'vuex'
 
 export default defineComponent({
   name: 'PageIndex',
   data () {
     return {
-      loans: [
-        {
-          name: "USD",
-          symbol: "dUSD",
-          icon: "fas fa-dollar-sign",
-          amount: 13337.69,
-          price: 13337.69,
-          collateralizationRatio: 250,
-          loanSchemeId: "C_150",
-          indicatorColor: "positive",
-          indicatorNumber: 0.9,
-        },
-        {
-          name: "Tesla",
-          symbol: "TSLA / USD",
-          icon: "fas fa-charging-station",
-          amount: 420.69,
-          price: 1045.00,
-          collateralizationRatio: 250,
-          loanSchemeId: "C_150",
-          indicatorColor: "positive",
-          indicatorNumber: 0.9,
-        },
-        {
-          name: "Twitter",
-          symbol: "TWTR / USD",
-          icon: "fab fa-twitter-square",
-          amount: 1337,
-          price: 54.83,
-          collateralizationRatio: 250,
-          loanSchemeId: "C_150",
-          indicatorColor: "positive",
-          indicatorNumber: 0.8,
-        },
-        {
-          name: "Google",
-          symbol: "GOOG / USD",
-          icon: "fab fa-google",
-          amount: 42,
-          price: 2922.52,
-          collateralizationRatio: 250,
-          loanSchemeId: "C_150",
-          indicatorColor: "warning",
-          indicatorNumber: 0.4,
-        },
-        {
-          name: "GME",
-          symbol: "GME / USD",
-          icon: "fas fa-gamepad",
-          amount: 9001,
-          price: 182.85,
-          collateralizationRatio: 250,
-          loanSchemeId: "C_150",
-          indicatorColor: "negative",
-          indicatorNumber: 0.01,
-        }
-
-      ],
-      vaults: [
-        {
-          "name": "Vault 1",
-          "vaultId": "e507b8adb489ae772040654632aea7b30c307bc43b6a5d6e1400b6b35c200b28",
-          "loanSchemeId": "C_150",
-          "ownerAddress": "tc5Yw92oAJwqq1FzGHK4sZyX45TgmEiUhK",
-          "isUnderLiquidation": false,
-          "collateralAmounts": [
-            "9710.00000000@DFI"
-          ],
-          "loanAmount": [
-            "420.69@dTSLA",
-            "1337@dTWTR",
-          ],
-          "collateralValue": 24490.61928900,
-          "loanValue": 16381.35795762,
-          "currentRatio": 150
-        },
-        {
-          "name": "Vault 2",
-          "vaultId": "e507b8adb489ae772040654632aea7b30c307bc43b6a5d6e1400b6b35c200b28",
-          "loanSchemeId": "C_150",
-          "ownerAddress": "tc5Yw92oAJwqq1FzGHK4sZyX45TgmEiUhK",
-          "isUnderLiquidation": false,
-          "collateralAmounts": [
-            "9710.00000000@DFI"
-          ],
-          "loanAmount": [
-            "420.69@dTSLA"
-          ],
-          "collateralValue": 24490.61928900,
-          "loanValue": 16381.35795762,
-          "currentRatio": 150
-        },
-        {
-          "name": "Vault 3",
-          "vaultId": "e507b8adb489ae772040654632aea7b30c307bc43b6a5d6e1400b6b35c200b28",
-          "loanSchemeId": "C_150",
-          "ownerAddress": "tc5Yw92oAJwqq1FzGHK4sZyX45TgmEiUhK",
-          "isUnderLiquidation": false,
-          "collateralAmounts": [
-            "9710.00000000@DFI"
-          ],
-          "loanAmount": [
-            "420.69@dTSLA"
-          ],
-          "collateralValue": 24490.61928900,
-          "loanValue": 16381.35795762,
-          "currentRatio": 150
-        },
-      ],
-      vaultStates: [
-        "active",
-        "frozen",
-        "inliquidation",
-        "frozeninliquidation",
-        "mayliquidate",
-      ]
+      loans: [],
+      overCollateralizationFactor: 2,
+      numberFormats: {
+        currency: { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 },
+      },
+      demoAccountID: process.env.DEMO_ACCOUNT_ID,
+      darkMode: this.$q.dark.isActive,
     }
   },
+  methods: {
+    async prepareDemo() {
+      await this.$store.dispatch('account/setUserId', this.demoAccountID)
+      this.loadUserData
+    },
+    trackColor(vault) {
+      let color = ''
+      if (vault.state == 'active') {
+        color = 'positive'
+      } else if (vault.state == 'mayLiquidate') {
+        color = 'warning'
+      } else if (vault.state == 'inLiquidation') {
+        color = 'negative'
+      }
+      return color
+    },
+    awayFromLiqudation(vault) {
+      return vault.collateralRatio - vault.loanScheme.minCollateral
+    },
+    awayFromLiqudationRelative(vault) {
+      return this.awayFromLiqudation(vault) / (this.overCollateralizationFactor * vault.loanScheme.minCollateral)
+    }
+  },
+  computed: {
+    locale: function() {
+      return this.$root.$i18n.locale
+    },
+    ...mapGetters({
+      vaults: 'account/vaults',
+      userId: 'account/userId',
+    }),
+    ...mapActions({
+      loadUserData: 'account/loadUserData',
+    })
+  }
+
 })
 </script>
 
 <style lang="sass">
   .q-card
-    min-width: 250px
+    min-width: 290px
+
+    .main-info
+      min-height: 105px
+
+    .coll-progress
+      min-height: 70px
+
+    .coll-info
+      min-height: 100px
 
   body.screen--xs
     .q-card
@@ -263,5 +237,5 @@ export default defineComponent({
 
   body.screen--sm
     .q-card
-      width: 32%
+      width: 31%
 </style>

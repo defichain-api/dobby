@@ -21,7 +21,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
-    boot: ["i18n", "axios", "addressbar-color"],
+    boot: ["i18n", "axios", "addressbar-color", "fontawesome-pro"],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ["app.scss"],
@@ -38,7 +38,7 @@ module.exports = configure(function (ctx) {
 
       "roboto-font", // optional, you are not bound to it
       "material-icons", // optional, you are not bound to it
-      "fontawesome-v5",
+      //"fontawesome-v5",
     ],
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
@@ -47,9 +47,11 @@ module.exports = configure(function (ctx) {
 
       // Enable .env file for configuration
       env: {
-        API_URL: 'https://api.defichain-dobby.com',
-        LOCAL_STORAGE_ACCOUNT_ID_KEY: 'dobbyAccount',
-        LOCAL_SETTINGS_KEY: 'dobbySettings',
+        "API_URL": 'https://api.defichain-dobby.com',
+        "LOCAL_STORAGE_ACCOUNT_ID_KEY": 'dobbyAccount',
+        "LOCAL_SETTINGS_KEY": 'dobbySettings',
+        "DEMO_ACCOUNT_ID": 'demo-demo-demo-demo-demodemodemo',
+        "PREFILL_SETUP": false,
         ...(require('dotenv').config().parsed),
       },
 
@@ -83,13 +85,15 @@ module.exports = configure(function (ctx) {
     devServer: {
       https: false,
       port: 8069,
-      open: true, // opens browser window automatically
+      open: false, // opens browser window automatically
     },
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
+      iconSet: 'fontawesome-v5-pro',
       config: {
-        dark: "auto",
+        //dark: "auto",
+        dark: false,
         screen: {
           bodyClasses: true,
         },

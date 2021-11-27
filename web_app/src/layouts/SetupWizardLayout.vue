@@ -10,7 +10,7 @@
     <q-header elevated class="q-py-xs" height-hint="58">
       <q-toolbar>
         <q-btn flat no-caps no-wrap>
-          <q-icon name="fas fa-socks" size="28px" />
+          <q-icon name="fad fa-socks" size="28px" />
           <q-toolbar-title shrink class="text-weight-bold">
             D.O.B.B.Y.
           </q-toolbar-title>
