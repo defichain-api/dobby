@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enum\NotificationGatewayType;
 use App\Models\Service\VaultService;
 use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
@@ -44,6 +45,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
 	{
+		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL, now()->addHour());
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/warning.subject'), config('app.name')))
 			->markdown('mail.notification.info', [
@@ -57,6 +59,8 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	 */
 	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
+		$this->snooze($notificationTrigger, NotificationGatewayType::WEBHOOK, now()->addMinutes(15));
+
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([

@@ -9,6 +9,7 @@ use App\Enum\QueueName;
 use App\Models\NotificationTrigger;
 use App\Models\User;
 use App\Models\Vault;
+use Carbon\Carbon;
 use Illuminate\Notifications\Notification;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -22,5 +23,10 @@ class BaseNotification extends Notification
 			'mail'                => QueueName::NOTIFICATION_EMAIL_QUEUE,
 			WebhookChannel::class => QueueName::NOTIFICATION_WEBHOOK_QUEUE,
 		];
+	}
+
+	protected function snooze(User|NotificationTrigger $model, string $type, Carbon $until): void
+	{
+		$model->cooldown($type)->until($until);
 	}
 }
