@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\HorizonBasicAuthMiddleware;
+use App\Http\Middleware\HttpsProtocolMiddleware;
 use App\Http\Middleware\UneditableDemoMiddleware;
 use App\Http\Middleware\WebAppAuthMiddleware;
 use Fruitcake\Cors\HandleCors;
@@ -28,6 +29,7 @@ class Kernel extends HttpKernel
 			\Illuminate\View\Middleware\ShareErrorsFromSession::class,
 			\App\Http\Middleware\VerifyCsrfToken::class,
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
+			HttpsProtocolMiddleware::class,
 		],
 
 		'api' => [
@@ -35,6 +37,7 @@ class Kernel extends HttpKernel
 			//			'throttle:api',
 			HandleCors::class,
 			\Illuminate\Routing\Middleware\SubstituteBindings::class,
+			HttpsProtocolMiddleware::class,
 		],
 	];
 	protected $routeMiddleware = [
