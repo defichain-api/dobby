@@ -3,18 +3,23 @@
 namespace App\Listeners;
 
 use App\Enum\NotificationTriggerType;
-use App\Events\VaultUpdatingEvent;
+use App\Events\VaultUpdatingRatioEvent;
 use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\User;
 use App\Notifications\VaultInfoTriggerNotification;
 use App\Notifications\VaultWarningTriggerNotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class VaultUpdatingListener
+class VaultUpdatingRatioListener implements ShouldQueue
 {
-	public function handle(VaultUpdatingEvent $event)
+	public function handle(VaultUpdatingRatioEvent $event): void
 	{
-		// check ratio - send notifications
 		$vault = $event->vault();
+		if ($vault->collateralRatio <= 0) {
+			return;
+		}
+
+		// check ratio - send notifications
 		$users = $vault->users;
 
 		$users->each(function (User $user) use ($vault) {

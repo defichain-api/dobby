@@ -1,7 +1,8 @@
 @component('mail::message')
-# {{ __('notifications/mail/warning.greeting') }}
-{{ __('notifications/mail/warning.message', [
-	'ratio' => $notificationTrigger->ratio,
+# {{ __('notifications/mail/may_liquidate.greeting') }}
+{{ __('notifications/mail/may_liquidate.message', [
+	'vault_id'       => str_truncate_middle($vault->vaultId, 15, '...'),
+    'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
 ]) }}
 
 @component('mail::table')
@@ -11,11 +12,8 @@
 @endcomponent
 
 {{ __('notifications/mail/warning.message_difference', [
-	'ratio' => $notificationTrigger->ratio,
-	'difference' => app(\App\Models\Service\VaultService::class)->calculateCollateralDifference(
-		$vault,
-		$notificationTrigger->ratio
-	),
+	'ratio' => 300,
+	'difference' => app(\App\Models\Service\VaultService::class)->calculateCollateralDifference($vault, 300),
 ]) }}
 
 @component('mail::button', ['url' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId)])

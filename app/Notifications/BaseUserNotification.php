@@ -16,21 +16,24 @@ class BaseUserNotification extends BaseNotification
 
 	public function via(User $user): array
 	{
-		ray(get_class($this));
-
 		$methods = [];
 		if ($user->hasGateway(NotificationGatewayType::TELEGRAM)
-			&& $user->cooldown(CooldownTypes::TELEGRAM_NOTIFICATION)->passed()) {
+			&& $user->cooldown($this->cooldownIdentifier(CooldownTypes::TELEGRAM_NOTIFICATION))->passed()) {
 			$methods[] = NotificationGatewayType::TELEGRAM;
 		}
 		if ($user->hasGateway(NotificationGatewayType::WEBHOOK)) {
 			$methods[] = WebhookChannel::class;
 		}
 		if ($user->hasGateway(NotificationGatewayType::MAIL)
-			&& $user->cooldown(CooldownTypes::MAIL_NOTIFICATION)->passed()) {
+			&& $user->cooldown($this->cooldownIdentifier(CooldownTypes::MAIL_NOTIFICATION))->passed()) {
 			$methods[] = NotificationGatewayType::MAIL;
 		}
 
 		return $methods;
+	}
+
+	protected function cooldownIdentifier(string $type): string
+	{
+		return sprintf('%s_%s_%s', get_class($this), $this->vault->vaultId, $type);
 	}
 }

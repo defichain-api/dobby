@@ -18,7 +18,7 @@
 	),
 ]) }}
 
-@component('mail::button', ['url' => config('app.url')])
+@component('mail::button', ['url' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId)])
 {{ __('notifications/mail/general.button_title') }}
 @endcomponent
 

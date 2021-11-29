@@ -6,7 +6,7 @@ use App\Models\Vault;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class VaultUpdatingEvent
+class VaultUpdatingStateEvent
 {
 	use Dispatchable, SerializesModels;
 

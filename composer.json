@@ -10,6 +10,7 @@
         "botman/botman": "^2.6.1",
         "botman/driver-telegram": "^1.6.2",
         "doctrine/dbal": "^3.1",
+        "envant/fireable": "^1.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "kurozora/laravel-cooldown": "dev-master",
