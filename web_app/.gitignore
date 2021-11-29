@@ -1,5 +1,6 @@
 .DS_Store
 .thumbs.db
+.npmrc
 .vscode
 node_modules
 

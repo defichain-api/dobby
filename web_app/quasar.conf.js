@@ -21,7 +21,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
-    boot: ["i18n", "axios", "addressbar-color", "fontawesome-pro"],
+    boot: ["i18n", "axios", "addressbar-color", "fontawesome-pro", "notify-defaults"],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ["app.scss"],
@@ -49,7 +49,7 @@ module.exports = configure(function (ctx) {
       env: {
         "API_URL": 'https://api.defichain-dobby.com',
         "LOCAL_STORAGE_ACCOUNT_ID_KEY": 'dobbyAccount',
-        "LOCAL_SETTINGS_KEY": 'dobbySettings',
+        "LOCAL_STORAGE_SETTINGS_KEY": 'dobbySettings',
         "DEMO_ACCOUNT_ID": 'demo-demo-demo-demo-demodemodemo',
         "PREFILL_SETUP": false,
         ...(require('dotenv').config().parsed),
