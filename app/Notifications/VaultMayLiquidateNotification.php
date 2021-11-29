@@ -30,7 +30,6 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 
 	public function toMail(User $user): MailMessage
 	{
-		ray('mail');
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/may_liquidate.subject'), config('app.name')))
 			->markdown('mail.notification.may_liquidate', [
@@ -43,8 +42,6 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 	 */
 	public function toWebhook(User $user): WebhookCall
 	{
-		ray('hook');
-
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([

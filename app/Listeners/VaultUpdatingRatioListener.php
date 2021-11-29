@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Enum\NotificationTriggerType;
+use App\Enum\QueueName;
 use App\Events\VaultUpdatingRatioEvent;
 use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\User;
@@ -12,6 +13,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class VaultUpdatingRatioListener implements ShouldQueue
 {
+	public string $queue = QueueName::LISTENER_QUEUE;
+
 	public function handle(VaultUpdatingRatioEvent $event): void
 	{
 		$vault = $event->vault();
