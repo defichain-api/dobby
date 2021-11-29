@@ -4,6 +4,14 @@ const routes = [
     path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [{
+      path: "",
+      component: () => import("pages/Dashboard.vue")
+    }],
+  },
+  {
+    path: "/dashboard",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{
       name: 'dashboard',
       path: "",
       component: () => import("pages/Dashboard.vue")
@@ -16,6 +24,15 @@ const routes = [
       name: "setup",
       path: "",
       component: () => import("pages/SetupWizard.vue")
+    }],
+  },
+  {
+    path: "/settings",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{
+      name: "settings",
+      path: "",
+      component: () => import("pages/Settings.vue")
     }],
   },
 

@@ -1,5 +1,6 @@
 import { LocalStorage } from 'quasar'
 import { api } from 'boot/axios'
+
 /**
  * Actions for Settings
  */
@@ -29,6 +30,19 @@ export function setUserId({ commit }, userId) {
 
     // set user id for api auth
     api.defaults.headers.common['x-user-auth'] = userId
+}
+
+// ----------------------------------------------------------------------------------
+
+export function logout({ commit }) {
+    // reset user id in vuex and local storage
+    commit('setUserId', '')
+
+    // reset api auth
+    delete api.defaults.headers.common['x-user-auth']
+
+    // reload page
+    location.reload()
 }
 
 // ----------------------------------------------------------------------------------

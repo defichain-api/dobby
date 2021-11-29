@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md text-h4" v-if="vaults.lenght > 0">Your Vaults <q-icon name="fas fa-archive" /> </div>
+  <div class="q-pt-md q-px-md text-h4" v-if="vaults.length > 0"><q-icon name="fal fa-box-usd" /> Your Vaults </div>
   <div class="q-pa-md row items-start q-gutter-md">
 
     <!-- Show hint when no user is set -->
@@ -65,6 +65,28 @@
       </q-card-section>
     </q-card>
   </div>
+
+  <q-separator inset v-if="userId == demoAccountID" />
+
+  <div class="q-pa-md row items-start q-gutter-md">
+    <q-card flat v-if="vaults.length > 0 && userId != demoAccountID">
+      <q-card-section>
+        <div class="text-h5 q-mb-md">Beta Dobby</div>
+        <p>
+          Dobby is so proud to show you this beta version of himself! But please keep in mind that he may be buggy.
+        </p>
+        <p>
+          Oh, and by the way: Thank you so much for accepting our Community Fund Proposal!
+        </p>
+        <p>
+          Adrian, Chris &amp; Michael
+        </p>
+      </q-card-section>
+    </q-card>
+  </div>
+
+  <q-separator inset />
+
   <div class="q-pa-md row items-start q-gutter-md">
     <!-- <q-card flat>
       <q-card-section>
@@ -82,7 +104,7 @@
       <q-card-section>
         <div class="row no-wrap text-center">
           <div class="col-12">
-            <div class="text-caption">{{ vault.ownerAddress }}</div>
+            <div class="text-caption ellipsis"><q-icon name="fal fa-box-usd" /> {{ vault.vaultId }}</div>
           </div>
         </div>
       </q-card-section>
@@ -147,10 +169,13 @@
       </q-card-section>
 
       <q-separator />
-
+      <!--
       <q-card-section class="coll-info row">
-        Add collateral worth $14444 to reach 400%
+        ADD collateral worth $14444 to reach 400%
+        ---
+        REMOVE collateral worth $8234 to reach 400%
       </q-card-section>
+      -->
       <!--
       <q-card-section
         class="q-py-xs"

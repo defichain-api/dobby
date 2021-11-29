@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" :class="{'bg-blue-grey-2': !darkMode }">
+  <q-layout view="hHh lpR fFf" :class="{'bg-blue-grey-2': !$q.dark.isActive }">
     <q-ajax-bar
       ref="bar"
       position="top"
@@ -44,17 +44,22 @@
             >
               <div class="row no-wrap q-pa-md">
                 <div class="column">
-                  <div class="text-h6 q-mb-md">Settings</div>
+                  <div class="text-h6 q-mb-md">Quick Settings</div>
                   <q-toggle
                     label="Color Scheme"
-                    v-model="colorScheme"
+                    v-model="darkMode"
                     toggle-indeterminate
                     indeterminate-value="auto"
                     indeterminate-icon="fas fa-adjust"
                     checked-icon="fas fa-moon"
                     unchecked-icon="fas fa-sun"
                   />
+                  <!--
                   <q-toggle v-model="autoReload" label="Auto Reload" />
+                  -->
+                  <!--
+                  <div>All Settings</div>
+                  -->
                 </div>
 
                 <q-separator vertical inset class="q-mx-lg" />
@@ -64,7 +69,7 @@
                     <q-icon name="far fa-hat-wizard" />
                   </q-avatar>
 
-                  <div class="text-subtitle1 q-mt-md q-mb-xs">F4B...3CB</div>
+                  <!-- <div class="text-subtitle1 q-mt-md q-mb-xs">F4B...3CB</div> -->
 
                   <q-btn
                     color="primary"
@@ -72,6 +77,7 @@
                     push
                     size="sm"
                     v-close-popup
+                    @click="logout"
                   />
                 </div>
               </div>
@@ -89,7 +95,7 @@
     >
       <q-scroll-area class="fit">
         <q-list padding>
-          <q-item v-for="link in links1" :key="link.text" v-ripple clickable>
+          <q-item v-for="link in links1" :key="link.text" v-ripple clickable :to="link.to">
             <q-item-section avatar>
               <q-icon color="grey" :name="link.icon" />
             </q-item-section>
@@ -104,9 +110,10 @@
 
           <q-separator class="q-mt-md q-mb-xs" />
 
-          <q-item-label header class="text-weight-bold text-uppercase">
+          <!-- <q-item-label header class="text-weight-bold text-uppercase">
             Your Notification Channels
           </q-item-label>
+
 
           <q-item v-for="link in links2" :key="link.text" v-ripple clickable>
             <q-item-section avatar>
@@ -125,13 +132,13 @@
             </q-item-section>
           </q-item>
 
-          <q-separator class="q-my-md" />
+          <q-separator class="q-my-md" /> -->
 
           <q-item-label header class="text-weight-bold text-uppercase">
             D.O.B.B.Y.
           </q-item-label>
 
-          <q-item v-for="link in links4" :key="link.text" v-ripple clickable>
+          <q-item v-for="link in links4" :key="link.text" :to="link.to" v-ripple clickable>
             <q-item-section avatar>
               <q-icon color="grey" :name="link.icon" />
             </q-item-section>
@@ -146,7 +153,7 @@
               <a
                 class="YL__drawer-footer-link"
               >
-                Version 1
+                Version 0.1
               </a>
             </div>
           </div>
@@ -161,8 +168,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
+import { useStore } from 'vuex'
 
 export default {
   name: 'MainLayout',
@@ -170,28 +178,37 @@ export default {
   setup () {
     const $q = useQuasar()
     const leftDrawerOpen = ref(false)
-    const search = ref('')
     const bar = ref(null)
+    const darkMode = ref($q.dark.isActive)
+    const store = useStore();
     //$q.dark.set(true)
 
     function toggleLeftDrawer () {
       leftDrawerOpen.value = !leftDrawerOpen.value
     }
 
+    function logout () {
+      store.dispatch('account/logout')
+    }
+
+    watch(darkMode, (darkMode) => {
+      $q.dark.set(darkMode)
+      store.dispatch('settings/set', { key: 'darkMode', value: darkMode })
+    })
+
     return {
       leftDrawerOpen,
-      search,
       bar,
+      darkMode,
 
       toggleLeftDrawer,
+      logout,
 
-      darkMode: $q.dark.isActive,
-      colorScheme: false,
       autoReload: true,
       links1: [
-        { icon: 'fab fa-fort-awesome-alt', text: 'Dashboard' },
+        { icon: 'fab fa-fort-awesome-alt', text: 'Dashboard', to: "dashboard" },
         // { icon: 'fas fa-dumpster-fire', text: 'Needs Your Attention', badge: 2 },
-        { icon: 'fas fa-dumpster-fire', text: 'Needs Your Attention' },
+        //{ icon: 'fas fa-dumpster-fire', text: 'Needs Your Attention' },
       ],
       /*
       links2: [
@@ -202,31 +219,16 @@ export default {
       ],
       */
      links2: [
-        { icon: 'fab fa-telegram', text: 'Telegram' , active: true},
+        { icon: 'fab fa-telegram', text: 'Telegram' , active: true },
         { icon: 'fas fa-envelope', text: 'Email', active: true },
         { icon: 'far fa-comment', text: 'Push', active: false },
       ],
       links4: [
-        { icon: 'fas fa-archive', text: 'Manage Vaults' },
-        { icon: 'fas fa-sliders-h', text: 'Settings' },
-        { icon: 'fas fa-question-circle', text: 'WTF?!' },
-        { icon: 'fas fa-comments', text: 'Send feedback' }
+        { icon: 'fas fa-archive', text: 'Manage Vaults', to: 'manage-vaults' },
+        { icon: 'fas fa-sliders-h', text: 'Settings', to: 'settings' },
+        { icon: 'fas fa-question-circle', text: 'WTF?!', to: 'wtf' },
+        { icon: 'fas fa-comments', text: 'Send feedback', to: 'feedback' }
       ],
-      buttons1: [
-        { text: 'Version' },
-        { text: 'Press' },
-        { text: 'Copyright' },
-        { text: 'Contact us' },
-        { text: 'Creators' },
-        { text: 'Advertise' },
-        { text: 'Developers' }
-      ],
-      buttons2: [
-        { text: 'Terms' },
-        { text: 'Privacy' },
-        { text: 'Policy & Safety' },
-        { text: 'Test new features' }
-      ]
     }
   }
 }

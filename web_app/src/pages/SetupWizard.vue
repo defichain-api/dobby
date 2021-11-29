@@ -8,8 +8,8 @@
       <div class="q-pa-lg" v-if="!showSetup">
         <div class="text-h4 q-my-lg">Hello, friend <q-icon name="fas fa-hat-wizard" /></div>
         <div class="text-body1 text-italic q-mt-lg">
-          This is Dobby - your personal <a href="https://defichain.com/">DeFiChain</a> house elf. Dobby is happy because you found your way to him.
-          He is very useful because he keeps you informed about your <a href="https://defichain.com/">DeFiChain</a> loans when they get in trouble
+          This is Dobby - your personal <a href="https://defichain.com/" class="text-primary">DeFiChain</a> house elf. Dobby is happy because you found your way to him.
+          He is very useful because he keeps you informed about your <a href="https://defichain.com/" class="text-primary">DeFiChain</a> loans when they get in trouble.
           <br />
           <q-chip v-if="!showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-info-circle" @click="showMore = !showMore">Read more...</q-chip>
           <q-chip v-if="showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-compress-alt" @click="showMore = !showMore">Show less</q-chip>
@@ -35,11 +35,11 @@
             </div>
           </div>
         </transition>
-        <q-card flat bordered class="q-mt-xl text-center">
+        <q-card flat :bordered="!this.$q.dark.isActive" class="q-mt-xl text-center">
           <q-card-section>
             <!-- <q-icon name="fas fa-socks" size="xl" /> -->
             <q-img
-            src="/img/dobby-logo.png"
+            src="/img/dobby-logo-white-border.png"
             spinner-color="white"
             style="height: 60px; max-width: 60px"
           />
@@ -59,6 +59,7 @@
               - OR -
               </div>
               <q-input
+                ref="existingUserId"
                 rounded
                 outlined
                 dense
@@ -66,11 +67,13 @@
                 label-color="primary"
                 v-model="userId"
                 label="paste in an existing user key"
-                debounce="1000"
-                :loading="false"
+                debounce="250"
+                error-message="This is not a valid Dobby User ID"
+                :error="!userIdIsValid"
               >
                 <template v-slot:append>
-                  <q-icon name="fas fa-paste" color="primary" cliackable />
+                  <!--<q-icon name="fas fa-paste" color="primary" cliackable />-->
+                  <q-icon v-if="isUuid(userId)" @click="setExistingUserId" name="fad fa-arrow-circle-right" color="primary" cliackable />
                 </template>
               </q-input>
           </q-card-section>
@@ -230,7 +233,7 @@
               <q-stepper-navigation>
                 <q-btn unelevated rounded :disabled="addresses.length < 1" @click="makeAccount()" color="primary" label="Continue" />
                 <q-btn flat @click="step = 1" color="primary" label="Back" class="q-ml-sm" />
-                <q-btn flat @click="step = 1" color="primary" label="demo" class="q-ml-sm" />
+                <q-btn flat @click="prepareDemo()" color="primary" label="demo" class="q-ml-sm" />
               </q-stepper-navigation>
             </q-step>
 
@@ -242,7 +245,7 @@
               :done="step > 3"
             >
               <q-card class="text-center q-mb-md">
-                <q-card-section class="bg-primary">
+                <q-card-section class="bg-primary text-white">
                   {{ userId }}
                 </q-card-section>
                 <q-card-section class="bg-secondary">
@@ -266,7 +269,7 @@
               <div class="q-my-md">{{ userId }}</div>
 
               <q-stepper-navigation>
-                <q-btn unelevated rounded color="primary" label="Show my vaults" />
+                <q-btn unelevated rounded to="dashboard" color="primary" label="Show my vaults" />
               </q-stepper-navigation>
             </q-step>
           </q-stepper>
@@ -277,8 +280,9 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 import { copyToClipboard } from 'quasar'
+import { validate as validateUuid } from 'uuid';
 
 export default defineComponent({
   name: 'PageIndex',
@@ -294,9 +298,34 @@ export default defineComponent({
       userId: (process.env.DEV && process.env.PREFILL_SETUP) ? 'c00e07e1-0705-47a1-aef5-8544fe13adc1' : '',
 
       addressToAdd: (process.env.DEV && process.env.PREFILL_SETUP) ? 'tedT9idRxCzmmxT4sST9gHmAZ5Mh24a2Wm' : '',
+
+    }
+  },
+  computed: {
+    userIdIsValid() {
+      if (this.userId.length == 0) return true
+      return this.isUuid(this.userId)
     }
   },
   methods: {
+    /**
+     * Check if a string is a valid UUID
+     */
+    isUuid: function() {
+      return validateUuid(this.userId)
+    },
+
+    /**
+     * Set a user id and fetch user's data from dobby API
+     */
+    setExistingUserId: function () {
+      this.$store.dispatch('account/setUserId', this.userId)
+      this.$store.dispatch('account/loadUserData')
+
+      // redirect to dashboard
+      this.$router.push({ name: 'dashboard' })
+    },
+
     /**
      * Set dobby to demo mode.
      * Essentially, this means setting the user id to a specific one
@@ -306,8 +335,10 @@ export default defineComponent({
       await this.$store.dispatch('account/setUserId', process.env.DEMO_ACCOUNT_ID)
       this.$store.dispatch('account/loadUserData')
 
+      // redirect to dashboard
       this.$router.push({ name: 'dashboard' })
     },
+
     /**
      * Adding a new addres to the addresses array at first position.
      * Does not add addresses already known
@@ -316,6 +347,7 @@ export default defineComponent({
       if (this.addresses.includes(addressToAdd)) return;
       this.addresses.unshift(addressToAdd);
     },
+
     /**
      * Removes an address from the addresses array when this entry is known
      */
@@ -325,6 +357,7 @@ export default defineComponent({
         this.addresses.splice(index, 1);
       }
     },
+
     /**
      * Generates a new account based on the user's input:
      * - theme (dark/light)
@@ -336,17 +369,20 @@ export default defineComponent({
       this.$api.post('setup', this.getSetupData())
         .then((response) => {
           this.userId = response.data.userId
-          console.log(response.data.vaults)
+          this.$store.dispatch('account/setUserId', this.userId)
+          this.$store.dispatch('account/loadUserData')
           this.step = 3
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error)
           this.$q.notify({
             type: 'negative',
-            message: 'Whoops. There was en error :(',
+            message: 'Whoops. There was an error :(',
             position: 'bottom',
           })
         })
     },
+
     /**
      * Processes neccessary data for the setup process and delivers a suitable data
      * format for calling the dobby API
@@ -358,6 +394,7 @@ export default defineComponent({
         "ownerAddresses": JSON.parse(JSON.stringify(this.addresses))
       }
     },
+
     /**
      * Checks if string is most likely a vault ID
      *
@@ -366,6 +403,7 @@ export default defineComponent({
     stringIsVaultId(string) {
       return string.length == 64
     },
+
     /**
      * Checks if string is most likely a DFI address
      *
@@ -374,6 +412,7 @@ export default defineComponent({
     stringIsDfiAddress(string) {
       return string.length == 34
     },
+
     /**
      * Decides wheater the icon in the adresses list is that for DFI address or for a
      * vault ID
@@ -382,6 +421,7 @@ export default defineComponent({
       if (this.stringIsVaultId(string)) return 'fas fa-archive'
       else if (this.stringIsDfiAddress(string)) return 'fas fa-address-book'
     },
+
     /**
      * Copies a string to the clipboard
      */
@@ -397,7 +437,7 @@ export default defineComponent({
         .catch(() => {
           console.log("error")
         })
-    }
+    },
   },
 })
 </script>
