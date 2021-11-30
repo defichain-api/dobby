@@ -28,6 +28,9 @@ export function setUserId({ commit }, userId) {
     // store user id in vuex and local storage
     commit('setUserId', userId)
 
+    // Remove all vaults from the vault list
+    commit('clearVaultList')
+
     // set user id for api auth
     api.defaults.headers.common['x-user-auth'] = userId
 }
@@ -48,6 +51,10 @@ export function logout({ commit }) {
 // ----------------------------------------------------------------------------------
 
 export async function loadUserData({ commit, dispatch }) {
+
+    // clear
+    await commit('clearVaultList')
+
     await api
         .get('/user')
         .then((response) => {

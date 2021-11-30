@@ -19,14 +19,15 @@
         />
 
         <q-btn flat no-caps no-wrap class="q-ml-xs">
-          <q-icon name="fad fa-socks" size="28px" />
+
           <!-- <q-img
             src="/img/dobby-logo-white-border.png"
             spinner-color="white"
             style="height: 32px; max-width: 32px"
           /> -->
+          <q-icon :name="this.$store.getters.headline.icon" size="28px" />
           <q-toolbar-title shrink class="text-weight-bold">
-            D.O.B.B.Y.
+            {{ this.$store.getters.headline.text }}
           </q-toolbar-title>
         </q-btn>
 
@@ -94,7 +95,18 @@
       :width="240"
     >
       <q-scroll-area class="fit">
-        <q-list padding>
+        <q-list>
+          <q-item-label header class="text-weight-bold text-uppercase text-center">
+            <q-img
+              src="/img/dobby-logo-white-border.png"
+              spinner-color="white"
+              style="height: 40px; max-width: 40px"
+              class="q-mr-sm"
+            />
+          </q-item-label>
+
+          <q-separator class="q-mt-ms q-mb-xs" />
+
           <q-item v-for="link in links1" :key="link.text" v-ripple clickable :to="link.to">
             <q-item-section avatar>
               <q-icon color="grey" :name="link.icon" />
@@ -108,7 +120,7 @@
             </q-badge>
           </q-item>
 
-          <q-separator class="q-mt-md q-mb-xs" />
+          <q-separator class="q-mt-ms q-mb-xs" />
 
           <!-- <q-item-label header class="text-weight-bold text-uppercase">
             Your Notification Channels
@@ -134,10 +146,6 @@
 
           <q-separator class="q-my-md" /> -->
 
-          <q-item-label header class="text-weight-bold text-uppercase">
-            D.O.B.B.Y.
-          </q-item-label>
-
           <q-item v-for="link in links4" :key="link.text" :to="link.to" v-ripple clickable>
             <q-item-section avatar>
               <q-icon color="grey" :name="link.icon" />
@@ -148,12 +156,13 @@
           </q-item>
 
           <q-separator class="q-mt-md q-mb-lg" />
+
           <div class="q-px-md text-grey-9">
             <div class="row items-center q-gutter-x-sm q-gutter-y-xs">
               <a
-                class="YL__drawer-footer-link"
+                class="YL__drawer-footer-link text-grey"
               >
-                Version 0.1
+                Version Beta 1
               </a>
             </div>
           </div>
@@ -224,10 +233,11 @@ export default {
         { icon: 'far fa-comment', text: 'Push', active: false },
       ],
       links4: [
-        { icon: 'fas fa-archive', text: 'Manage Vaults', to: 'manage-vaults' },
-        { icon: 'fas fa-sliders-h', text: 'Settings', to: 'settings' },
-        { icon: 'fas fa-question-circle', text: 'WTF?!', to: 'wtf' },
-        { icon: 'fas fa-comments', text: 'Send feedback', to: 'feedback' }
+        { icon: 'fal fa-bells', text: 'Manage Notifications', to: 'manage-notifications' },
+        { icon: 'fal fa-archive', text: 'Manage Vaults', to: 'manage-vaults' },
+        { icon: 'fal fa-sliders-h', text: 'Settings', to: 'settings' },
+        { icon: 'fal fa-question-circle', text: 'WTF?!', to: 'wtf' },
+        { icon: 'fal fa-comments', text: 'Send feedback', to: 'feedback' }
       ],
     }
   }

@@ -27,6 +27,24 @@ const routes = [
     }],
   },
   {
+    path: "/manage-notifications",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{
+      name: "manage-notifications",
+      path: "",
+      component: () => import("pages/ManageNotifications.vue")
+    }],
+  },
+  {
+    path: "/manage-vaults",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{
+      name: "manage-vaults",
+      path: "",
+      component: () => import("pages/ManageVaults.vue")
+    }],
+  },
+  {
     path: "/settings",
     component: () => import("layouts/MainLayout.vue"),
     children: [{

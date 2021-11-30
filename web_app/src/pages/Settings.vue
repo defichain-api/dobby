@@ -1,8 +1,12 @@
 <template>
-  <div class="q-pa-md text-h5"><q-icon name="fad fa-sliders-h-square" class="text-h4 q-mr-md" />Dobby Settings</div>
   <div class="q-pa-md row items-start q-gutter-md">
-    <UserId />
-    <DarkMode />
+    <transition-group
+      appear
+      enter-active-class="animated pulse"
+    >
+      <UserId key="userId" />
+      <DarkMode key="darkMode" />
+    </transition-group>
   </div>
 </template>
 
@@ -16,6 +20,9 @@ export default defineComponent({
   components: {
     UserId,
     DarkMode,
+  },
+  created() {
+    this.$store.dispatch('setHeadline', {text: 'Dobby Settings', icon: 'fal fa-sliders-h'})
   },
 })
 </script>

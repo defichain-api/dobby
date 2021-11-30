@@ -39,10 +39,10 @@
           <q-card-section>
             <!-- <q-icon name="fas fa-socks" size="xl" /> -->
             <q-img
-            src="/img/dobby-logo-white-border.png"
-            spinner-color="white"
-            style="height: 60px; max-width: 60px"
-          />
+              src="/img/dobby-logo-white-border.png"
+              spinner-color="white"
+              style="height: 60px; max-width: 60px"
+            />
           </q-card-section>
           <q-separator inset />
           <q-card-section>
@@ -195,7 +195,7 @@
                 label="paste in a DFI address or a vault ID"
                 :loading="false"
               ></q-input>
-              <q-btn @click="addAddress(addressToAdd); addressToAdd = ''" :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle " color="primary" label="add" class="q-my-sm full-width"></q-btn>
+              <q-btn @click="addAddress(addressToAdd); addressToAdd = ''" :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 42 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle " color="primary" label="add" class="q-my-sm full-width"></q-btn>
 
               <q-list bordered padding v-if="addresses.length > 0" class="q-mt-md">
                 <!--
@@ -231,7 +231,7 @@
 
 
               <q-stepper-navigation>
-                <q-btn unelevated rounded :disabled="addresses.length < 1" @click="makeAccount()" color="primary" label="Continue" />
+                <q-btn unelevated rounded :disabled="addresses.length < 1" @click="makeAccount()" color="primary" label="Continue and create account" />
                 <q-btn flat @click="step = 1" color="primary" label="Back" class="q-ml-sm" />
                 <q-btn flat @click="prepareDemo()" color="primary" label="demo" class="q-ml-sm" />
               </q-stepper-navigation>
