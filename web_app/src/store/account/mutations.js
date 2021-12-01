@@ -19,6 +19,17 @@ export function setUserId(state, userId) {
 // ----------------------------------------------------------------------------------
 
 /**
+ * Empty the vault list
+ *
+ * @param {object} state
+ */
+export function clearVaultList(state) {
+    state.vaults = []
+}
+
+// ----------------------------------------------------------------------------------
+
+/**
  * Add another vault to the vault list
  *
  * @param {object} state

@@ -1,5 +1,5 @@
 <template>
-  <q-card flat :bordered="!this.$q.dark.isActive" style="min-width: 320px;">
+  <q-card flat bordered style="min-width: 320px;">
 
     <q-card-section>
       <div class="text-primary text-h6">{{ $t('Your Dobby User Key') }}</div>
@@ -12,8 +12,9 @@
           text-color="white"
           :icon="(showUserId) ? 'fal fa-eye-slash' : 'fal fa-eye'"
         />
-        <span v-if="showUserId">{{ userId }}</span>
-        <span v-if="!showUserId">########-####-####-##############</span>
+        <span class="text-caption" v-if="showUserId">{{ userId }}</span>
+        <!-- <span v-if="!showUserId">########-####-####-##############</span> -->
+        <span v-if="!showUserId">********-****-****-**************</span>
       </q-chip>
     </q-card-section>
     <q-card-section class="text-center">

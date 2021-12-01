@@ -52,6 +52,7 @@ module.exports = configure(function (ctx) {
         "LOCAL_STORAGE_SETTINGS_KEY": 'dobbySettings',
         "DEMO_ACCOUNT_ID": 'demo-demo-demo-demo-demodemodemo',
         "PREFILL_SETUP": false,
+        "TELEGRAM_BOT_LINK": 'https://t.me/defichain_dobby_bot', // https://t.me/defichain_dobby_bot?start=USER_ID
         ...(require('dotenv').config().parsed),
       },
 
