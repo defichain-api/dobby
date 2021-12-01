@@ -1,0 +1,90 @@
+# GitHub Action for Laravel with MySQL and Redis
+name: DeFiChain DOBBY Tests
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
+jobs:
+  laravel:
+    name: Laravel (PHP 8.0)
+    runs-on: ubuntu-latest
+    env:
+      DB_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: password
+      BROADCAST_DRIVER: log
+      CACHE_DRIVER: redis
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
+      REDIS_PORT: 6379
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: laravel
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      redis:
+        image: redis
+        ports:
+          - 6379/tcp
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: "Validate composer.json & composer.lock"
+        run: "composer validate"
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
+        with:
+          php-version: '8.0'
+          extensions: mbstring, dom, fileinfo, mysql
+      - name: Start mysql service
+        run: sudo /etc/init.d/mysql start
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+      - name: Install Composer dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: generate app key
+        run: php artisan key:generate
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: Clear Config
+        run: php artisan config:clear
+        env:
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: Run Migration
+        run: php artisan migrate -v
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: Test with phpunit
+        run: vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+        env:
+          DB_PORT: ${{ job.services.mysql.ports['3306'] }}
+          REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
+      - name: CodeCov Check
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests
+          file: ./coverage.xml
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true
