@@ -9,7 +9,7 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 
 ## Setup own Dobby instance
 
-###These are the requirements for Dobby:
+### These are the requirements for Dobby:
 
 - MariaDB/MySQL
 - Redis
@@ -19,7 +19,7 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 - Telegram Bot, if you want to receive notifications on telegram. Add the bot secret in the .env after the instance 
   setup. To receive the secret, be kind to the [BotFather](https://t.me/botfather).
 
-###Follow these steps to setup your own instance of Dobby on an own server:
+### Follow these steps to setup your own instance of Dobby on an own server:
 
 1. checkout the repo
 2. install frontend dependencies with `npm install && cd web_app && yarn install`
