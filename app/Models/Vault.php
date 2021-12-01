@@ -64,10 +64,10 @@ class Vault extends Model
 		'batches'           => 'array',
 	];
 	protected array $fireableAttributes = [
-//		'state'           => [
-//			VaultStates::INLIQUIDATION => VaultUpdatingStateEvent::class,
-//			VaultStates::MAYLIQUIDATE  => VaultUpdatingStateEvent::class,
-//		],
+		'state'           => [
+			VaultStates::INLIQUIDATION => VaultUpdatingStateEvent::class,
+			VaultStates::MAYLIQUIDATE  => VaultUpdatingStateEvent::class,
+		],
 		'collateralRatio' => VaultUpdatingRatioEvent::class,
 	];
 

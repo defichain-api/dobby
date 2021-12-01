@@ -3,6 +3,7 @@
 {{ __('notifications/mail/may_liquidate.message', [
 	'vault_id'       => str_truncate_middle($vault->vaultId, 15, '...'),
     'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
+    'ratio' => $vault->collateralRatio,
 ]) }}
 
 @component('mail::table')
