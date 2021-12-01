@@ -23,9 +23,9 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 
 1. checkout the repo
 2. install frontend dependencies with `npm install && cd web_app && yarn install`
+7. create the webviews with `cd web_app && quasar build && cd .. && npm run production`
 3. install php dependencies with `composer install`
 4. create copy of the environment file `cp .env.example .env`, then add your redis/database credentials
 5. create an app secret with `php artisan key:generate`
 6. migrate the database with `php artisan migrate`
-7. create the webviews with `cd web_app && quasar build`
 
