@@ -30,7 +30,9 @@ class VaultRepository
 		foreach ($vaults as $vaultRaw) {
 			$vault = $this->createOrUpdate($vaultRaw);
 			try {
-				$this->attachVaultToUser($vault, $user);
+				if (!$this->userHasVaultId($user, $vault->vaultId)) {
+					$this->attachVaultToUser($vault, $user);
+				}
 			} catch (Exception) {
 				return false;
 			}
@@ -72,6 +74,11 @@ class VaultRepository
 	protected function attachVaultToUser(Vault $vault, User $user): void
 	{
 		$user->vaults()->attach([$vault->vaultId]);
+	}
+
+	protected function userHasVaultId(User $user, string $vaultId): bool
+	{
+		return $user->vaults->contains($vaultId);
 	}
 
 	protected function createOrUpdate(array $data): Vault
