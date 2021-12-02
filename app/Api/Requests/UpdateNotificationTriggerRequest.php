@@ -4,37 +4,43 @@ namespace App\Api\Requests;
 
 use App\Enum\NotificationTriggerType;
 use App\Rules\UserGatewayRule;
+use App\Rules\UserTriggerRule;
 use Illuminate\Validation\Rule;
 use JetBrains\PhpStorm\ArrayShape;
 
 class UpdateNotificationTriggerRequest extends ApiRequest
 {
-	#[ArrayShape(['vaultId' => "string[]", 'ratio' => "string[]", 'type' => "string[]", 'gateways.*' => "string[]"])]
+	#[ArrayShape(['triggerId' => "string[]", 'ratio' => "string[]", 'type' => "string[]", 'gateways.*' => "string[]"])]
 	public function rules(): array
 	{
 		/** @var \App\Models\User $requestingUser */
 		$requestingUser = $this->get('user');
 
 		return [
-			'vaultId'    => ['required', 'exists:vaults,vaultId'],
+			'triggerId'  => [
+				'required',
+				'int',
+				'exists:notification_triggers,id',
+				new UserTriggerRule($requestingUser, $this->triggerId()),
+			],
 			'ratio'      => ['required', 'int'],
 			'type'       => ['required', Rule::in(NotificationTriggerType::ALL)],
 			'gateways.*' => ['required', 'min:1', new UserGatewayRule($requestingUser)],
 		];
 	}
 
-	#[ArrayShape(['vaultId.exists' => "string", 'type.in' => "string"])]
+	#[ArrayShape(['triggerId.exists' => "string", 'type.in' => "string"])]
 	public function messages(): array
 	{
 		return [
-			'vaultId.exists' => 'The vault has to be setup first',
-			'type.in'        => sprintf('possible values are: %s', implode(', ', NotificationTriggerType::ALL)),
+			'triggerId.exists' => 'Setup a trigger first.',
+			'type.in'          => sprintf('possible values are: %s', implode(', ', NotificationTriggerType::ALL)),
 		];
 	}
 
-	public function vaultId(): string
+	public function triggerId(): int
 	{
-		return $this->input('vaultId');
+		return $this->input('triggerId');
 	}
 
 	public function ratio(): int

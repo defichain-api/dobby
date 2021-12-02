@@ -9,11 +9,13 @@ class QueueName
 	const NOTIFICATION_WEBHOOK_QUEUE = 'notification_webhook';
 	const API_CALLS_QUEUE = 'api_calls';
 	const UPDATE_VAULTS_QUEUE = 'update_vaults';
+	const LISTENER_QUEUE = 'listeners';
 	const QUEUES_ALL = [
 		self::NOTIFICATION_TELEGRAM_QUEUE,
 		self::NOTIFICATION_EMAIL_QUEUE,
 		self::NOTIFICATION_WEBHOOK_QUEUE,
 		self::API_CALLS_QUEUE,
 		self::UPDATE_VAULTS_QUEUE,
+		self::LISTENER_QUEUE,
 	];
 }

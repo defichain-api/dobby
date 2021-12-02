@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
-use App\Events\VaultUpdatingEvent;
+use App\Enum\VaultStates;
+use App\Events\VaultUpdatingRatioEvent;
+use App\Events\VaultUpdatingStateEvent;
+use Envant\Fireable\FireableAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -31,6 +34,8 @@ use \Illuminate\Database\Eloquent\Collection;
  */
 class Vault extends Model
 {
+	use FireableAttributes;
+
 	protected $primaryKey = 'vaultId';
 	public $incrementing = false;
 	protected $fillable = [
@@ -58,8 +63,12 @@ class Vault extends Model
 		'interestAmounts'   => 'array',
 		'batches'           => 'array',
 	];
-	protected $dispatchesEvents = [
-		'updated' => VaultUpdatingEvent::class,
+	protected array $fireableAttributes = [
+		'state'           => [
+			VaultStates::INLIQUIDATION => VaultUpdatingStateEvent::class,
+			VaultStates::MAYLIQUIDATE  => VaultUpdatingStateEvent::class,
+		],
+		'collateralRatio' => VaultUpdatingRatioEvent::class,
 	];
 
 	public function getVaultIdAttribute(): string

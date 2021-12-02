@@ -25,7 +25,7 @@ class CreateNotificationsTable extends Migration
 			$table->string('value');
 
 			$table->foreign('userId')
-				->references('userId')
+				->references('id')
 				->on('users');
 		});
 	}

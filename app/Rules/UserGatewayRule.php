@@ -12,7 +12,7 @@ class UserGatewayRule implements Rule
 
 	public function passes($attribute, $value): bool
 	{
-		return NotificationGateway::where('userId', $this->user->userId)
+		return NotificationGateway::where('userId', $this->user->id)
 			->whereId($value)->count() === 1;
 	}
 

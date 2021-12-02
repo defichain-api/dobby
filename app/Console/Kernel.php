@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
 use App\Console\Commands\UpdateVaultDataCommand;
@@ -16,6 +17,7 @@ class Kernel extends ConsoleKernel
 		UpdateLoanSchemeCommand::class,
 		UpdateFixedIntervalPriceCommand::class,
 		PruneInactiveUsersCommand::class,
+		CurrentSummaryNotificationCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void
