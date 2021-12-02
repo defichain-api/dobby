@@ -47,9 +47,9 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 			->payload([
 				'type' => NotificationTriggerType::MAY_LIQUIDATION,
 				'data' => [
-					'vault_id'       => $this->vault->vaultId,
-					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'difference'     => app(VaultService::class)->calculateCollateralDifference($this->vault, 300),
+					'vaultId'       => $this->vault->vaultId,
+					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'difference'    => app(VaultService::class)->calculateCollateralDifference($this->vault, 300),
 				],
 			])->useSecret($user->id);
 	}

@@ -47,9 +47,9 @@ class VaultInLiquidationNotification extends BaseUserNotification implements Sho
 			->payload([
 				'type' => NotificationTriggerType::IN_LIQUIDATION,
 				'data' => [
-					'vault_id'       => $this->vault->vaultId,
-					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'block_height'   => $this->vault->liquidationHeight,
+					'vaultId'       => $this->vault->vaultId,
+					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'blockHeight'   => $this->vault->liquidationHeight,
 				],
 			])->useSecret($user->id);
 	}

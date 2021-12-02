@@ -46,6 +46,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
 	{
 		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL, now()->addHour());
+
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/warning.subject'), config('app.name')))
 			->markdown('mail.notification.info', [
@@ -66,13 +67,13 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 			->payload([
 				'type' => NotificationTriggerType::INFO,
 				'data' => [
-					'vault_id'          => $this->vault->vaultId,
-					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'ratio'             => $notificationTrigger->ratio,
-					'current_ratio'     => $this->vault->collateralRatio,
-					'collateral_amount' => round($this->vault->collateralValue, 2),
-					'loan_value'        => round($this->vault->loanValue, 2),
-					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault,
+					'vaultId'          => $this->vault->vaultId,
+					'vaultDeeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'ratio'            => $notificationTrigger->ratio,
+					'currentRatio'     => $this->vault->collateralRatio,
+					'collateralAmount' => round($this->vault->collateralValue, 2),
+					'loanValue'        => round($this->vault->loanValue, 2),
+					'difference'       => app(VaultService::class)->calculateCollateralDifference($this->vault,
 						$notificationTrigger->ratio),
 				],
 			])->useSecret($notificationTrigger->vaultId);

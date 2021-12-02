@@ -17,10 +17,10 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 
 	public function toTelegram(User $user): TelegramFile
 	{
-		$message = '';
+		$message = __('notifications/telegram/current_summary.intro') . "\r\n\r\n###############################\r\n\r\n";
 		foreach ($this->vaultsData($user) as $vault) {
 			$message .= __('notifications/telegram/current_summary.vault_details',
-					$vault) . "\r\n###############################\r\n";
+					$vault) . "\r\n\r\n###############################\r\n\r\n";
 		}
 
 		return TelegramFile::create()

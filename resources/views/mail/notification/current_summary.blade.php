@@ -1,6 +1,6 @@
 @component('mail::message')
 # {{ __('notifications/mail/current_summary.greeting') }}
-{{ trans_choice('notifications/mail/current_summary.message', count($vaults)) }}
+{{ __('notifications/mail/current_summary.message') }}
 
 @component('mail::table')
     | {{ __('notifications/mail/general.table.vault_id') }} | {{ __('notifications/mail/general.table.min_ratio') }}|{{ __('notifications/mail/general.table.current_ratio') }} | {{ __('notifications/mail/general.table.collateral_value') }} | {{ __('notifications/mail/general.table.loan_value') }} |
