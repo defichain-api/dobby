@@ -10,19 +10,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class NotificationGatewayService
 {
-	public function create(CreateNotificationGatewayRequest $request): bool
+	public function create(CreateNotificationGatewayRequest $request): NotificationGateway
 	{
-		try {
-			NotificationGateway::create([
-				'userId' => $request->get('user')->id,
-				'type'   => $request->type(),
-				'value'  => $request->value(),
-			]);
-
-			return true;
-		} catch (\Exception) {
-			return false;
-		}
+		return NotificationGateway::create([
+			'userId' => $request->get('user')->id,
+			'type'   => $request->type(),
+			'value'  => $request->value(),
+		]);
 	}
 
 	public function createTelegramGateway(string $userId, string $telegramId): NotificationGateway
