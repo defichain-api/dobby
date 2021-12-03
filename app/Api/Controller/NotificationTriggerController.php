@@ -33,7 +33,7 @@ class NotificationTriggerController
 		return response()->json([
 			'state'   => 'ok',
 			'message' => 'notification trigger created',
-			'trigger' => new NotificationTriggerResource($notificationTrigger),
+			'data'    => new NotificationTriggerResource($notificationTrigger),
 		], Response::HTTP_OK);
 	}
 
@@ -49,7 +49,7 @@ class NotificationTriggerController
 		return response()->json([
 			'state'   => 'ok',
 			'message' => 'notification trigger updated',
-			'trigger' => new NotificationTriggerResource($notificationTrigger),
+			'data'    => new NotificationTriggerResource($notificationTrigger),
 		], Response::HTTP_OK);
 	}
 
