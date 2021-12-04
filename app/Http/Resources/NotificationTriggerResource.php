@@ -13,8 +13,8 @@ class NotificationTriggerResource extends JsonResource
 			'triggerId' => $this->id,
 			'ratio'     => $this->ratio,
 			'type'      => $this->type,
+			'vaultId'   => $this->vault->vaultId,
 			'gateways'  => NotificationGatewayResource::collection($this->gateways),
-			'vault'     => new VaultResource($this->whenLoaded('vault')),
 		];
 	}
 }
