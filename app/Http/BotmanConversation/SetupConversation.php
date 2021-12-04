@@ -38,7 +38,7 @@ class SetupConversation extends Conversation
 			// already connected
 			$this->telegramMessageService->send(__('bot/setup.already_registered'), $senderId);
 		} elseif (!Str::isUuid($userId)
-			|| User::where('userId', $userId)->count() === 0) {
+			|| User::where('id', $userId)->count() === 0) {
 			// not registered yet
 			$this->telegramMessageService->send(__('bot/setup.not_registered', ['url' => config('app.url')]), $senderId);
 		} else {
