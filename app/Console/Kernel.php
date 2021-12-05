@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
+use App\Console\Commands\StatisticsCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
 use App\Console\Commands\UpdateVaultDataCommand;
 use App\Console\Commands\UpdateLoanSchemeCommand;
@@ -18,6 +19,7 @@ class Kernel extends ConsoleKernel
 		UpdateFixedIntervalPriceCommand::class,
 		PruneInactiveUsersCommand::class,
 		CurrentSummaryNotificationCommand::class,
+		StatisticsCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void
@@ -31,6 +33,8 @@ class Kernel extends ConsoleKernel
 			->everyFiveMinutes();
 		$schedule->command(PruneInactiveUsersCommand::class)
 			->weekly();
+		$schedule->command(StatisticsCommand::class)
+			->dailyAt('23:59');
 	}
 
 	protected function commands(): void

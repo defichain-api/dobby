@@ -11,11 +11,17 @@ class CreateStatisticsTable extends Migration
 		Schema::create('statistics', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->date('date')->index();
-			$table->integer('user_count')->default(0);
-			$table->integer('vault_count')->default(0);
-			$table->json('messages')->default('[]');
+			$table->unsignedInteger('user_count')->default(0);
+			$table->unsignedInteger('vault_count')->default(0);
+			$table->unsignedInteger('sum_telegram_messages')->default(0);
+			$table->unsignedInteger('sum_mail_messages')->default(0);
+			$table->unsignedInteger('sum_webhook_messages')->default(0);
+			$table->unsignedInteger('sum_info_notifications')->default(0);
+			$table->unsignedInteger('sum_warning_notifications')->default(0);
+			$table->unsignedInteger('sum_daily_messages')->default(0);
 			$table->float('sum_collateral')->default(0);
 			$table->float('sum_loan')->default(0);
+			$table->float('avg_ratio')->default(0);
 		});
 	}
 
