@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer sum_info_notifications
  * @property integer sum_warning_notifications
  * @property integer sum_daily_messages
+ * @property integer sum_may_liquidate_notifications
+ * @property integer sum_in_liquidation_notifications
  * @property float   sum_collateral
  * @property float   sum_loan
  * @property float   avg_ratio
@@ -34,6 +36,8 @@ class Statistic extends Model
 		'sum_info_notifications',
 		'sum_warning_notifications',
 		'sum_daily_messages',
+		'sum_may_liquidate_notifications',
+		'sum_in_liquidation_notifications',
 		'sum_collateral',
 		'sum_loan',
 		'avg_ratio',

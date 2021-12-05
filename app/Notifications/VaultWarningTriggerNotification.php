@@ -19,8 +19,8 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramFile
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::TELEGRAM)
-			->messageTypeSent(NotificationTriggerType::WARNING);
+			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
+			->messageTriggerUsed(NotificationTriggerType::WARNING);
 
 		return TelegramFile::create()
 			->content(
@@ -53,8 +53,8 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::WEBHOOK)
-			->messageTypeSent(NotificationTriggerType::WARNING);
+			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
+			->messageTriggerUsed(NotificationTriggerType::WARNING);
 
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
@@ -75,8 +75,8 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::MAIL)
-			->messageTypeSent(NotificationTriggerType::WARNING);
+			->messageGatewayUsed(NotificationGatewayType::MAIL)
+			->messageTriggerUsed(NotificationTriggerType::WARNING);
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/warning.subject'), config('app.name')))

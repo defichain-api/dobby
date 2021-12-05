@@ -19,8 +19,8 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 	public function toTelegram(User $user): TelegramFile
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::TELEGRAM)
-			->messageTypeSent(NotificationTriggerType::DAILY);
+			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
+			->messageTriggerUsed(NotificationTriggerType::DAILY);
 
 		$message = __('notifications/telegram/current_summary.intro') . "\r\n\r\n###############################\r\n\r\n";
 		foreach ($this->vaultsData($user) as $vault) {
@@ -37,8 +37,8 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 	public function toMail(User $user): MailMessage
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::MAIL)
-			->messageTypeSent(NotificationTriggerType::DAILY);
+			->messageGatewayUsed(NotificationGatewayType::MAIL)
+			->messageTriggerUsed(NotificationTriggerType::DAILY);
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/current_summary.subject'), config('app.name')))
@@ -53,8 +53,8 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 	public function toWebhook(User $user): WebhookCall
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::WEBHOOK)
-			->messageTypeSent(NotificationTriggerType::DAILY);
+			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
+			->messageTriggerUsed(NotificationTriggerType::DAILY);
 
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())

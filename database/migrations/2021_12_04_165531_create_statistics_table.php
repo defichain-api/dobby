@@ -18,6 +18,8 @@ class CreateStatisticsTable extends Migration
 			$table->unsignedInteger('sum_webhook_messages')->default(0);
 			$table->unsignedInteger('sum_info_notifications')->default(0);
 			$table->unsignedInteger('sum_warning_notifications')->default(0);
+			$table->unsignedInteger('sum_may_liquidate_notifications')->default(0);
+			$table->unsignedInteger('sum_in_liquidation_notifications')->default(0);
 			$table->unsignedInteger('sum_daily_messages')->default(0);
 			$table->float('sum_collateral')->default(0);
 			$table->float('sum_loan')->default(0);

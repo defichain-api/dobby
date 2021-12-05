@@ -19,8 +19,8 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramFile
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::TELEGRAM)
-			->messageTypeSent(NotificationTriggerType::INFO);
+			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
+			->messageTriggerUsed(NotificationTriggerType::INFO);
 
 		return TelegramFile::create()
 			->content(
@@ -50,8 +50,8 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::MAIL)
-			->messageTypeSent(NotificationTriggerType::INFO);
+			->messageGatewayUsed(NotificationGatewayType::MAIL)
+			->messageTriggerUsed(NotificationTriggerType::INFO);
 		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL, now()->addHour());
 
 		return (new MailMessage)
@@ -68,8 +68,8 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
 		$this->statisticService
-			->messageGatewaySent(NotificationGatewayType::WEBHOOK)
-			->messageTypeSent(NotificationTriggerType::INFO);
+			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
+			->messageTriggerUsed(NotificationTriggerType::INFO);
 		$this->snooze($notificationTrigger, NotificationGatewayType::WEBHOOK, now()->addMinutes(15));
 
 		return WebhookCall::create()

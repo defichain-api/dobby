@@ -66,12 +66,14 @@ class StatisticService
 		return $this;
 	}
 
-	public function messageTypeSent(string $type): self
+	public function messageTriggerUsed(string $type): self
 	{
 		$type = match ($type) {
 			NotificationTriggerType::DAILY => 'sum_daily_messages',
 			NotificationTriggerType::INFO => 'sum_info_notifications',
 			NotificationTriggerType::WARNING => 'sum_warning_notifications',
+			NotificationTriggerType::MAY_LIQUIDATION => 'sum_may_liquidate_notifications',
+			NotificationTriggerType::IN_LIQUIDATION => 'sum_in_liquidation_notifications',
 		};
 		if (!isset($type)) {
 			return $this;
@@ -86,7 +88,7 @@ class StatisticService
 		return $this;
 	}
 
-	public function messageGatewaySent(string $gateway): self
+	public function messageGatewayUsed(string $gateway): self
 	{
 		$selectedGateway = match ($gateway) {
 			NotificationGatewayType::TELEGRAM => 'sum_telegram_messages',

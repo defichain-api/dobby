@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use App\Models\User;
@@ -17,6 +18,10 @@ class VaultInLiquidationNotification extends BaseUserNotification implements Sho
 
 	public function toTelegram(User $notificationTrigger): TelegramMessage
 	{
+		$this->statisticService
+			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
+			->messageTriggerUsed(NotificationTriggerType::IN_LIQUIDATION);
+
 		return TelegramMessage::create()
 			->content(
 				__('notifications/telegram/in_liquidation.message', [
@@ -30,6 +35,10 @@ class VaultInLiquidationNotification extends BaseUserNotification implements Sho
 
 	public function toMail(User $user): MailMessage
 	{
+		$this->statisticService
+			->messageGatewayUsed(NotificationGatewayType::MAIL)
+			->messageTriggerUsed(NotificationTriggerType::IN_LIQUIDATION);
+
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/in_liquidation.subject'), config('app.name')))
 			->markdown('mail.notification.in_liquidation', [
@@ -42,6 +51,10 @@ class VaultInLiquidationNotification extends BaseUserNotification implements Sho
 	 */
 	public function toWebhook(User $user): WebhookCall
 	{
+		$this->statisticService
+			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
+			->messageTriggerUsed(NotificationTriggerType::IN_LIQUIDATION);
+
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
