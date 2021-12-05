@@ -58,6 +58,7 @@
                   <!--
                   <q-toggle v-model="autoReload" label="Auto Reload" />
                   -->
+                  <q-toggle v-model="privacy" label="Hide sensible data" />
                   <!--
                   <div>All Settings</div>
                   -->
@@ -189,8 +190,8 @@ export default {
     const leftDrawerOpen = ref(false)
     const bar = ref(null)
     const darkMode = ref($q.dark.isActive)
-    const store = useStore();
-    //$q.dark.set(true)
+    const store = useStore()
+    const privacy = ref(store.getters['settings/value']('privacy'))
 
     function toggleLeftDrawer () {
       leftDrawerOpen.value = !leftDrawerOpen.value
@@ -205,10 +206,15 @@ export default {
       store.dispatch('settings/set', { key: 'darkMode', value: darkMode })
     })
 
+    watch(privacy, (privacyActive) => {
+      store.dispatch('settings/set', { key: 'privacy', value: privacyActive })
+    })
+
     return {
       leftDrawerOpen,
       bar,
       darkMode,
+      privacy,
 
       toggleLeftDrawer,
       logout,
