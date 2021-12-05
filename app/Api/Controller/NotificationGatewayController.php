@@ -4,9 +4,11 @@ namespace App\Api\Controller;
 
 use App\Api\Requests\CreateNotificationGatewayRequest;
 use App\Api\Requests\DeleteNotificationGatewayRequest;
+use App\Api\Requests\TestNotificationGatewayRequest;
 use App\Api\Service\NotificationGatewayService;
 use App\Http\Resources\NotificationGatewayCollection;
 use App\Http\Resources\NotificationGatewayResource;
+use App\Notifications\DemoNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,6 +43,19 @@ class NotificationGatewayController
 				'message' => 'failed to create the notification gateway',
 			], Response::HTTP_BAD_REQUEST);
 		}
+	}
+
+	public function testGateway(
+		TestNotificationGatewayRequest $request,
+	): JsonResponse {
+		/** @var \App\Models\User $user */
+		$user = $request->get('user');
+		$user->notify(new DemoNotification($request->type()));
+
+		return response()->json([
+			'state'   => 'ok',
+			'message' => sprintf('test notification to %s gateway sent', $request->type()),
+		], Response::HTTP_OK);
 	}
 
 	public function deleteGateway(
