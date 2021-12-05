@@ -12,6 +12,7 @@ class BaseTriggerNotification extends BaseNotification
 {
 	public function __construct(protected Vault $vault)
 	{
+		parent::__construct();
 	}
 
 	public function via(NotificationTrigger $notifiable): array

@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
 use App\Models\Service\VaultService;
 use App\Models\User;
@@ -17,6 +18,10 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 
 	public function toTelegram(User $user): TelegramMessage
 	{
+		$this->statisticService
+			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
+			->messageTriggerUsed(NotificationTriggerType::MAY_LIQUIDATION);
+
 		return TelegramMessage::create()
 			->content(
 				__('notifications/telegram/may_liquidation.message', [
@@ -30,6 +35,10 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 
 	public function toMail(User $user): MailMessage
 	{
+		$this->statisticService
+			->messageGatewayUsed(NotificationGatewayType::MAIL)
+			->messageTriggerUsed(NotificationTriggerType::MAY_LIQUIDATION);
+
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/may_liquidate.subject'), config('app.name')))
 			->markdown('mail.notification.may_liquidate', [
@@ -42,6 +51,10 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 	 */
 	public function toWebhook(User $user): WebhookCall
 	{
+		$this->statisticService
+			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
+			->messageTriggerUsed(NotificationTriggerType::MAY_LIQUIDATION);
+
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([

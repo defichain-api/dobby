@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\HorizonBasicAuthMiddleware;
 use App\Http\Middleware\HttpsProtocolMiddleware;
+use App\Http\Middleware\PaginateApiMiddleware;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -48,6 +49,7 @@ class Kernel extends HttpKernel
 			HandleCors::class,
 			SubstituteBindings::class,
 			HttpsProtocolMiddleware::class,
+			PaginateApiMiddleware::class,
 		],
 	];
 	protected $routeMiddleware = [

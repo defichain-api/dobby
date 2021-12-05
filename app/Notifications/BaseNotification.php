@@ -7,6 +7,7 @@ use App\Enum\CooldownTypes;
 use App\Enum\NotificationGatewayType;
 use App\Enum\QueueName;
 use App\Models\NotificationTrigger;
+use App\Models\Service\StatisticService;
 use App\Models\User;
 use App\Models\Vault;
 use Carbon\Carbon;
@@ -15,6 +16,13 @@ use JetBrains\PhpStorm\ArrayShape;
 
 class BaseNotification extends Notification
 {
+	protected StatisticService $statisticService;
+
+	public function __construct()
+	{
+		$this->statisticService = app(StatisticService::class);
+	}
+
 	#[ArrayShape(['telegram' => "string", 'mail' => "string", WebhookChannel::class => "string"])]
 	public function viaQueues(): array
 	{
