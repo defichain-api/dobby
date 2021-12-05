@@ -12,6 +12,7 @@ class BaseUserNotification extends BaseNotification
 {
 	public function __construct(protected Vault $vault)
 	{
+		parent::__construct();
 	}
 
 	public function via(User $user): array

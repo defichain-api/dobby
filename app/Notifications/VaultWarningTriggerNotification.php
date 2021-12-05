@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enum\NotificationGatewayType;
 use App\Models\Service\VaultService;
 use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
@@ -17,10 +18,14 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 
 	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramFile
 	{
+		$this->statisticService
+			->messageGatewaySent(NotificationGatewayType::TELEGRAM)
+			->messageTypeSent(NotificationTriggerType::WARNING);
+
 		return TelegramFile::create()
 			->content(
 				__('notifications/telegram/warning.message', [
-					'vaultId'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vaultId'           => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
@@ -47,17 +52,21 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 	 */
 	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
+		$this->statisticService
+			->messageGatewaySent(NotificationGatewayType::WEBHOOK)
+			->messageTypeSent(NotificationTriggerType::WARNING);
+
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([
 				'type' => NotificationTriggerType::WARNING,
 				'data' => [
 					'vaultId'          => $this->vault->vaultId,
-					'ratio'             => $notificationTrigger->ratio,
+					'ratio'            => $notificationTrigger->ratio,
 					'currentRatio'     => $this->vault->collateralRatio,
 					'collateralAmount' => round($this->vault->collateralValue, 2),
 					'loanValue'        => round($this->vault->loanValue, 2),
-					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault,
+					'difference'       => app(VaultService::class)->calculateCollateralDifference($this->vault,
 						$notificationTrigger->ratio),
 				],
 			])->useSecret($notificationTrigger->vaultId);
@@ -65,6 +74,10 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage
 	{
+		$this->statisticService
+			->messageGatewaySent(NotificationGatewayType::MAIL)
+			->messageTypeSent(NotificationTriggerType::WARNING);
+
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/warning.subject'), config('app.name')))
 			->markdown('mail.notification.warning', [

@@ -66,7 +66,7 @@ class StatisticService
 		return $this;
 	}
 
-	public function messageTypeSent(string $type)
+	public function messageTypeSent(string $type): self
 	{
 		$type = match ($type) {
 			NotificationTriggerType::DAILY => 'sum_daily_messages',
@@ -74,7 +74,7 @@ class StatisticService
 			NotificationTriggerType::WARNING => 'sum_warning_notifications',
 		};
 		if (!isset($type)) {
-			return;
+			return $this;
 		}
 
 		Statistic::updateOrCreate([
@@ -82,9 +82,11 @@ class StatisticService
 		], [
 			$type => DB::raw(sprintf('%s + 1', $type)),
 		]);
+
+		return $this;
 	}
 
-	public function messageGatewaySent(string $gateway)
+	public function messageGatewaySent(string $gateway): self
 	{
 		$selectedGateway = match ($gateway) {
 			NotificationGatewayType::TELEGRAM => 'sum_telegram_messages',
@@ -92,7 +94,7 @@ class StatisticService
 			NotificationGatewayType::WEBHOOK => 'sum_webhook_messages',
 		};
 		if (!isset($selectedGateway)) {
-			return;
+			return $this;
 		}
 
 		Statistic::updateOrCreate([
@@ -100,5 +102,7 @@ class StatisticService
 		], [
 			$selectedGateway => DB::raw(sprintf('%s + 1', $selectedGateway)),
 		]);
+
+		return $this;
 	}
 }
