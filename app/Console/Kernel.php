@@ -33,6 +33,8 @@ class Kernel extends ConsoleKernel
 			->everyFiveMinutes();
 		$schedule->command(PruneInactiveUsersCommand::class)
 			->weekly();
+		$schedule->command(CurrentSummaryNotificationCommand::class)
+			->dailyAt('8:00');
 		$schedule->command(StatisticsCommand::class)
 			->dailyAt('23:59');
 	}

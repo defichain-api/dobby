@@ -9,14 +9,14 @@ use App\Models\Vault;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use NotificationChannels\Telegram\TelegramFile;
+use NotificationChannels\Telegram\TelegramMessage;
 use Spatie\WebhookServer\WebhookCall;
 
 class CurrentSummaryTriggerNotification extends BaseUserNotification implements ShouldQueue
 {
 	use Queueable;
 
-	public function toTelegram(User $user): TelegramFile
+	public function toTelegram(User $user): TelegramMessage
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
@@ -28,9 +28,8 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 					$vault) . "\r\n\r\n###############################\r\n\r\n";
 		}
 
-		return TelegramFile::create()
+		return TelegramMessage::create()
 			->content($message)
-			->file(storage_path('app/img/notification/telegram_daily.png'), 'photo')
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
 	}
 
