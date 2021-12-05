@@ -6,6 +6,7 @@ export default {
         settings: {
             darkMode: 'auto',
             language: 'en',
+            privacy: false,
         }
     },
     getters: {

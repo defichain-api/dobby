@@ -1,8 +1,7 @@
 <template>
   <div class="q-pa-md row items-start q-gutter-md">
-
     <!-- Show hint when no user is set -->
-    <q-card flat bordered v-if="vaults.length == 0">
+    <q-card flat :bordered="$q.dark.isActive" v-if="vaults.length == 0">
       <q-img src="/img/banner.jpg">
         <div class="absolute-bottom text-h6">
           No vaults set yet
@@ -40,7 +39,7 @@
     </q-card>
 
     <!-- Show hint when demo user is active -->
-    <q-card flat bordered v-if="userId == demoAccountID">
+    <q-card flat :bordered="$q.dark.isActive" v-if="userId == demoAccountID">
       <q-card-section>
         <div class="text-h6">Demo Mode</div>
         <div class="text-subtitle2">take your time to look around :)</div>
@@ -57,14 +56,12 @@
     </q-card>
 
     <!-- Beta hint -->
-    <q-card flat v-if="vaults.length > 0 && userId != demoAccountID">
+    <q-card flat v-if="vaults.length > 0 && userId != demoAccountID" style="width: 100%;">
       <q-card-section>
-        <div class="text-h5 q-mb-md">Beta Dobby</div>
+        <div class="text-h5 q-mb-md"><q-icon name="fal fa-flask-potion" /> Beta Dobby</div>
         <p>
-          Dobby is so proud to show you this beta version of himself! But please keep in mind that he may be buggy.
-        </p>
-        <p>
-          Oh, and by the way: Thank you so much for accepting our Community Fund Proposal!
+          Dobby is so proud to show you this beta version of himself! But please keep in mind that he may be buggy. Don't trust him blindly!<br />
+          Oh, and by the way: Thank you so much for accepting our Community Fund Proposal! We're very proud to be part of this journey.
         </p>
         <p>
           Adrian, Chris &amp; Michael
@@ -82,13 +79,12 @@
         <q-btn color="primary" icon="chat" label="Change notification settings"></q-btn>
       </q-card-section>
     </q-card>-->
-    <!--
+
     <transition-group
-      group
       appear
       enter-active-class="animated pulse"
-    >-->
-      <q-card flat bordered v-for="vault in vaults" :key="vault.vaultId" class="q-mb-md vault">
+    >
+      <q-card flat :bordered="$q.dark.isActive" v-for="vault in vaults" :key="vault.vaultId" class="q-mb-md vault">
         <q-card-section
           class="q-py-xs"
           style="height: 15px"
@@ -99,7 +95,7 @@
         <q-card-section>
           <div class="row no-wrap text-center">
             <div class="col-12">
-              <div class="text-caption ellipsis"><q-icon name="fal fa-box-usd" /> {{ vault.vaultId }}</div>
+              <div class="text-caption ellipsis"><q-icon name="fal fa-box-usd" size="sm" class="q-mr-sm" /><span v-if="!privacy">{{ vault.vaultId }}</span><span v-if="privacy">🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈</span></div>
             </div>
           </div>
         </q-card-section>
@@ -109,7 +105,7 @@
         <q-card-section class="main-info" v-if="vault.state != 'inLiquidation'">
           <div class="row items-center no-wrap">
             <div :class="{'col-4': vault.state != 'inLiquidation', 'col-12': vault.state == 'inLiquidation'}">
-              <div class="text-h6">{{ vault.loanValue.toLocaleString(locale, numberFormats.currency) }}</div>
+              <div class="text-h6"><span v-if="!privacy || vault.loanValue == 0 ">{{ vault.loanValue.toLocaleString(locale, numberFormats.currency) }}</span><span v-if="privacy && vault.loanValue > 0">$ 🙈🙈🙈</span></div>
               <div class="caption">Loan Value</div>
             </div>
             <div v-if="vault.state != 'inLiquidation' && vault.loanValue > 0" class="col-8 text-right">
@@ -128,29 +124,32 @@
           </div>
         </q-card-section>
 
-        <q-card-section class="coll-progress" v-if="vault.loanValue > 0">
-          <div class="row">
-            <!-- <div class="col-2 text-left" style="font-size: 0.8em">{{ vault.loanScheme.minCollateral }} %</div> -->
-            <div class="col-12 text-center text-subtitle2">
-              <span v-if="vault.state != 'inLiquidation'" style="font-size: 1em" class="text-primary">{{ awayFromLiqudation(vault) }} % To Liquidation</span>
-              <span v-if="vault.state == 'inLiquidation'">oh, oh 😭</span>
+        <q-card-section class="coll-progress">
+          <div v-if="vault.loanValue > 0">
+            <div class="row">
+              <!-- <div class="col-2 text-left" style="font-size: 0.8em">{{ vault.loanScheme.minCollateral }} %</div> -->
+              <div class="col-12 text-center text-subtitle2">
+                <span v-if="vault.state != 'inLiquidation'" style="font-size: 1em" class="text-primary">{{ awayFromLiqudation(vault) }} % To Liquidation</span>
+                <span v-if="vault.state == 'inLiquidation'">oh, oh 😭</span>
+              </div>
+              <!-- <div class="col-2 text-right" style="font-size: 0.8em">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div> -->
             </div>
-            <!-- <div class="col-2 text-right" style="font-size: 0.8em">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div> -->
-          </div>
 
-          <q-linear-progress v-if="vault.state != 'inLiquidation'" size="md" :value="awayFromLiqudationRelative(vault)" :color="trackColor(vault)" :track-color="trackColor(vault)" />
-          <q-linear-progress v-if="vault.state == 'inLiquidation'" size="md" :value="0" :color="trackColor(vault)" :track-color="trackColor(vault)" />
-          <div class="row">
-            <div class="col-6 text-left">{{ vault.loanScheme.minCollateral }} %</div>
-            <div class="col-6 text-right">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div>
+            <q-linear-progress v-if="vault.state != 'inLiquidation'" size="md" :value="awayFromLiqudationRelative(vault)" :color="trackColor(vault)" :track-color="trackColor(vault)" />
+            <q-linear-progress v-if="vault.state == 'inLiquidation'" size="md" :value="0" :color="trackColor(vault)" :track-color="trackColor(vault)" />
+            <div class="row">
+              <div class="col-6 text-left">{{ vault.loanScheme.minCollateral }} %</div>
+              <div class="col-6 text-right">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div>
+            </div>
           </div>
         </q-card-section>
+
 
         <q-separator />
 
         <q-card-section class="coll-info row">
           <div class="col-6">
-            <span class="text-h6 text-primary" v-if="vault.state != 'inLiquidation'">{{ vault.collateralValue.toLocaleString(locale, numberFormats.currency) }}</span>
+            <span class="text-h6 text-primary" v-if="vault.state != 'inLiquidation'"><span v-if="!privacy">{{ vault.collateralValue.toLocaleString(locale, numberFormats.currency) }}</span><span v-if="privacy">$ 🙈🙈🙈</span></span>
             <span class="text-h6 text-primary" v-if="vault.state == 'inLiquidation'">Funds Frozen</span>
             <div class="caption">Collateral Amount</div>
           </div>
@@ -179,7 +178,7 @@
         </q-card-section>
         -->
       </q-card>
-    <!--</transition-group>-->
+    </transition-group>
   </div>
 </template>
 
@@ -230,9 +229,13 @@ export default defineComponent({
     locale: function() {
       return this.$root.$i18n.locale
     },
+    privacy() {
+      return this.settingValue('privacy')
+    },
     ...mapGetters({
       vaults: 'account/vaults',
       userId: 'account/userId',
+      settingValue: 'settings/value',
     }),
     ...mapActions({
       loadUserData: 'account/loadUserData',
@@ -242,7 +245,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
   .q-card.vault
     min-width: 290px
     min-height: 358px
@@ -252,7 +255,7 @@ export default defineComponent({
       min-height: 105px
 
     .coll-progress
-      min-height: 70px
+      min-height: 85px
 
     .coll-info
       min-height: 100px
