@@ -68,6 +68,7 @@ class VaultRepository
 
 	public function detachVaultFromUser(User $user, string $vaultId): void
 	{
+		app(NotificationTriggerService::class)->deleteTriggerForUserVault($user, $vaultId);
 		$user->vaults()->detach([$vaultId]);
 	}
 
