@@ -53,6 +53,15 @@ const routes = [
       component: () => import("pages/Settings.vue")
     }],
   },
+  {
+    path: "/wtf",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{
+      name: "wtf",
+      path: "",
+      component: () => import("pages/Wtf.vue")
+    }],
+  },
 
   // Always leave this as last one,
   // but you can also remove it
