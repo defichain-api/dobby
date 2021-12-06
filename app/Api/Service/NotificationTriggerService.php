@@ -6,6 +6,7 @@ use App\Api\Requests\CreateNotificationTriggerRequest;
 use App\Api\Requests\DeleteNotificationTriggerRequest;
 use App\Api\Requests\UpdateNotificationTriggerRequest;
 use App\Models\NotificationTrigger;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class NotificationTriggerService
@@ -36,6 +37,14 @@ class NotificationTriggerService
 		$trigger->gateways()->sync($request->gateways());
 
 		return $trigger;
+	}
+
+	public function deleteTriggerForUserVault(User $user, string $vaultId): void
+	{
+		$trigger = $user->notificationTrigger()->where('vaultId', $vaultId);
+		$trigger->each(function (NotificationTrigger $trigger) {
+			$trigger->delete();
+		});
 	}
 
 	public function delete(DeleteNotificationTriggerRequest $request): bool
