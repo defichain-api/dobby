@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md row items-start q-gutter-md">
 
-    <q-list bordered padding v-if="vaults.length > 0" class="q-mt-md"
+    <q-list bordered padding class="q-mt-md"
       :class="{'bg-white' : !this.$q.dark.isActive, 'bg-dark': this.$q.dark.isActive}"
     >
       <!--
