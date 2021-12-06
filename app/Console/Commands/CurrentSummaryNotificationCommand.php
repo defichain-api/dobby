@@ -17,6 +17,9 @@ class CurrentSummaryNotificationCommand extends Command
 			->having('gateways_count', '>', 0)
 			->chunk(100, function ($users) {
 				$users->each(function (User $user) {
+					if (is_null($user->vaults->first())) {
+						return;
+					}
 					$user->notify(new CurrentSummaryTriggerNotification($user->vaults->first()));
 				});
 			});
