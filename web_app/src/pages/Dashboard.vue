@@ -48,8 +48,8 @@
         <div class="text-h5 q-mb-md"><q-icon name="fal fa-flask-potion" /> Beta Dobby</div>
         <p>
           Dobby is so proud to show you this beta version of himself! But please keep in mind that he may be buggy. Don't trust him blindly!<br />
-          Feel free to join Dobby's developers at their <a href="https://t.me/defichain_dobby">Telegram channel</a> for questions and feedback.
-          And please consider following his <a href="https://twitter.com/dobby_dfi">Twitter account @dobby_dfi</a> for some updates and insights<br />
+          Feel free to join Dobby's developers at their <a href="https://t.me/defichain_dobby" target="_blank">Telegram channel</a> for questions and feedback.
+          And please consider following his <a href="https://twitter.com/dobby_dfi" target="_blank">Twitter account @dobby_dfi</a> for some updates and insights<br />
           <br />
           Oh, and by the way: Thank you so much for accepting our Community Fund Proposal! We're very proud to be part of this journey.
         </p>
