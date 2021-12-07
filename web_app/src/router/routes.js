@@ -62,6 +62,15 @@ const routes = [
       component: () => import("pages/Wtf.vue")
     }],
   },
+  {
+    path: "/statistics",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{
+      name: "statistics",
+      path: "",
+      component: () => import("pages/Statistics.vue")
+    }],
+  },
 
   // Always leave this as last one,
   // but you can also remove it
