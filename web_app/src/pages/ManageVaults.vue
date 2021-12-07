@@ -37,7 +37,7 @@
 
             <q-item-section top side>
               <div class="text-grey-8 q-gutter-xs">
-                <q-btn @click="removeVault(vault.vaultId)" size="md" flat dense round icon="delete" color="secondary" />
+                <q-btn @click="showConfirmRemoveVault(vault.vaultId)" size="md" flat dense round icon="delete" color="secondary" />
               </div>
             </q-item-section>
           </q-item>
@@ -62,7 +62,7 @@
           <q-btn
             v-if="!isDemoUser()"
             @click="addVault(addressToAdd); addressToAdd = ''"
-            :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 42 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle " color="primary" label="add" class="q-my-sm full-width"
+            :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 42 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle" color="primary" label="add" class="q-my-sm full-width"
           />
           <q-btn
             v-if="isDemoUser()"
@@ -97,40 +97,36 @@ export default defineComponent({
     this.$store.dispatch('setHeadline', {text: 'Your Vaults', icon: 'fal fa-archive'})
   },
   methods: {
-    /**
-     * {
-     *   "state": "ok",
-     *   "message": "vault added to users repository"
-     * }
-     */
     addVault(address) {
       this.$api.post("/user/vault", {"vaultId": address})
         .then((result) => {
+          /**
+           * {
+           *   "state": "ok",
+           *   "message": "vault added to users repository"
+           * }
+           */
           this.reloadVaults()
-          /*
-          this.$q.notify({
-            group: 'addVault',
-            type: 'positive',
-            message: 'Vault added',
-          })
-          */
         })
         .catch((error) => {
+          // c3f6997e0b6b4faea06435f8e261c45a562ec0e64e551b3c9a81e04bf0bae8db
+          // c3f6997e0b6b4faea06435f8e261c45a562ec0e64e551b3c9a81e04bf0bae8da
+          const errorMessage = JSON.parse(error.request.response)
           this.$q.notify({
             type: 'error',
-            message: error.message,
+            message: errorMessage.message,
           })
         })
     },
-    /**
-     * {
-     *   "state": "ok",
-     *   "message": "removed vault from users repository"
-     * }
-     */
     removeVault(address) {
       this.$api.delete("/user/vault", { "data": { "vaultId": address }})
         .then((result) => {
+          /**
+           * {
+           *   "state": "ok",
+           *   "message": "removed vault from users repository"
+           * }
+           */
           this.reloadVaults()
           /*
           this.$q.notify({
@@ -146,6 +142,18 @@ export default defineComponent({
             message: error.message,
           })
         })
+    },
+    showConfirmRemoveVault(address) {
+      this.$q.dialog({
+        title: 'Confirm vault removal',
+        message: 'Do you really want to remove this vault from Dobby? He won\'t watch it anymore.',
+        color: 'primary',
+        cancel: true,
+        focus: 'cancel',
+        persistent: true,
+      }).onOk(() => {
+        this.removeVault(address)
+      })
     },
     isDemoUser() {
       return (process.env.DEMO_ACCOUNT_ID == this.userId)

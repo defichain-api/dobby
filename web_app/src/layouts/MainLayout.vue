@@ -26,7 +26,7 @@
             style="height: 32px; max-width: 32px"
           /> -->
           <q-icon :name="this.$store.getters.headline.icon" size="28px" />
-          <q-toolbar-title shrink class="text-weight-bold">
+          <q-toolbar-title shrink class="text-weight-bold text-h6">
             {{ this.$store.getters.headline.text }}
           </q-toolbar-title>
         </q-btn>
@@ -243,7 +243,7 @@ export default {
         { icon: 'fal fa-archive', text: 'Manage Vaults', to: 'manage-vaults' },
         { icon: 'fal fa-sliders-h', text: 'Settings', to: 'settings' },
         { icon: 'fal fa-question-circle', text: 'WTF?!', to: 'wtf' },
-        { icon: 'fal fa-comments', text: 'Send feedback', to: 'feedback' }
+        //{ icon: 'fal fa-comments', text: 'Send feedback', to: 'feedback' }
       ],
     }
   }

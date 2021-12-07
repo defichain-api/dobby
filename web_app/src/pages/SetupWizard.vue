@@ -9,7 +9,7 @@
         <div class="text-h4 q-my-lg">Hello, friend <q-icon name="fas fa-hat-wizard" /></div>
         <div class="text-body1 text-italic q-mt-lg">
           This is Dobby - your personal <a href="https://defichain.com/" class="text-primary">DeFiChain</a> house elf. Dobby is happy because you found your way to him.
-          He is very useful because he keeps you informed about your <a href="https://defichain.com/" class="text-primary">DeFiChain</a> loans when they get in trouble.
+          He is very useful because he keeps you informed about your <a href="https://defichain.com/" class="text-primary">DeFiChain</a> vaults when they get in trouble.
           <br />
           <q-chip v-if="!showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-info-circle" @click="showMore = !showMore">Read more...</q-chip>
           <q-chip v-if="showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-compress-alt" @click="showMore = !showMore">Show less</q-chip>

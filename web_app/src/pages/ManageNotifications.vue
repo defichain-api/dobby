@@ -33,125 +33,199 @@
 
   <q-separator inset />
 
-  <div v-if="hasGateways" class="q-pa-md row items-start q-gutter-md">
-
-    <div class="text-h5 col-12">Your Notification Channels</div>
-    <div v-if="hasTelegramGateway">
-      <q-chip icon="fab fa-telegram" style="background-color: #0088cc;" text-color="white">
-        Telegam is connected
-      </q-chip>
-      <q-chip disabled icon="fal fa-mailbox" color="green" text-color="white">
-        &nbsp;Add email
-      </q-chip>
-      <q-chip disabled icon="fal fa-send-back" color="red" text-color="white">
-        &nbsp;Add webhook
-      </q-chip>
-      <div class="text-grey">
-        (only Telegram is available yet)
-      </div>
+  <div v-if="hasGateways" class="q-pa-md container">
+    <div class="row q-mb-md">
+      <div class="text-h5">Your Notification Channels</div>
     </div>
-    <!--
-    <q-card class="q-mr-md q-mb-md" v-for="gateway in gateways" :key="gateway.gatewayId">
-      <q-card-section v-if="gateway.type == 'telegram'" class="text-h6">
-        <q-icon name="fab fa-telegram"></q-icon>
-        Telegram
-      </q-card-section>
-      <q-card-section>
-        User: {{ gateway.value }}
-      </q-card-section>
-    </q-card>
-    -->
+    <div class="row">
+      <q-card flat :bordered="$q.dark.isActive" style="width: 100%;">
+        <q-card-section>
+          <q-chip v-if="hasTelegramGateway" icon="fab fa-telegram" style="background-color: #0088cc;" text-color="white">
+            Telegam is connected
+          </q-chip>
+          <q-separator class="q-my-sm" />
+          <div>coming soon:</div>
+          <q-chip disabled icon="fal fa-mailbox" style="" color="green" text-color="white">
+            &nbsp; email
+          </q-chip>
+          <q-chip disabled icon="fal fa-send-back" color="red" text-color="white">
+            &nbsp; webhook
+          </q-chip>
+        </q-card-section>
+      </q-card>
+    </div>
   </div>
 
   <q-separator inset />
 
-
-  <div v-if="hasTriggers" class="q-pa-md row items-start q-gutter-md">
-
-    <div class="text-h5 col-12">Your Notifications<q-badge color="primary" align="top">{{ triggers.length }}</q-badge></div>
-
-    <div>
-      These are your vaults, containing lists of notifications. It shows the type of
-      the notification, when it occurs and on which channels you'll receive notifications.
+  <div v-if="vaultsWithoutTriggers.size > 0" class="q-pa-md container">
+    <div class="row">
+      <div class="text-h5 col-12 q-mb-md">
+        Add Notifications
+        <q-badge class="q-ml-xs" color="primary" align="top">{{ vaultsWithoutTriggers.size }}</q-badge>
+      </div>
     </div>
-
-    <!--
-    <span v-for="(triggerList, vaultId) in triggersByVault" :key="vaultId" class="full-width">
-      <transition
-        appear
-        enter-active-class="animated pulse"
-      > -->
+    <div class="row q-mb-md">
+      Dobby noticed that you added vaults for him to monitor, but you haven't set up notifications yet.
+    </div>
+    <div class="row q-gutter-md items-start">
       <transition-group
         appear
         enter-active-class="animated pulse"
       >
-        <q-card flat v-for="(triggerList, vaultId) in triggersByVault" :key="vaultId" :bordered="$q.dark.isActive" class="vault">
-          <q-card-section>
-            <div class="row text-center">
-              <div class="col-12">
-                <div class="text-caption ellipsis"><q-icon name="fal fa-box-usd" size="sm" class="q-mr-sm" /><span v-if="!privacy">{{ vaultId }}</span><span v-if="privacy">🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈🙈</span></div>
+        <q-card flat :bordered="$q.dark.isActive" v-for="vault in vaultsWithoutTriggers" :key="vault.vaultId" class="vault">
+          <q-card-section class="container">
+            <div class="row">
+              <div class="col-2 text-center q-pt-sm">
+                <q-icon name="fal fa-box-usd" size="sm" />
+              </div>
+              <div class="col-10">
+                <div class="row">
+                  <div class="col-12">Add Notifications for vault</div>
+                </div>
+                <div class="row">
+                  <div class="col-12 text-caption ellipsis">
+                    <span v-if="!privacy">{{ vault.vaultId }}</span>
+                    <span v-if="privacy">🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦</span>
+                  </div>
+                </div>
               </div>
             </div>
           </q-card-section>
 
           <q-separator />
 
-          <q-card-section class="q-px-none">
-            <q-list>
-              <q-item dense>
-                <q-item-section avatar class="text-grey-6">
-                  Type
-                </q-item-section>
-
-                <q-item-section class="text-grey-6">
-                  Event &amp; Channels
-                </q-item-section>
-
-                <q-item-section side class="text-grey-6">
-                  Actions
-                </q-item-section>
-              </q-item>
-              <span v-for="trigger in triggerList" :key="trigger.triggerId">
-              <q-item>
-                <q-item-section top avatar>
-                  <q-avatar v-if="trigger.type == 'info'" color="orange" text-color="white" icon="fal fa-siren-on" />
-                  <q-avatar v-if="trigger.type == 'warning'" color="negative" text-color="white" icon="fal fa-bomb" />
-                </q-item-section>
-
-                <q-item-section>
-                  <q-item-label>Vault drops <span class="text-primary">below {{ trigger.ratio }} %</span></q-item-label>
-                  <div v-for="gateway in trigger.gateways" :key="gateway.gatewayId">
-                    <q-avatar v-if="gateway.type == 'telegram'" style="background-color: #0088cc;" class="q-my-sm q-mr-sm" text-color="white" icon="fab fa-telegram-plane" size="sm" />
-                  </div>
-                </q-item-section>
-
-                <q-item-section side top>
-                  <q-avatar  text-color="white" icon="fal fa-trash" size="md" />
-                </q-item-section>
-              </q-item>
-              <q-separator inset="item" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
-              </span>
-            </q-list>
-
-            <!--
-            <div class="text-body1">When vault drops <span class="text-primary">below {{ trigger.ratio }} %</span></div>
-            <q-chip icon="fab fa-telegram" style="background-color: #0088cc;" text-color="white" v-for="gateway in trigger.gateways" :key="gateway.gatewayId">
-              Telegram
-            </q-chip>
-
-            <p>
-              Type: {{ trigger.type }}
-            </p>
-            -->
-
-
+          <q-card-section class="container">
+            <div class="row">
+              <div class="col-6 text-right q-pr-sm">
+                <span class="text-body1 text-primary" v-if="!privacy">{{ vault.collateralValue.toLocaleString(locale, numberFormats.currency) }}</span>
+                <span class="text-body1 text-primary" v-if="privacy">$🧦🧦🧦</span>
+                <br />
+                Collateral value
+              </div>
+              <div class="col-6 q-pl-sm" style="border-left: 1px solid rgba(0,0,0,0.3)">
+                <span class="text-body1 text-primary">{{ vault.loanScheme.minCollateral }} %</span>
+                <br />
+                Min collateral
+              </div>
+            </div>
           </q-card-section>
 
+          <q-separator />
+
+          <q-card-section class="container">
+            <div class="row">
+              <div class="col-12 text-center q-mb-md">
+                Dobby will add these notifications:
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6 text-right q-pr-sm">
+                <q-avatar color="orange" text-color="white" size="md" icon="fal fa-siren-on" />
+                <br />
+                info
+              </div>
+              <div class="col-6 q-pl-sm q-mb-md">
+                <span class="text-h6 text-primary">&lt; {{ Math.ceil(vault.loanScheme.minCollateral * this.triggerMultipleInfo) }} %</span><br />
+                when below
+              </div>
+            </div>
+            <q-separator inset class="q-mb-md" />
+            <div class="row">
+              <div class="col-6 text-right q-pr-sm">
+                <q-avatar color="negative" text-color="white" size="md" icon="fal fa-bomb" />
+                <br />
+                warning
+              </div>
+              <div class="col-6 q-pl-sm">
+                <span class="text-h6 text-primary">&lt; {{ Math.ceil(vault.loanScheme.minCollateral * this.triggerMultipleWarning) }} %</span><br />
+                when below
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-separator />
+
+          <q-card-actions>
+            <q-btn rounded outline color="primary" icon="fal fa-bells" label="add notifications" class="full-width" @click="addNotifications(vault)"></q-btn>
+          </q-card-actions>
         </q-card>
       </transition-group>
-    <!--
-    </span> -->
+    </div>
+    </div>
 
+  <q-separator inset />
+
+  <div v-if="hasTriggers" class="q-pa-md container">
+    <div class="row q-mb-md">
+      <div class="text-h5 col-12">Your Notifications<q-badge class="q-ml-xs" color="primary" align="top">{{ triggers.length }}</q-badge></div>
+    </div>
+
+    <div class="row q-mb-md">
+      These are your vaults, containing lists of notifications. It shows the type of
+      the notification, when it occurs and on which channels you'll receive notifications.<br />
+      <br />
+      You'll be able to edit these in a future version of Dobby.
+      If you changed your loan scheme and wand to change your notification trigger points, too, then simply go to the 'manage vaults' section, remove it and add it back again.
+    </div>
+
+    <div class="row items-start q-gutter-md">
+    <transition-group
+      appear
+      enter-active-class="animated pulse"
+    >
+      <q-card flat v-for="(triggerList, vaultId) in triggersByVault" :key="vaultId" :bordered="$q.dark.isActive" class="vault">
+        <q-card-section class="container">
+          <div class="row text-center">
+            <div class="col-12">
+              <div class="text-caption ellipsis"><q-icon name="fal fa-box-usd" size="sm" class="q-mr-sm" /><span v-if="!privacy">{{ vaultId }}</span><span v-if="privacy">🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦</span></div>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="q-px-none">
+          <q-list>
+            <q-item dense>
+              <q-item-section avatar class="text-grey-6">
+                Type
+              </q-item-section>
+
+              <q-item-section class="text-grey-6">
+                Event &amp; Channels
+              </q-item-section>
+
+              <q-item-section side class="text-grey-6">
+                <!--Actions-->
+              </q-item-section>
+            </q-item>
+            <span v-for="trigger in triggerList" :key="trigger.triggerId">
+            <q-item>
+              <q-item-section top avatar>
+                <q-avatar v-if="trigger.type == 'info'" color="orange" text-color="white" icon="fal fa-siren-on" />
+                <q-avatar v-if="trigger.type == 'warning'" color="negative" text-color="white" icon="fal fa-bomb" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label>Vault drops <span class="text-primary">below {{ trigger.ratio }} %</span></q-item-label>
+                <div v-for="gateway in trigger.gateways" :key="gateway.gatewayId">
+                  <q-avatar v-if="gateway.type == 'telegram'" style="background-color: #0088cc;" class="q-my-sm q-mr-sm" text-color="white" icon="fab fa-telegram-plane" size="sm" />
+                </div>
+              </q-item-section>
+
+              <q-item-section side top>
+                <!--<q-avatar text-color="grey" icon="fal fa-trash" size="md" />-->
+              </q-item-section>
+            </q-item>
+            <q-separator inset="item" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
+            </span>
+          </q-list>
+        </q-card-section>
+
+      </q-card>
+    </transition-group>
+    </div>
   </div>
 </template>
 
@@ -166,12 +240,17 @@ export default defineComponent({
     return {
       gateways: [],
       triggers: [],
+      triggerMultipleInfo: 1.5,
+      triggerMultipleWarning: 1.25,
       waitingForTelegramGateway: false,
       waitingForTelegramLoop: null,
+      numberFormats: {
+        currency: { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 },
+      },
     }
   },
   created() {
-    this.$store.dispatch('setHeadline', { text: 'Notification settings', icon: 'fal fa-sliders-h'})
+    this.$store.dispatch('setHeadline', { text: 'Notification settings', icon: 'fal fa-bells'})
     this.getGateways()
     this.getTriggers()
   },
@@ -193,32 +272,35 @@ export default defineComponent({
         })
     },
     checkForTelegramGateway() {
-        this.waitingForTelegramLoop = setInterval(() => {
-          this.getGateways(()=> {
-            if (this.hasTelegramGateway) {
-              clearTimeout(this.waitingForTelegramLoop)
-              this.makeTelegramTemplate()
-            }
-          })
-        }, 2500)
+      this.waitingForTelegramLoop = setInterval(() => {
+        this.getGateways(()=> {
+          if (this.hasTelegramGateway) {
+            clearTimeout(this.waitingForTelegramLoop)
+            this.makeTelegramNotifications()
+          }
+        })
+      }, 2500)
     },
     openTelegram() {
       openURL(process.env.TELEGRAM_BOT_LINK + '?start=' + this.userId)
     },
-    makeTelegramTemplate() {
-      this.vaults.forEach((vault) => {
-        const minCollateral = vault.loanScheme.minCollateral
-        let triggerConfig = {
-          "vaultId": vault.vaultId,
-          "ratio": minCollateral * 1.5,
-          "type": "info",
-          "gateways": [ this.telegramGateway.gatewayId ]
-        }
-        this.makeNotification(triggerConfig)
+    addNotifications(vault) {
+      const minCollateral = vault.loanScheme.minCollateral
+      let triggerConfig = {
+        "vaultId": vault.vaultId,
+        "ratio": Math.ceil(minCollateral * this.triggerMultipleInfo),
+        "type": "info",
+        "gateways": [ this.telegramGateway.gatewayId ]
+      }
+      this.makeNotification(triggerConfig)
 
-        triggerConfig.ratio = minCollateral * 1.25
-        triggerConfig.type = "warning"
-        this.makeNotification(triggerConfig)
+      triggerConfig.ratio = Math.ceil(minCollateral * this.triggerMultipleWarning)
+      triggerConfig.type = "warning"
+      this.makeNotification(triggerConfig)
+    },
+    makeTelegramNotifications() {
+      this.vaults.forEach((vault) => {
+        this.addNotifications(vault)
       })
     },
     makeNotification(triggerConfig) {
@@ -278,6 +360,26 @@ export default defineComponent({
     privacy() {
       return this.settingValue('privacy')
     },
+    hasVaultsWithoutTriggers: function() {
+      return false
+    },
+    vaultsWithoutTriggers: function() {
+      let vaultList = new Set()
+      this.vaults.forEach((vault) => {
+        if(!(vault.vaultId in this.triggersByVault)) {
+          vaultList.add(vault)
+        }
+      })
+      /*
+      let vaultList = {}
+      this.vaults.forEach((vault) => {
+        if(!(vault.vaultId in this.triggersByVault)) {
+          vaultList[vault.vaultId] = vault
+        }
+      })
+      */
+      return vaultList
+    },
     ...mapGetters({
       vaults: 'account/vaults',
       userId: 'account/userId',
@@ -289,8 +391,8 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 .q-card.vault
-    min-width: 290px
-    max-width: 23%
+    min-width: 300px
+    max-width: 400px
 
 body.screen--xs
   .q-card
