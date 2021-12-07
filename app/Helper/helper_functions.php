@@ -11,3 +11,15 @@ if (!function_exists('str_truncate_middle')) {
 			: $text;
 	}
 }
+
+if (!function_exists('number_format_for_language')) {
+	function number_format_for_language(float|int $number, int $decimals = 2, string $language = 'en'): string
+	{
+		return number_format(
+			$number,
+			$decimals,
+			$language === 'en' ? '.' : ',',
+			$language === 'en' ? ',' : '.',
+		);
+	}
+}
