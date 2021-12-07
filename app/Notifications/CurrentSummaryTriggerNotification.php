@@ -73,14 +73,14 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 			function () use ($user) {
 				$vaults = $user->vaults;
 				$vaultData = [];
-				$vaults->each(function (Vault $vault) use (&$vaultData) {
+				$vaults->each(function (Vault $vault) use (&$vaultData, $user) {
 					$vaultData[] = [
 						'vault_id'          => $vault->vaultId,
 						'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
 						'min_col_ratio'     => $vault->loanScheme->minCollaterationRatio,
 						'current_ratio'     => $vault->collateralRatio,
-						'collateral_amount' => round($vault->collateralValue, 2),
-						'loan_value'        => round($vault->loanValue, 2),
+						'collateral_amount' => number_format_for_language($vault->collateralValue, 2, $user->language),
+						'loan_value'        => number_format_for_language($vault->loanValue, 2, $user->language),
 					];
 				});
 

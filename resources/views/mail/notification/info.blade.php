@@ -7,7 +7,7 @@
 @component('mail::table')
     | {{ __('notifications/mail/general.table.vault_id') }} | {{ __('notifications/mail/general.table.current_ratio') }} | {{ __('notifications/mail/general.table.collateral_value') }} | {{ __('notifications/mail/general.table.loan_value') }} |
     | ------------- |:-------------:| :----------------: | :--------: |
-    | {{ str_truncate_middle($vault->vaultId, 15) }} | {{ $vault->collateralRatio }} % |{{ round($vault->collateralValue, 2) }} USD | {{ round($vault->loanValue, 2) }} USD |
+    | {{ str_truncate_middle($vault->vaultId, 15) }} | {{ $vault->collateralRatio }} % |{{ number_format_for_language($vault->collateralValue) }} USD | {{ number_format_for_language($vault->loanValue) }} USD |
 @endcomponent
 
 {{ __('notifications/mail/info.message_difference', [

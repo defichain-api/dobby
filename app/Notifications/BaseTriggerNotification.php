@@ -15,21 +15,28 @@ class BaseTriggerNotification extends BaseNotification
 		parent::__construct();
 	}
 
-	public function via(NotificationTrigger $notifiable): array
+	public function via(NotificationTrigger $trigger): array
 	{
 		$methods = [];
-		if ($notifiable->hasGateway(NotificationGatewayType::TELEGRAM)
-			&& $notifiable->cooldown(CooldownTypes::TELEGRAM_NOTIFICATION)->passed()) {
+		if ($trigger->hasGateway(NotificationGatewayType::TELEGRAM)
+			&& $trigger->cooldown(CooldownTypes::TELEGRAM_NOTIFICATION)->passed()) {
 			$methods[] = NotificationGatewayType::TELEGRAM;
 		}
-		if ($notifiable->hasGateway(NotificationGatewayType::WEBHOOK)) {
+		if ($trigger->hasGateway(NotificationGatewayType::WEBHOOK)) {
 			$methods[] = WebhookChannel::class;
 		}
-		if ($notifiable->hasGateway(NotificationGatewayType::MAIL)
-			&& $notifiable->cooldown(CooldownTypes::MAIL_NOTIFICATION)->passed()) {
+		if ($trigger->hasGateway(NotificationGatewayType::MAIL)
+			&& $trigger->cooldown(CooldownTypes::MAIL_NOTIFICATION)->passed()) {
 			$methods[] = NotificationGatewayType::MAIL;
 		}
 
 		return $methods;
+	}
+
+	public function formatNumberForTrigger(NotificationTrigger $trigger, float|int $number, int $decimals = 2): float|int
+	{
+		$language = rescue(fn() => $trigger->user()->language, 'en', false);
+
+		return number_format_for_language($number, 2, $language);
 	}
 }
