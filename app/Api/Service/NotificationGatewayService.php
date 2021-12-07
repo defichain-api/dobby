@@ -19,12 +19,13 @@ class NotificationGatewayService
 		]);
 	}
 
-	public function createTelegramGateway(string $userId, string $telegramId): NotificationGateway
+	public function createOrUpdateTelegramGateway(string $userId, string $telegramId): NotificationGateway
 	{
-		return NotificationGateway::create([
+		return NotificationGateway::updateOrCreate([
+			'value' => $telegramId,
+		], [
 			'userId' => $userId,
 			'type'   => NotificationGatewayType::TELEGRAM,
-			'value'  => $telegramId,
 		]);
 	}
 
