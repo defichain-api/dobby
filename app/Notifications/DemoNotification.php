@@ -70,6 +70,7 @@ class DemoNotification extends BaseNotification implements ShouldQueue
 			->payload([
 				'type' => NotificationTriggerType::DEMO,
 				'data' => [
+					'state'   => 'ok',
 					'message' => 'webhook notification is setup correctly',
 				],
 			])->useSecret($user->id);
