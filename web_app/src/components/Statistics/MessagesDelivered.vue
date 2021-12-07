@@ -11,7 +11,7 @@
         </div>
         <div class="col-2">
           <div class="text-body1 text-primary">{{ this.latest.messages.gateways.telegram.toLocaleString(locale) }}</div>
-          <q-avatar style="background-color: #0088cc;" font-size="0.6em" text-color="white" size="md" icon="fab fa-telegram-plane" />
+          <q-avatar color="telegram" font-size="0.6em" text-color="white" size="md" icon="fab fa-telegram-plane" />
         </div>
         <div class="col-2 ">
           <div class="text-body1 text-primary">{{ this.latest.messages.gateways.mail.toLocaleString(locale) }}</div>

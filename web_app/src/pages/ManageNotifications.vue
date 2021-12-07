@@ -13,7 +13,7 @@
           later version.)
         </p>
 
-        <q-btn v-if="!waitingForTelegramGateway" unelevated class="full-width" icon="fab fa-telegram" label="Connect to Telegram now" color="primary" @click="checkForTelegramGateway(); openTelegram(); waitingForTelegramGateway = true;"></q-btn>
+        <q-btn v-if="!waitingForTelegramGateway && !isDemo" unelevated class="full-width" icon="fab fa-telegram" label="Connect to Telegram now" color="primary" @click="checkForTelegramGateway(); openTelegram(); waitingForTelegramGateway = true;"></q-btn>
         <q-card flat v-if="waitingForTelegramGateway" class="bg-accent text-white" style="max-width: 380px;">
           <q-card-section class="row">
             <div class="col-3 q-pa-sm">
@@ -34,31 +34,61 @@
   <q-separator inset />
 
   <div v-if="hasGateways" class="q-pa-md container">
-    <div class="row q-mb-md">
-      <div class="text-h5">Your Notification Channels</div>
-    </div>
-    <div class="row">
-      <q-card flat :bordered="$q.dark.isActive" style="width: 100%;">
-        <q-card-section>
-          <q-chip v-if="hasTelegramGateway" icon="fab fa-telegram" style="background-color: #0088cc;" text-color="white">
-            Telegam is connected
-          </q-chip>
-          <q-separator class="q-my-sm" />
-          <div>coming soon:</div>
-          <q-chip disabled icon="fal fa-mailbox" style="" color="green" text-color="white">
-            &nbsp; email
-          </q-chip>
-          <q-chip disabled icon="fal fa-send-back" color="red" text-color="white">
-            &nbsp; webhook
-          </q-chip>
-        </q-card-section>
-      </q-card>
-    </div>
+    <q-card flat :bordered="$q.dark.isActive" class="notifications">
+      <q-card-section>
+          <div class="text-h5">Your Notification Channels</div>
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-section class="container">
+        <div class="row">
+          <div class="col-6">
+            <div class="text-body1">Connected</div>
+            <q-chip v-if="hasTelegramGateway" icon="fab fa-telegram-plane" color="telegram" text-color="white">
+              Telegam
+            </q-chip>
+          </div>
+          <div class="col-6">
+            <div class="text-body1">Available Soon</div>
+            <q-chip disabled icon="fal fa-mailbox" style="" color="green" text-color="white">
+              &nbsp; email
+            </q-chip>
+            <q-chip disabled icon="fal fa-send-back" color="red" text-color="white">
+              &nbsp; webhook
+            </q-chip>
+          </div>
+        </div>
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-actions clickable @click="testChannelExpanded = !testChannelExpanded">
+        <span class="text-body1 q-ml-sm">Send Test Message</span>
+        <q-space />
+        <q-btn
+          color="grey"
+          round
+          flat
+          dense
+          :icon="testChannelExpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+        />
+      </q-card-actions>
+
+      <q-slide-transition>
+        <div v-show="testChannelExpanded">
+          <q-card-section class="text-subitle2">
+            <q-btn rounded outline @click="testTelegram()" label="test Telegram" icon="fab fa-telegram-plane" color="telegram"></q-btn>
+          </q-card-section>
+        </div>
+      </q-slide-transition>
+    </q-card>
+
   </div>
 
   <q-separator inset />
 
-  <div v-if="vaultsWithoutTriggers.size > 0" class="q-pa-md container">
+  <div v-if="hasGateways && vaultsWithoutTriggers.size > 0" class="q-pa-md container">
     <div class="row">
       <div class="text-h5 col-12 q-mb-md">
         Add Notifications
@@ -210,7 +240,7 @@
               <q-item-section>
                 <q-item-label>Vault drops <span class="text-primary">below {{ trigger.ratio }} %</span></q-item-label>
                 <div v-for="gateway in trigger.gateways" :key="gateway.gatewayId">
-                  <q-avatar v-if="gateway.type == 'telegram'" style="background-color: #0088cc;" class="q-my-sm q-mr-sm" text-color="white" icon="fab fa-telegram-plane" size="sm" />
+                  <q-avatar v-if="gateway.type == 'telegram'" color="telegram" class="q-my-sm q-mr-sm" text-color="white" icon="fab fa-telegram-plane" size="sm" />
                 </div>
               </q-item-section>
 
@@ -244,13 +274,14 @@ export default defineComponent({
       triggerMultipleWarning: 1.25,
       waitingForTelegramGateway: false,
       waitingForTelegramLoop: null,
+      testChannelExpanded: false,
       numberFormats: {
         currency: { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 },
       },
     }
   },
   created() {
-    this.$store.dispatch('setHeadline', { text: 'Notification settings', icon: 'fal fa-bells'})
+    this.$store.dispatch('setHeadline', { text: 'Dobby likes to talk', icon: 'fal fa-bells'})
     this.getGateways()
     this.getTriggers()
   },
@@ -283,6 +314,16 @@ export default defineComponent({
     },
     openTelegram() {
       openURL(process.env.TELEGRAM_BOT_LINK + '?start=' + this.userId)
+    },
+    testTelegram() {
+      this.$api.post("/user/gateways/test", { "type":"telegram" })
+        .then((result) => {
+          this.$q.notify({
+            group: 'telegram',
+            type: 'positive',
+            message: 'Dobby should have said hello via Telegram :)',
+          })
+        })
     },
     addNotifications(vault) {
       const minCollateral = vault.loanScheme.minCollateral
@@ -357,7 +398,7 @@ export default defineComponent({
       })
       return vaultTriggers
     },
-    privacy() {
+    privacy: function() {
       return this.settingValue('privacy')
     },
     hasVaultsWithoutTriggers: function() {
@@ -380,6 +421,9 @@ export default defineComponent({
       */
       return vaultList
     },
+    isDemo: function() {
+      return process.env.DEMO_ACCOUNT_ID == this.userId
+    },
     ...mapGetters({
       vaults: 'account/vaults',
       userId: 'account/userId',
@@ -390,6 +434,9 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+.q-card.notifications
+    min-width: 400px
+
 .q-card.vault
     min-width: 300px
     max-width: 400px
@@ -398,6 +445,8 @@ body.screen--xs
   .q-card
     width: 100%
     max-width: inherit
+  .q-card.notifications
+    min-width: inherit
 
 body.screen--sm
   .q-card
