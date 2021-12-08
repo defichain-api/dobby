@@ -38,7 +38,8 @@ class User extends Model
 
 	public function vaults(): BelongsToMany
 	{
-		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId');
+		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId')
+			->withPivot('name');
 	}
 
 	public function notificationTrigger(): Collection

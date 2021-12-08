@@ -83,6 +83,7 @@ class Vault extends Model
 
 	public function users(): BelongsToMany
 	{
-		return $this->belongsToMany(User::class, 'user_vault', 'vaultId', 'userId');
+		return $this->belongsToMany(User::class, 'user_vault', 'vaultId', 'userId')
+			->withPivot('name');
 	}
 }
