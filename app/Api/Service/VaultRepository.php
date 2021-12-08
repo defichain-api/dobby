@@ -77,6 +77,11 @@ class VaultRepository
 		$user->vaults()->attach([$vault->vaultId]);
 	}
 
+	public function setVaultName(User $user, Vault $vault, string $name): bool
+	{
+		return $user->vaults()->updateExistingPivot($vault->vaultId, ['name' => $name]) > 0;
+	}
+
 	protected function userHasVaultId(User $user, string $vaultId): bool
 	{
 		return $user->vaults->contains($vaultId);
