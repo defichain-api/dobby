@@ -16,11 +16,11 @@
       <div class="row">
         <div class="col-6">
           <div class="text-h4 text-primary">{{ (this.latest.sum_collateral / this.latest.sum_loan * 100).toLocaleString(locale, {maximumFractionDigits: 0}) }} %</div>
-          <div class="text-caption">AVG</div>
+          <div class="text-caption">Coll To Loans</div>
         </div>
         <div class="col-6">
           <div class="text-h4 text-primary">{{ this.latest.avg_ratio.toLocaleString(locale, { maximumFractionDigits: 0 }) }} %</div>
-          <div class="text-caption">Median</div>
+          <div class="text-caption">AVG Per User</div>
         </div>
       </div>
     </q-card-section>
