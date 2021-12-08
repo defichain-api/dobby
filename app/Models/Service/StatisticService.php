@@ -74,8 +74,9 @@ class StatisticService
 			NotificationTriggerType::WARNING => 'sum_warning_notifications',
 			NotificationTriggerType::MAY_LIQUIDATION => 'sum_may_liquidate_notifications',
 			NotificationTriggerType::IN_LIQUIDATION => 'sum_in_liquidation_notifications',
+			default => null,
 		};
-		if (!isset($type)) {
+		if (is_null($type)) {
 			return $this;
 		}
 
@@ -94,8 +95,9 @@ class StatisticService
 			NotificationGatewayType::TELEGRAM => 'sum_telegram_messages',
 			NotificationGatewayType::MAIL => 'sum_mail_messages',
 			NotificationGatewayType::WEBHOOK => 'sum_webhook_messages',
+			default => null,
 		};
-		if (!isset($selectedGateway)) {
+		if (is_null($selectedGateway)) {
 			return $this;
 		}
 

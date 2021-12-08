@@ -10,6 +10,7 @@ class NotificationTriggerType
 	const IN_LIQUIDATION = 'inLiquidation';
 	const MAY_LIQUIDATION = 'mayLiquidate';
 	const LIQUIDATED = 'liquidated';
+	const DEMO = 'demo';
 	const ALL = [
 		self::INFO,
 		self::WARNING,
@@ -17,5 +18,6 @@ class NotificationTriggerType
 		self::IN_LIQUIDATION,
 		self::MAY_LIQUIDATION,
 		self::LIQUIDATED,
+		self::DEMO,
 	];
 }

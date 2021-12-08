@@ -54,6 +54,9 @@ Route::middleware(['webapp_auth'])->group(function () {
 		Route::post('/', [NotificationGatewayController::class, 'createGateway'])
 			->middleware('uneditable_demo')
 			->name('create');
+		Route::post('test', [NotificationGatewayController::class, 'testGateway'])
+			->middleware('uneditable_demo')
+			->name('test');
 		Route::delete('/', [NotificationGatewayController::class, 'deleteGateway'])
 			->middleware('uneditable_demo')
 			->name('delete');

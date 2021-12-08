@@ -1,9 +1,10 @@
 <?php
 
 return [
-	'button_title' => "visit DOBBY and take a closer look",
-	'thank_you'    => "Thank you for using DOBBY!",
-	'regards'      => "Regards,",
+	'button_title'         => "visit DOBBY and take a closer look",
+	'button_notifications' => "configure your notifications",
+	'thank_you'            => "Thank you for using DOBBY!",
+	'regards'              => "Regards,",
 
 	'table' => [
 		'vault_id'         => 'vault id',
