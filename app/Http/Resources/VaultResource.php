@@ -13,6 +13,7 @@ class VaultResource extends JsonResource
 	{
 		return [
 			'vaultId'            => $this->vaultId,
+			'name'               => $this->pivot->name ?? '',
 			'ownerAddress'       => $this->ownerAddress,
 			'loanScheme'         => [
 				'id'            => $this->loanScheme->name,
@@ -44,9 +45,9 @@ class VaultResource extends JsonResource
 			$valueUsd = rescue(fn() => app(FixedIntervalPriceService::class)->calculateValueForToken($token, $amount)
 				, null, false);
 			$data[] = [
-				'raw'      => $item,
-				'amount'   => $amount,
-				'token'    => $token,
+				'raw'    => $item,
+				'amount' => $amount,
+				'token'  => $token,
 				$this->mergeWhen(isset($valueUsd), ['valueUsd' => $valueUsd]),
 			];
 		}

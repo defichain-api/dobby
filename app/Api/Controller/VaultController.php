@@ -5,7 +5,9 @@ namespace App\Api\Controller;
 use App\Api\Exceptions\DefichainApiException;
 use App\Api\Requests\CreateVaultRequest;
 use App\Api\Requests\DeleteVaultRequest;
+use App\Api\Requests\UpdateVaultRequest;
 use App\Api\Service\VaultRepository;
+use App\Models\Vault;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,6 +32,19 @@ class VaultController
 		return response()->json([
 			'state'   => 'ok',
 			'message' => 'vault added to users repository',
+		], Response::HTTP_OK);
+	}
+
+	public function updateUserVaultName(
+		UpdateVaultRequest $request,
+		VaultRepository    $vaultService,
+		Vault              $vault
+	): JsonResponse {
+		$vaultService->setVaultName($request->get('user'), $vault, $request->name());
+
+		return response()->json([
+			'state'   => 'ok',
+			'message' => 'renamed vault',
 		], Response::HTTP_OK);
 	}
 
