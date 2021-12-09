@@ -27,7 +27,7 @@ class VaultUpdatingRatioListener implements ShouldQueue
 
 		$users->each(function (User $user) use ($vault) {
 			try {
-				$trigger = $user->nearestTriggerBelowRatio($vault->collateralRatio);
+				$trigger = $user->nearestTriggerBelowRatio($vault);
 			} catch (NotificationTriggerNotAvailableException) {
 				return;
 			}
