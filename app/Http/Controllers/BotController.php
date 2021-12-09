@@ -13,6 +13,7 @@ class BotController
 {
 	public function handle(): void
 	{
+		ray()->clearAll();
 		/** @var Botman $botMan */
 		$botMan = app('botman');
 
@@ -22,11 +23,16 @@ class BotController
 			return;
 		}
 
-		if (\Str::contains($message, 'snooze_')) {
+//		if (\Str::contains($message, 'snooze_')) {
+//		}
+
+		$botMan->hears('snooze_([0-9]+_[0-9]+)', function (BotMan $botMan) use ($message) {
 			$botMan->startConversation(new SnoozeConversation($message));
-		} else {
-			$botMan->startConversation(new SetupConversation());
-		}
+			ray('start snooze' . $message);
+		});
+		$botMan->fallback(function (Botman $botMan) {
+//			$botMan->startConversation(new SetupConversation());
+		});
 
 		$botMan->exception(BotManException::class, function (Throwable $throwable, $bot) {
 			$bot->reply('An error occurred. Try again later...');
