@@ -30,7 +30,7 @@ class SnoozeConversation extends Conversation
 		$message = Str::replace('snooze_', '', $message);
 		$segments = Str::of($message)->split('/[\s_]+/');
 		$this->cooldownMinutes = $segments->pop() ?? 0;
-		$this->triggerId = $segments->pop();
+		$this->triggerId = $segments->pop() ?? -1;
 	}
 
 	/**
@@ -39,9 +39,12 @@ class SnoozeConversation extends Conversation
 	 */
 	public function run(): void
 	{
-		NotificationTrigger::find($this->triggerId)
-			->cooldown(CooldownTypes::TELEGRAM_NOTIFICATION)
-			->until(now()->addHours($this->cooldownMinutes));
+		$trigger = NotificationTrigger::find($this->triggerId);
+		if (is_null($trigger)) {
+			return;
+		}
+		$trigger->cooldown(CooldownTypes::TELEGRAM_NOTIFICATION)
+			->until(now()->addMinutes($this->cooldownMinutes));
 
 		$this->telegramMessageService->send(
 			trans_choice('bot/snooze.snooze', $this->cooldownMinutes, ['time' => $this->cooldownMinutes / 60]),

@@ -25,7 +25,7 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 		return TelegramFile::create()
 			->content(
 				__('notifications/telegram/warning.message', [
-					'vaultId'           => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vault_id'           => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
