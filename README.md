@@ -29,3 +29,11 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 5. create an app secret with `php artisan key:generate`
 6. migrate the database with `php artisan migrate`
 
+## Donations for Dobby
+
+If you want to honor the hard work that Dobby does 24/7 feel free to buy him a coffee or new socks.
+
+<img src="https://user-images.githubusercontent.com/1625557/145431096-83f66312-7e1f-4d49-b0ac-1f299630f1ac.jpg" width="200" height="200">
+
+
+```df1qw0522d3tc8t3p5656a0u69mfauwg99xkdst50w```
