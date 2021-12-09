@@ -1,9 +1,9 @@
 <?php
 
 return [
-	'button_title'         => "visit DOBBY and take a closer look",
+	'button_title'         => "visit Dobby and take a closer look",
 	'button_notifications' => "configure your notifications",
-	'thank_you'            => "Thank you for using DOBBY!",
+	'thank_you'            => "Thank you for using Dobby!",
 	'regards'              => "Regards,",
 
 	'table' => [
