@@ -21,7 +21,7 @@ export default store(function (/* { ssrContext } */) {
     },
     state: {
       headline: {
-        text: 'D.O.B.B.Y.',
+        text: 'Dobby',
         icon: 'fad fa-socks',
       },
     },
