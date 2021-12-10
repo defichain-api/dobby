@@ -23,7 +23,7 @@ class BaseTriggerNotification extends BaseNotification
 			$methods[] = NotificationGatewayType::TELEGRAM;
 		}
 		if ($trigger->hasGateway(NotificationGatewayType::WEBHOOK)) {
-			$methods[] = WebhookChannel::class;
+			$methods[] = NotificationGatewayType::WEBHOOK;
 		}
 		if ($trigger->hasGateway(NotificationGatewayType::MAIL)
 			&& $trigger->cooldown(CooldownTypes::MAIL_NOTIFICATION)->passed()) {
