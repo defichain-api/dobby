@@ -26,7 +26,7 @@ class DemoNotification extends BaseNotification implements ShouldQueue
 		return match ($this->channel) {
 			NotificationGatewayType::TELEGRAM => [NotificationGatewayType::TELEGRAM],
 			NotificationGatewayType::MAIL => [NotificationGatewayType::MAIL],
-			NotificationGatewayType::WEBHOOK => [WebhookChannel::class],
+			NotificationGatewayType::WEBHOOK => [NotificationGatewayType::WEBHOOK],
 			default => [],
 		};
 	}

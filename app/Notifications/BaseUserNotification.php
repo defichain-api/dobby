@@ -22,7 +22,7 @@ class BaseUserNotification extends BaseNotification
 			$methods[] = NotificationGatewayType::TELEGRAM;
 		}
 		if ($user->hasGateway(NotificationGatewayType::WEBHOOK)) {
-			$methods[] = WebhookChannel::class;
+			$methods[] = NotificationGatewayType::WEBHOOK;
 		}
 		if ($user->hasGateway(NotificationGatewayType::MAIL)
 			&& $user->cooldown($this->cooldownIdentifier(CooldownTypes::MAIL_NOTIFICATION))->passed()) {

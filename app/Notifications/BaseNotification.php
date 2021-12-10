@@ -19,13 +19,17 @@ class BaseNotification extends Notification
 		$this->statisticService = app(StatisticService::class);
 	}
 
-	#[ArrayShape(['telegram' => "string", 'mail' => "string", 'webhook' => "string"])]
+	#[ArrayShape([
+		NotificationGatewayType::TELEGRAM => "string",
+		NotificationGatewayType::MAIL     => "string",
+		NotificationGatewayType::WEBHOOK  => "string",
+	])]
 	public function viaQueues(): array
 	{
 		return [
-			'telegram' => QueueName::NOTIFICATION_TELEGRAM_QUEUE,
-			'mail'     => QueueName::NOTIFICATION_EMAIL_QUEUE,
-			'webhook'  => QueueName::NOTIFICATION_WEBHOOK_QUEUE,
+			NotificationGatewayType::TELEGRAM => QueueName::NOTIFICATION_TELEGRAM_QUEUE,
+			NotificationGatewayType::MAIL     => QueueName::NOTIFICATION_EMAIL_QUEUE,
+			NotificationGatewayType::WEBHOOK  => QueueName::NOTIFICATION_WEBHOOK_QUEUE,
 		];
 	}
 

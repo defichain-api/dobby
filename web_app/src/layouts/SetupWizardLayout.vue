@@ -12,7 +12,7 @@
         <q-btn flat no-caps no-wrap>
           <q-icon name="fad fa-socks" size="28px" />
           <q-toolbar-title shrink class="text-weight-bold">
-            D.O.B.B.Y.
+            Dobby
           </q-toolbar-title>
         </q-btn>
         <q-space />
