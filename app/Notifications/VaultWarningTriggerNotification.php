@@ -21,11 +21,13 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::WARNING);
+		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM, now()->addMinutes(15));
 
 		return TelegramFile::create()
 			->content(
 				__('notifications/telegram/warning.message', [
-					'vaultId'           => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vault_id'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vault_name'        => $this->vault->pivot->name ?? '',
 					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
@@ -64,7 +66,8 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 					'vaultId'          => $this->vault->vaultId,
 					'ratio'            => $notificationTrigger->ratio,
 					'currentRatio'     => $this->vault->collateralRatio,
-					'collateralAmount' => $this->formatNumberForTrigger($notificationTrigger, $this->vault->collateralValue),
+					'collateralAmount' => $this->formatNumberForTrigger($notificationTrigger,
+						$this->vault->collateralValue),
 					'loanValue'        => $this->formatNumberForTrigger($notificationTrigger, $this->vault->loanValue),
 					'difference'       => app(VaultService::class)->calculateCollateralDifference($this->vault,
 						$notificationTrigger->ratio),

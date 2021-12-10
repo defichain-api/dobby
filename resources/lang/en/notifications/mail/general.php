@@ -7,6 +7,7 @@ return [
 	'regards'              => "Regards,",
 
 	'table' => [
+		'vault_name'       => 'vault name',
 		'vault_id'         => 'vault id',
 		'current_ratio'    => 'current ratio',
 		'min_ratio'        => 'min. ratio',

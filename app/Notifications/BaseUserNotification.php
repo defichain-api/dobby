@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Channel\WebhookChannel;
 use App\Enum\CooldownTypes;
 use App\Enum\NotificationGatewayType;
 use App\Models\User;
