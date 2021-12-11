@@ -6,7 +6,6 @@ use App\Api\Service\NotificationGatewayService;
 use App\Enum\NotificationGatewayType;
 use App\Models\User;
 use BotMan\BotMan\Messages\Conversations\Conversation;
-use JetBrains\PhpStorm\Pure;
 use Str;
 
 class SetupConversation extends Conversation

@@ -6,6 +6,7 @@ use App\Api\Requests\CreateNotificationGatewayRequest;
 use App\Api\Requests\DeleteNotificationGatewayRequest;
 use App\Enum\NotificationGatewayType;
 use App\Models\NotificationGateway;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class NotificationGatewayService
@@ -29,17 +30,21 @@ class NotificationGatewayService
 		]);
 	}
 
-	public function delete(DeleteNotificationGatewayRequest $request): bool
+	public function delete(User $user, int $gatewayId): bool
 	{
-
 		try {
-			$notificationGateway = NotificationGateway::where('userId', $request->get('user')->id)
-				->where('id', $request->gatewayId())->firstOrFail();
+			$notificationGateway = NotificationGateway::where('userId', $user->id)
+				->where('id', $gatewayId)->firstOrFail();
 		} catch (ModelNotFoundException) {
 			return false;
 		}
 
 		return $notificationGateway->delete();
+	}
+
+	public function deleteWithRequest(DeleteNotificationGatewayRequest $request): bool
+	{
+		return $this->delete($request->get('user'), $request->gatewayId());
 	}
 
 	public function hasGatewayWithValue(string $senderId, string $gatewayType): bool

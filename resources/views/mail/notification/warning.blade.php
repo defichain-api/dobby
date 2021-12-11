@@ -12,7 +12,7 @@
 
 {{ __('notifications/mail/warning.message_difference', [
 	'ratio' => $notificationTrigger->ratio,
-	'difference' => app(\App\Models\Service\VaultService::class)->calculateCollateralDifference(
+	'difference' => app(\App\Api\Service\VaultRepository::class)->calculateCollateralDifference(
 		$vault,
 		$notificationTrigger->ratio
 	),

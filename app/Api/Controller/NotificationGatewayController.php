@@ -62,7 +62,7 @@ class NotificationGatewayController
 		DeleteNotificationGatewayRequest $request,
 		NotificationGatewayService       $service
 	): JsonResponse {
-		$success = $service->delete($request);
+		$success = $service->deleteWithRequest($request);
 
 		if (!$success) {
 			return response()->json([

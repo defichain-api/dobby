@@ -2,9 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
-use App\Models\Service\VaultService;
 use App\Models\User;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
@@ -27,7 +27,7 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 				__('notifications/telegram/may_liquidation.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'difference'     => app(VaultService::class)->calculateCollateralDifference($this->vault, 300),
+					'difference'     => app(VaultRepository::class)->calculateCollateralDifference($this->vault, 300),
 				])
 			)
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
@@ -62,7 +62,7 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 				'data' => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'difference'    => app(VaultService::class)->calculateCollateralDifference($this->vault, 300),
+					'difference'    => app(VaultRepository::class)->calculateCollateralDifference($this->vault, 300),
 				],
 			])->useSecret($user->id);
 	}

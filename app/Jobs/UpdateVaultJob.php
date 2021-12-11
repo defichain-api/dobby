@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Api\Service\VaultRepository;
+use App\Api\Service\VaultService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,7 +16,10 @@ class UpdateVaultJob implements ShouldQueue
 
 	public function __construct(protected array $vaults) {}
 
-	public function handle(VaultRepository $vaultService): void
+	/**
+	 * @throws \App\Api\Exceptions\DefichainApiException
+	 */
+	public function handle(VaultService $vaultService): void
 	{
 		$vaultService->updateVaults($this->vaults);
 	}

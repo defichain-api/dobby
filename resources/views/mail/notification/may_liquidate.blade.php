@@ -14,7 +14,7 @@
 
 {{ __('notifications/mail/warning.message_difference', [
 	'ratio' => 300,
-	'difference' => app(\App\Models\Service\VaultService::class)->calculateCollateralDifference($vault, 300),
+	'difference' => app(\App\Api\Service\VaultRepository::class)->calculateCollateralDifference($vault, 300),
 ]) }}
 
 @component('mail::button', ['url' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId)])

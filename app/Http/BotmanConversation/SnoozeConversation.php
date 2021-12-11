@@ -2,26 +2,20 @@
 
 namespace App\Http\BotmanConversation;
 
-use App\Api\Service\NotificationGatewayService;
 use App\Enum\CooldownTypes;
-use App\Enum\NotificationGatewayType;
 use App\Models\NotificationTrigger;
-use App\Models\User;
 use BotMan\BotMan\Messages\Conversations\Conversation;
-use JetBrains\PhpStorm\Pure;
 use Str;
 
 class SnoozeConversation extends Conversation
 {
 	protected TelegramMessageService $telegramMessageService;
-	protected NotificationGatewayService $gatewayService;
 	protected int $cooldownMinutes;
 	protected int $triggerId;
 
 	public function __construct(string $message)
 	{
 		$this->telegramMessageService = new TelegramMessageService(app('botman'));
-		$this->gatewayService = app(NotificationGatewayService::class);
 
 		/**
 		 * message has the format:
