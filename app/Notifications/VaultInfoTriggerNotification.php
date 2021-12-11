@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
-use App\Models\Service\VaultService;
 use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -21,6 +21,8 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::INFO);
+		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM, now()->addMinutes(15));
+
 
 		return TelegramFile::create()
 			->content(
@@ -29,11 +31,9 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
-					'collateral_amount' => $this->formatNumberForTrigger($notificationTrigger,
-						$this->vault->collateralValue, 2),
-					'loan_value'        => $this->formatNumberForTrigger($notificationTrigger, $this->vault->loanValue,
-						2),
-					'difference'        => app(VaultService::class)->calculateCollateralDifference($this->vault,
+					'collateral_amount' => $this->formatNumberForTrigger($notificationTrigger, $this->vault->collateralValue, 2),
+					'loan_value'        => $this->formatNumberForTrigger($notificationTrigger, $this->vault->loanValue, 2),
+					'difference'        => app(VaultRepository::class)->calculateCollateralDifference($this->vault,
 						$notificationTrigger->ratio),
 				])
 			)
@@ -87,7 +87,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 						$this->vault->collateralValue, 2),
 					'loanValue'        => $this->formatNumberForTrigger($notificationTrigger, $this->vault->loanValue,
 						2),
-					'difference'       => app(VaultService::class)->calculateCollateralDifference($this->vault,
+					'difference'       => app(VaultRepository::class)->calculateCollateralDifference($this->vault,
 						$notificationTrigger->ratio),
 				],
 			])->useSecret($notificationTrigger->vaultId);

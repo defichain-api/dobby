@@ -7,13 +7,14 @@ use App\Api\Requests\CreateVaultRequest;
 use App\Api\Requests\DeleteVaultRequest;
 use App\Api\Requests\UpdateVaultRequest;
 use App\Api\Service\VaultRepository;
+use App\Api\Service\VaultService;
 use App\Models\Vault;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class VaultController
 {
-	public function createUserVault(CreateVaultRequest $request, VaultRepository $vaultService): JsonResponse
+	public function createUserVault(CreateVaultRequest $request, VaultService $vaultService): JsonResponse
 	{
 		try {
 			if (!$vaultService->setVaultForUser($request->get('user'), $request->vaultId())) {
@@ -37,7 +38,7 @@ class VaultController
 
 	public function updateUserVaultName(
 		UpdateVaultRequest $request,
-		VaultRepository    $vaultService,
+		VaultService       $vaultService,
 		Vault              $vault
 	): JsonResponse {
 		$vaultService->setVaultName($request->get('user'), $vault, $request->name());
@@ -48,7 +49,7 @@ class VaultController
 		], Response::HTTP_OK);
 	}
 
-	public function deleteUserVault(DeleteVaultRequest $request, VaultRepository $vaultService): JsonResponse
+	public function deleteUserVault(DeleteVaultRequest $request, VaultService $vaultService): JsonResponse
 	{
 		$vaultService->detachVaultFromUser($request->get('user'), $request->vaultId());
 

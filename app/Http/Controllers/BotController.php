@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\BotmanConversation\SetupConversation;
+use App\Api\Service\NotificationGatewayService;
+use App\Http\BotmanConversation\DisableGatewayConversation;
 use App\Http\BotmanConversation\SnoozeConversation;
+use App\Http\BotmanConversation\StateConversation;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Exceptions\Base\BotManException;
 use Exception;
@@ -22,11 +24,17 @@ class BotController
 			return;
 		}
 
-		if (\Str::contains($message, 'snooze_')) {
+		$botMan->hears('snooze_([0-9]+_[0-9]+)', function (BotMan $botMan) use ($message) {
 			$botMan->startConversation(new SnoozeConversation($message));
-		} else {
-			$botMan->startConversation(new SetupConversation());
-		}
+		});
+		$botMan->hears('/vault_state', function (BotMan $botMan){
+			$botMan->startConversation(new StateConversation());
+		});
+		$botMan->hears('/disable_telegram', function (BotMan $botMan){
+			$botMan->startConversation(new DisableGatewayConversation(app(NotificationGatewayService::class)));
+		});
+		$botMan->fallback(function (Botman $botMan) {
+		});
 
 		$botMan->exception(BotManException::class, function (Throwable $throwable, $bot) {
 			$bot->reply('An error occurred. Try again later...');

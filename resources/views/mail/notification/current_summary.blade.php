@@ -3,10 +3,10 @@
 {{ __('notifications/mail/current_summary.message') }}
 
 @component('mail::table')
-    | {{ __('notifications/mail/general.table.vault_id') }} | {{ __('notifications/mail/general.table.min_ratio') }}|{{ __('notifications/mail/general.table.current_ratio') }} | {{ __('notifications/mail/general.table.collateral_value') }} | {{ __('notifications/mail/general.table.loan_value') }} |
-    | ------------- |:-------------:|:-------------:| :----------------: | :--------: |
+    | {{ __('notifications/mail/general.table.vault_name') }} | {{ __('notifications/mail/general.table.vault_id') }}| {{ __('notifications/mail/general.table.min_ratio') }}|{{ __('notifications/mail/general.table.current_ratio')}} | {{ __('notifications/mail/general.table.collateral_value') }} | {{ __('notifications/mail/general.table.loan_value') }} |
+    | ------------- | ------------- |:-------------:|:-------------:| :----------------: | :--------: |
     @foreach($vaults as $vault)
-    | [{{ str_truncate_middle($vault['vault_id'], 15) }}]({{ $vault['vault_deeplink'] }}) | {{ $vault['min_col_ratio'] }} % | {{$vault['current_ratio'] }} % |{{ $vault['collateral_amount'] }} USD | {{ $vault['loan_value'] }} USD |
+    |{{ $vault['vault_name'] }}| [{{ str_truncate_middle($vault['vault_id'], 15) }}]({{ $vault['vault_deeplink'] }}) |{{$vault['min_col_ratio'] }} % | {{$vault['current_ratio'] }} % |{{ $vault['collateral_amount'] }} USD | {{ $vault['loan_value'] }} USD |
     @endforeach
 @endcomponent
 

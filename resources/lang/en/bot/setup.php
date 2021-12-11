@@ -9,4 +9,6 @@ return [
 		'collect_data'   => "*Dobby* is busy doing magic(al?) things, please give him some seconds...",
 		'setup_finished' => "Now *Dobby* knows how to reach you.\r\n\r\nGo back to Dobby on :url and finish your setup.",
 	],
+
+	'unknown_user' => "*Dobby* has problems to recognize who you are. Please set up your telegram account at :url",
 ];

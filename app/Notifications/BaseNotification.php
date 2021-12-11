@@ -2,14 +2,10 @@
 
 namespace App\Notifications;
 
-use App\Channel\WebhookChannel;
-use App\Enum\CooldownTypes;
-use App\Enum\NotificationGatewayType;
 use App\Enum\QueueName;
 use App\Models\NotificationTrigger;
 use App\Models\Service\StatisticService;
 use App\Models\User;
-use App\Models\Vault;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notification;
 use JetBrains\PhpStorm\ArrayShape;
@@ -26,8 +22,7 @@ class BaseNotification extends Notification
 	#[ArrayShape([
 		NotificationGatewayType::TELEGRAM => "string",
 		NotificationGatewayType::MAIL     => "string",
-		NotificationGatewayType::WEBHOOK  =>
-			"string",
+		NotificationGatewayType::WEBHOOK  => "string",
 	])]
 	public function viaQueues(): array
 	{

@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
 use App\Models\User;
@@ -67,27 +68,7 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 
 	protected function vaultsData(User $user): array
 	{
-		$data = rescue(fn() => cache()->remember(
-			sprintf('user_%s_vaults', $user->id),
-			now()->addMinutes(2),
-			function () use ($user) {
-				$vaults = $user->vaults;
-				$vaultData = [];
-				$vaults->each(function (Vault $vault) use (&$vaultData, $user) {
-					$vaultData[] = [
-						'vault_id'          => $vault->vaultId,
-						'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
-						'min_col_ratio'     => $vault->loanScheme->minCollaterationRatio,
-						'current_ratio'     => $vault->collateralRatio,
-						'collateral_amount' => number_format_for_language($vault->collateralValue, 2, $user->language),
-						'loan_value'        => number_format_for_language($vault->loanValue, 2, $user->language),
-					];
-				});
-
-				return $vaultData;
-			}), [], false);
-
-		return $data;
+		return app(VaultRepository::class)->vaultsDataForUser($user);
 	}
 
 	protected function cooldownIdentifier(string $type): string
