@@ -29,6 +29,11 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 5. create an app secret with `php artisan key:generate`
 6. migrate the database with `php artisan migrate`
 
+### Telegram bot commands
+
+- vault_state - get the current states of your vault/s
+- disable_telegram - unlink your telegram from Dobby
+
 ## Donations for Dobby
 
 If you want to honor the hard work that Dobby does 24/7 feel free to buy him a coffee or new socks.
