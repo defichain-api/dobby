@@ -28,6 +28,8 @@ Route::middleware(['webapp_auth'])->group(function () {
 	Route::name('user.')->prefix('user')->group(function () {
 		Route::get('/', [UserController::class, 'getUser'])
 			->name('get');
+		Route::put('/', [UserController::class, 'updateUser'])
+			->name('update');
 		Route::delete('/', [UserController::class, 'deleteUser'])
 			->middleware('uneditable_demo')
 			->name('delete');
