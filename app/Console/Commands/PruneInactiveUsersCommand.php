@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class PruneInactiveUsersCommand extends Command
 {
-	protected $signature = 'prune:inactive-users {--after=7}';
+	protected $signature = 'prune:inactive-users {--after=14}';
 	protected $description = 'Prune inactive users. argument: after=X (in days)';
 
 	public function handle(): void

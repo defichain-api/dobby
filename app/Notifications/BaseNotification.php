@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Enum\NotificationGatewayType;
 use App\Enum\QueueName;
 use App\Models\NotificationTrigger;
 use App\Models\Service\StatisticService;
