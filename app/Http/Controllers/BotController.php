@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Api\Service\NotificationGatewayService;
 use App\Http\BotmanConversation\DisableGatewayConversation;
+use App\Http\BotmanConversation\SetupConversation;
 use App\Http\BotmanConversation\SnoozeConversation;
 use App\Http\BotmanConversation\StateConversation;
 use BotMan\BotMan\BotMan;
@@ -34,6 +35,7 @@ class BotController
 			$botMan->startConversation(new DisableGatewayConversation(app(NotificationGatewayService::class)));
 		});
 		$botMan->fallback(function (Botman $botMan) {
+			$botMan->startConversation(new SetupConversation());
 		});
 
 		$botMan->exception(BotManException::class, function (Throwable $throwable, $bot) {
