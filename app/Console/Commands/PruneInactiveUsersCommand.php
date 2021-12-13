@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Api\Service\UserService;
 use App\Models\User;
 use Illuminate\Console\Command;
 
@@ -10,7 +11,7 @@ class PruneInactiveUsersCommand extends Command
 	protected $signature = 'prune:inactive-users {--after=14}';
 	protected $description = 'Prune inactive users. argument: after=X (in days)';
 
-	public function handle(): void
+	public function handle(UserService $userService): void
 	{
 		$afterDays = $this->option('after');
 		if ($afterDays < 7) {
@@ -32,13 +33,13 @@ class PruneInactiveUsersCommand extends Command
 			$userCount,
 			$afterDays
 		));
-		$users->each(function (User $user) {
+		$users->each(function (User $user) use ($userService) {
 			if (\Str::contains($user->id, 'demo')) {
 				return;
 			}
 			$user->gateways()->delete();
 			$this->info(sprintf('deleted notification gateways for user %s', $user->id));
-			if ($user->delete()) {
+			if ($userService->delete($user)) {
 				$this->info(sprintf('deleted user %s', $user->id));
 			} else {
 				$this->warn(sprintf('could not delete user %s', $user->id));
