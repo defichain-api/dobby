@@ -89,6 +89,7 @@ return [
 	'available_themes' => [
 		'light',
 		'dark',
+		'auto',
 	],
 
 	/*

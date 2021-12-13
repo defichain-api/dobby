@@ -2,6 +2,7 @@
 
 namespace App\Api\Controller;
 
+use App\Api\Requests\UpdateUserRequest;
 use App\Api\Service\UserService;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
@@ -13,6 +14,16 @@ class UserController
 	public function getUser(Request $request): JsonResponse
 	{
 		return response()->json(new UserResource($request->get('user')), Response::HTTP_OK);
+	}
+
+	public function updateUser(UpdateUserRequest $request, UserService $service): JsonResponse
+	{
+		$service->update($request);
+
+		return response()->json([
+			'state'   => 'ok',
+			'message' => 'user updated',
+		], Response::HTTP_OK);
 	}
 
 	public function deleteUser(Request $request, UserService $service): JsonResponse
