@@ -23,18 +23,19 @@ class OceanApiClient
 	/**
 	 * @throws \App\Api\Exceptions\OceanApiException
 	 */
-	public function loadVaultsForPage(string $next = ''): array
+	public function loadVaultsForPage(string $nextPage = ''): array
 	{
-		$path = config('defichain_ocean.vaults.get');
-		if ($next !== '') {
-			$path .= sprintf('&next=%s', $next);
-		}
+		$path = strlen($nextPage) > 0
+			? sprintf('%s?next=%s', config('defichain_ocean.vaults.get'), $nextPage)
+			: config('defichain_ocean.vaults.get');
 
 		try {
-			return json_decode($this->client->get($path)->getBody()->getContents(), true);
+			$response = $this->client->get($path);
 		} catch (GuzzleException $e) {
 			throw OceanApiException::message('loadVaultsForPage', $e);
 		}
+
+		return json_decode($response->getBody()->getContents(), true);
 	}
 
 	/**
