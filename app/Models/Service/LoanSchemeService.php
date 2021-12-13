@@ -10,9 +10,9 @@ class LoanSchemeService
 	{
 		foreach ($rawLoanSchemes as $rawLoanScheme) {
 			LoanScheme::updateOrCreate([
-				'name' => $rawLoanScheme['name'],
+				'name' => $rawLoanScheme['id'],
 			], [
-				'minCollaterationRatio' => $rawLoanScheme['minCollaterationRatio'],
+				'minCollaterationRatio' => (int) $rawLoanScheme['minColRatio'],
 				'interestRate'          => $rawLoanScheme['interestRate'],
 			]);
 		}
