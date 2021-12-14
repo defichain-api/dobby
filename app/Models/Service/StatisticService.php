@@ -27,7 +27,10 @@ class StatisticService
 		Statistic::updateOrCreate([
 			'date' => today(),
 		], [
-			'vault_count' => Vault::count(),
+			'vault_count' => Vault::withCount('users')
+				->having('users_count', '>', 0)
+				->where('vaultId', 'NOT LIKE', '%demo%')
+				->count(),
 		]);
 
 		return $this;
