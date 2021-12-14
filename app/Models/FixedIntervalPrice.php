@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
- * @property int     id
- * @property string  priceFeedId
- * @property string  priceBase
- * @property float   activePrice
- * @property float   nextPrice
- * @property Carbon  timestamp
- * @property string  validFromTimeString
- * @property boolean isLive
+ * @property int    id
+ * @property string priceFeedId
+ * @property string priceBase
+ * @property float  activePrice
+ * @property float  nextPrice
+ * @property Carbon timestamp
+ * @property int    blockHeight
+ * @property string validFromTimeString
  */
 class FixedIntervalPrice extends Model
 {
@@ -29,7 +29,7 @@ class FixedIntervalPrice extends Model
 		'activePrice',
 		'nextPrice',
 		'timestamp',
-		'isLive',
+		'blockHeight',
 	];
 
 	public function getValidFromTimeStringAttribute(): string
