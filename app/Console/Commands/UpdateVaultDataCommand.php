@@ -5,12 +5,8 @@ namespace App\Console\Commands;
 use App\Api\Exceptions\OceanApiException;
 use App\Api\Service\VaultService;
 use App\ApiClient\OceanApiClient;
-use App\Enum\QueueName;
-use App\Jobs\UpdateVaultJob;
-use App\Models\Vault;
 use Arr;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 
 class UpdateVaultDataCommand extends Command
 {
@@ -39,7 +35,8 @@ class UpdateVaultDataCommand extends Command
 		}
 		$this->info(sprintf('%s: vault update ended', now()->toDateTimeString()));
 		$this->newLine(2);
-		$this->info(sprintf('time: %s sec (%s min)', $startTime->diffInSeconds(now()), $startTime->diffInMinutes(now())));
+		$this->info(sprintf('time: %s sec (%s min)', $startTime->diffInSeconds(now()),
+			$startTime->diffInMinutes(now())));
 	}
 
 	/**
@@ -53,18 +50,19 @@ class UpdateVaultDataCommand extends Command
 
 		while ($hasPages) {
 			$data = app(OceanApiClient::class)->loadVaultsForPage($nextPage);
-			$nextPage = $data['page']['next'] ?? 'n/a';
 			$vaults = $data['data'] ?? [];
 			$this->output->write('.', false);
 
 			$vaultService->updateVaults($vaults);
 
-			if ($nextPage === 'n/a') {
-				$hasPages = false;
-			}
-
 			$vaultCount += count($vaults);
+			if (!Arr::has($data, 'page.next')) {
+				$hasPages = false;
+				continue;
+			}
+			$nextPage = $data['page']['next'];
 		}
+
 		$this->newLine(2);
 		$this->info(sprintf('updated %s vaults', $vaultCount));
 	}
