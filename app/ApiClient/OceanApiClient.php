@@ -26,7 +26,7 @@ class OceanApiClient
 	public function loadVaultsForPage(string $nextPage = ''): array
 	{
 		$path = strlen($nextPage) > 0
-			? sprintf('%s?next=%s', config('defichain_ocean.vaults.get'), $nextPage)
+			? sprintf('%s&next=%s', config('defichain_ocean.vaults.get'), $nextPage)
 			: config('defichain_ocean.vaults.get');
 
 		try {

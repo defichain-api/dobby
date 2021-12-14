@@ -7,6 +7,7 @@ use App\Models\LoanScheme;
 use App\Models\User;
 use App\Models\Vault;
 use Exception;
+use Str;
 
 class VaultService
 {
@@ -41,12 +42,8 @@ class VaultService
 		return true;
 	}
 
-	/**
-	 * @throws \App\Api\Exceptions\DefichainApiException
-	 */
-	public function updateVaults(array $vaultIds): bool
+	public function updateVaults(array $vaults): bool
 	{
-		$vaults = $this->apiClient->getMultipleVaults($vaultIds);
 		if (count($vaults) === 0) {
 			return false;
 		}
@@ -89,21 +86,21 @@ class VaultService
 		return Vault::updateOrCreate([
 			'vaultId' => (string) $data['vaultId'],
 		], [
-			'loanSchemeId'       => $loanSchemes->where('name', '=', $data['loanSchemeId'])->first()->id,
+			'loanSchemeId'       => $loanSchemes->where('name', '=', $data['loanScheme']['id'])->first()->id,
 			'ownerAddress'       => $data['ownerAddress'],
-			'state'              => $data['state'],
-			'collateralAmounts'  => $data['collateralAmounts'],
-			'loanAmounts'        => $data['loanAmounts'],
-			'interestAmounts'    => $data['interestAmounts'],
-			'collateralValue'    => $data['collateralValue'],
-			'loanValue'          => $data['loanValue'],
-			'interestValue'      => $data['interestValue'],
-			'informativeRatio'   => $data['informativeRatio'],
-			'collateralRatio'    => $data['collateralRatio'],
-			'liquidationHeight'  => $data['liquidationHeight'],
-			'batchCount'         => $data['batchCount'],
-			'liquidationPenalty' => $data['liquidationPenalty'],
-			'batches'            => $data['batches'],
+			'state'              => Str::lower($data['state']),
+			'collateralAmounts'  => $data['collateralAmounts'] ?? [],
+			'loanAmounts'        => $data['loanAmounts'] ?? [],
+			'interestAmounts'    => $data['interestAmounts'] ?? [],
+			'collateralValue'    => $data['collateralValue'] ?? null,
+			'loanValue'          => $data['loanValue'] ?? null,
+			'interestValue'      => $data['interestValue'] ?? 0,
+			'informativeRatio'   => $data['informativeRatio'] ?? 0,
+			'collateralRatio'    => $data['collateralRatio'] ?? null,
+			'liquidationHeight'  => $data['liquidationHeight'] ?? null,
+			'batchCount'         => $data['batchCount'] ?? 0,
+			'liquidationPenalty' => $data['liquidationPenalty'] ?? 0,
+			'batches'            => $data['batches'] ?? [],
 		]);
 	}
 
