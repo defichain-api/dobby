@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "DeFiChain Dobby",
+    "short_name": "Dobby",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#ad0077",
+    "background_color": "#ad0077",
     "display": "standalone"
 }

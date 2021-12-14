@@ -2,8 +2,8 @@
   <div class="q-pa-md row items-start q-gutter-md">
     <q-card flat :bordered="$q.dark.isActive">
       <q-card-section>
-        <div class="text-h4 q-my-lg">Hello, friend <q-icon name="fas fa-hat-wizard" /></div>
-        <div class="text-body1 text-italic q-mt-lg">
+        <div class="text-h4 q-mb-lg">Hello, friend <q-icon name="fas fa-hat-wizard" /></div>
+        <div class="q-mt-lg">
           This is Dobby - your personal <a href="https://defichain.com/" class="text-primary">DeFiChain</a> house elf. Dobby is happy because you found your way to him.
           He is very useful because he keeps you informed about your <a href="https://defichain.com/" class="text-primary">DeFiChain</a> vaults when they get in trouble.
           <br />
@@ -25,23 +25,76 @@
                 This is achieved by a combination of this app and - what we call -
                 notification channels.
                 <br />
-                You can choose from receiving messages via Telegram and Email for now.
-                More will follow.
+                You can choose from receiving messages via Telegram, Webhook and Email for now.
               </div>
             </div>
           </div>
         </transition>
       </q-card-section>
     </q-card>
+
     <q-card flat :bordered="$q.dark.isActive">
       <q-card-section>
-        <div class="text-h6 q-my-lg">Meet my developers <q-icon name="fal fa-flask-potion" /></div>
+        <div class="text-h6 q-mb-lg">Meet my developers <q-icon name="fal fa-flask-potion" /></div>
+        <p>
+          You might know them from other DeFiChain community projects.<br />
+        </p>
         <p>
           They are happy when you send them some feedback and they answer questions, too!
         </p>
         <div class="text-body1 text-italic q-mt-lg">
-            <q-btn type="a" class="full-width q-mb-md" color="primary" href="https://twitter.com/dobby_dfi" icon="fab fa-twitter" label="Twitter (@dobby_dfi)" />
-            <q-btn tyle="a" class="full-width" color="primary" href="https://t.me/defichain_dobby" icon="fab fa-telegram" label="Telegram group" />
+            <q-btn unelevated rounded type="a" class="full-width q-mb-md" color="primary" @click="toTwitter()" icon="fab fa-twitter" label="Twitter (@dobby_dfi)" />
+            <q-btn unelevated rounded tyle="a" class="full-width" color="primary" @click="toTelegramGroup()" icon="fab fa-telegram" label="Telegram group" />
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <q-card flat bordered class="q-mb-md" v-for="dev in devs" :key="dev.name">
+            <q-card-section>
+              <div class="text-h6">{{ dev.name }}</div>
+              {{ dev.role }}
+            </q-card-section>
+            <q-card-section>
+              <q-chip style="background-color: #1DA1F2" text-color="white" icon="fab fa-twitter">
+                @{{ dev.twitter }}
+              </q-chip>
+              <q-chip style="background-color: #0e76a8" text-color="white" icon="fab fa-linkedin">
+                {{ dev.linkedin }}
+              </q-chip>
+              <q-chip v-if="dev.website" color="accent" text-color="white" icon="fal fa-browser">
+                {{ dev.website }}
+              </q-chip>
+            </q-card-section>
+          </q-card>
+      </q-card-section>
+    </q-card>
+
+    <q-card flat :bordered="$q.dark.isActive">
+      <q-card-section class="q-pb-none">
+        <div class="text-h6 q-mb-lg">Buy us a coffee <q-icon name="fal fa-mug-hot" /></div>
+        <p>
+          We've got a bunch of questions where DFI can be sent to make a donation. So, here it is:<br />
+        </p>
+      </q-card-section>
+      <q-card-section class="q-pt-none">
+        <q-card flat class="text-center q-mb-md">
+          <q-card-section class="bg-primary text-white text-caption" style="font-size: 0.8em;">
+            df1qw0522d3tc8t3p5656a0u69mfauwg99xkdst50w
+          </q-card-section>
+          <q-card-section class="bg-accent">
+            <q-btn unelevated rounded color="primary" class="text-white" @click="toClipboard(donationAddress)">Copy to Clipboard</q-btn>
+          </q-card-section>
+        </q-card>
+        <span class="text-body2">(Dobby got socks already)</span>
+      </q-card-section>
+    </q-card>
+
+    <q-card flat :bordered="$q.dark.isActive">
+      <q-card-section>
+        <div class="text-h6 q-mb-lg">Funded by community <q-icon name="fal fa-coins" /></div>
+        <p>
+        </p>
+        <div class="text-body1 text-italic q-mt-lg">
+          <q-btn unelevated rounded type="a" class="full-width q-mb-md" color="primary" @click="toCfp()" icon="fab fa-twitter" label="CFP 2111-02 on GitHub" />
         </div>
       </q-card-section>
     </q-card>
@@ -49,12 +102,80 @@
 </template>
 
 <script>
+import { openURL } from 'quasar'
+import { copyToClipboard } from 'quasar'
+
 export default {
   data() {
     return {
-      showMore: false
+      showMore: false,
+      donationAddress: process.env.DONATION_ADDRESS,
+      devs: [
+        {
+          name: 'Adrian',
+          role: 'API (backend logic)',
+          twitter: 'adrian_schnell',
+          linkedin: 'adrian-schnell-287a2250',
+          website: 'https://roestfrisch.com',
+          other: [
+            {
+              name: 'DFI Signal',
+              link: 'https://www.dfi-signal.com'
+            }
+          ]
+        },
+        {
+          name: 'Chris',
+          role: 'Hosting & Data Sources',
+          twitter: 'sandrich',
+          linkedin: 'christian-sandrini-060b8039',
+          website: null,
+          other: [
+            {
+              name: 'Masternode Monitor',
+              link: 'https://www.defichain-masternode-monitor.com'
+            }
+          ]
+        },
+        {
+          name: 'Michael',
+          role: 'User Interface (this app)',
+          twitter: 'dt_buzzjoe',
+          linkedin: 'derfuchs',
+          website: 'https://www.derfuchs.net',
+          other: [
+            {
+              name: 'Masternode Monitor',
+              link: 'https://www.defichain-masternode-monitor.com'
+            }
+          ]
+        },
+      ]
     }
-  }
+  },
+  methods: {
+    toTwitter() {
+      openURL(process.env.TWITTER_LINK)
+    },
+    toTelegramGroup() {
+      openURL(process.env.TELEGRAM_GROUP_LINK)
+    },
+    toCfp() {
+      openUrl("https://github.com/DeFiCh/dfips/issues/75")
+    },
+    toClipboard(text) {
+      copyToClipboard(text)
+        .then(() => {
+            this.$q.notify({
+              type: 'info',
+              message: 'donation address copied to your clipboard'
+            })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+  },
 }
 </script>
 
@@ -64,8 +185,8 @@ export default {
     li
       list-style: none
   .q-card
-      min-width: 290px
-      max-width: 23%
+      width: 100%
+
 
   body.screen--xs
     .q-card

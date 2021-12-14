@@ -61,8 +61,8 @@ export default defineComponent({
               message: 'Your dobby user key has been copied to your clipboard',
             })
         })
-        .catch(() => {
-          console.log("error")
+        .catch((error) => {
+          console.log(error)
         })
     },
   },

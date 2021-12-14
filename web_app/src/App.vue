@@ -27,14 +27,22 @@ export default defineComponent({
     this.$q.dark.set(this.getSettingValue('darkMode'))
 
     // Load user's vaults when there's a userId set in local storage
+
     if (this.userId && this.userId != null && this.userId != '') {
       if (process.env.DEV) { console.log("[DEBUG] initializing with dobby account " + this.userId) }
 
       // Set auth header for API communication
       this.$api.defaults.headers.common['x-user-auth'] = this.userId
 
-      //Receive user data from Dobby API and store it in vuex store
-      this.loadUserData
+      // Receive user data from Dobby API and store it in vuex store
+      this.loadUserData.catch((error) => {
+        // TODO show information that user's accound was not found
+        //this.$router.push({ name: 'setup' })
+      })
+
+      // Fetch user's notifications
+      this.loadUserNotifications
+
     } else {
       // no user account set
       // redirect to setup
@@ -48,6 +56,7 @@ export default defineComponent({
     }),
     ...mapActions({
       loadUserData: 'account/loadUserData',
+      loadUserNotifications: 'notifications/fetch',
     })
   }
 })

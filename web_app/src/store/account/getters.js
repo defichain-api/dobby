@@ -9,3 +9,7 @@ export function userId(state) {
 export function vaults(state) {
     return state.vaults
 }
+
+export function isDemo(state) {
+    return process.env.DEMO_ACCOUNT_ID == state.userId
+}

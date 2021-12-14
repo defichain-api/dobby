@@ -7,6 +7,11 @@ export default {
             darkMode: 'auto',
             language: 'en',
             privacy: false,
+            numberFormats: {
+                currency: { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 },
+            },
+            triggerMultipleInfo: 1.5,
+            triggerMultipleWarning: 1.25,
         }
     },
     getters: {

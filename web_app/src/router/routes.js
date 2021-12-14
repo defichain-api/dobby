@@ -32,7 +32,7 @@ const routes = [
     children: [{
       name: "manage-notifications",
       path: "",
-      component: () => import("pages/ManageNotifications.vue")
+      component: () => import("src/pages/ManageNotifications.vue")
     }],
   },
   {

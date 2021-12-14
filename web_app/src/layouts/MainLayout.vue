@@ -7,7 +7,7 @@
       size="3px"
       skip-hijack
     />
-    <q-header class="q-py-xs" height-hint="58">
+    <q-header class="q-py-xs bg-primary-dark" height-hint="58">
       <q-toolbar>
         <q-btn
           flat
@@ -93,9 +93,9 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      :width="240"
+      :width="250"
     >
-      <q-scroll-area class="fit">
+      <!--<q-scroll-area class="fit">-->
         <q-list>
           <q-item-label header class="text-weight-bold text-uppercase text-center">
             <q-img
@@ -163,12 +163,14 @@
               <a
                 class="YL__drawer-footer-link text-grey"
               >
-                Version Beta 1
+                Version {{ version }} <br />
+                (Build: {{ release }})<br />
+                (Date: {{ releaseDate }})
               </a>
             </div>
           </div>
         </q-list>
-      </q-scroll-area>
+      <!--</q-scroll-area>-->
     </q-drawer>
 
     <q-page-container>
@@ -192,6 +194,9 @@ export default {
     const darkMode = ref($q.dark.isActive)
     const store = useStore()
     const privacy = ref(store.getters['settings/value']('privacy'))
+    const version = process.env.VERSION
+    const release = process.env.CURRENT_RELEASE
+    const releaseDate = process.env.RELEASE_DATE
 
     function toggleLeftDrawer () {
       leftDrawerOpen.value = !leftDrawerOpen.value
@@ -215,6 +220,9 @@ export default {
       bar,
       darkMode,
       privacy,
+      version,
+      release,
+      releaseDate,
 
       toggleLeftDrawer,
       logout,

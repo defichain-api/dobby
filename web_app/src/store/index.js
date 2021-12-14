@@ -3,6 +3,7 @@ import { createStore } from 'vuex'
 
 import account from './account'
 import settings from './settings'
+import notifications from './notifications'
 
 /*
  * If not building with SSR mode, you can
@@ -17,7 +18,8 @@ export default store(function (/* { ssrContext } */) {
   const Store = createStore({
     modules: {
       account,
-      settings
+      settings,
+      notifications,
     },
     state: {
       headline: {
@@ -28,7 +30,7 @@ export default store(function (/* { ssrContext } */) {
     getters: {
       headline(store) {
         return store.headline
-      }
+      },
     },
     actions: {
       setHeadline({ commit }, headline) {
