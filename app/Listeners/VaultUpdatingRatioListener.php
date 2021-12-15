@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Enum\NotificationTriggerType;
 use App\Enum\QueueName;
+use App\Enum\VaultStates;
 use App\Events\VaultUpdatingRatioEvent;
 use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\User;
@@ -26,8 +27,8 @@ class VaultUpdatingRatioListener implements ShouldQueue
 		$users = $vault->users;
 
 		$users->each(function (User $user) use ($vault) {
-			// cancel reporting if vault is not filled
-			if ($vault->collateralRatio < 0) {
+			// cancel reporting if vault is not filled or not active
+			if ($vault->collateralRatio < 0 || $vault->state !== VaultStates::ACTIVE) {
 				return true;
 			}
 
