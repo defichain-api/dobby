@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
 		$schedule->command(UpdateLoanSchemeCommand::class)
 			->daily();
 		$schedule->command(UpdateFixedIntervalPriceCommand::class)
+			->withoutOverlapping()
 			->everyFiveMinutes();
 		$schedule->command(PruneInactiveUsersCommand::class)
 			->weekly();
