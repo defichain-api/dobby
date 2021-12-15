@@ -67,6 +67,7 @@ class Vault extends Model
 		'state'           => [
 			VaultStates::INLIQUIDATION => VaultUpdatingStateEvent::class,
 			VaultStates::MAYLIQUIDATE  => VaultUpdatingStateEvent::class,
+			VaultStates::FROZEN        => VaultUpdatingStateEvent::class,
 		],
 		'collateralRatio' => VaultUpdatingRatioEvent::class,
 	];
