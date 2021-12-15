@@ -41,8 +41,8 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 			->messageTriggerUsed(NotificationTriggerType::FROZEN);
 
 		return (new MailMessage)
-			->subject(sprintf('%s - %s', __('notifications/mail/in_liquidation.subject'), config('app.name')))
-			->markdown('mail.notification.in_liquidation', [
+			->subject(sprintf('%s - %s', __('notifications/mail/frozen.subject'), config('app.name')))
+			->markdown('mail.notification.frozen', [
 				'vault' => $this->vault,
 			]);
 	}
