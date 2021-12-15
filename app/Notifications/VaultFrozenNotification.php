@@ -20,14 +20,15 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
-			->messageTriggerUsed(NotificationTriggerType::IN_LIQUIDATION);
+			->messageTriggerUsed(NotificationTriggerType::FROZEN);
 
 		return TelegramMessage::create()
 			->content(
-				__('notifications/telegram/in_liquidation.message', [
+				__('notifications/telegram/frozen.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vault_name'     => $this->vault->pivot->name ?? '',
 					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'block_height'   => $this->vault->liquidationHeight,
+					'channel_url'    => config('links.defichain_announcement_channel'),
 				])
 			)
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
@@ -37,7 +38,7 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
-			->messageTriggerUsed(NotificationTriggerType::IN_LIQUIDATION);
+			->messageTriggerUsed(NotificationTriggerType::FROZEN);
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/in_liquidation.subject'), config('app.name')))
@@ -53,16 +54,15 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
-			->messageTriggerUsed(NotificationTriggerType::IN_LIQUIDATION);
+			->messageTriggerUsed(NotificationTriggerType::FROZEN);
 
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::IN_LIQUIDATION,
+				'type' => NotificationTriggerType::FROZEN,
 				'data' => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'blockHeight'   => $this->vault->liquidationHeight,
 				],
 			])->useSecret($user->id);
 	}

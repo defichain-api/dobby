@@ -37,6 +37,6 @@ class VaultUpdatingStateListener implements ShouldQueue
 
 	protected function vaultShouldNotifyUsers(Vault $vault): bool
 	{
-		return in_array($vault->state, [VaultStates::MAYLIQUIDATE, VaultStates::INLIQUIDATION]);
+		return in_array($vault->state, [VaultStates::MAYLIQUIDATE, VaultStates::INLIQUIDATION, VaultStates::FROZEN]);
 	}
 }

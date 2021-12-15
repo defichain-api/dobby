@@ -23,16 +23,18 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 			->messageTriggerUsed(NotificationTriggerType::INFO);
 		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM, now()->addMinutes(15));
 
-
 		return TelegramFile::create()
 			->content(
 				__('notifications/telegram/info.message', [
 					'vault_id'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
+					'vault_name'        => $this->vault->pivot->name ?? '',
 					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
-					'collateral_amount' => $this->formatNumberForTrigger($notificationTrigger, $this->vault->collateralValue, 2),
-					'loan_value'        => $this->formatNumberForTrigger($notificationTrigger, $this->vault->loanValue, 2),
+					'collateral_amount' => $this->formatNumberForTrigger($notificationTrigger,
+						$this->vault->collateralValue, 2),
+					'loan_value'        => $this->formatNumberForTrigger($notificationTrigger, $this->vault->loanValue,
+						2),
 					'difference'        => app(VaultRepository::class)->calculateCollateralDifference($this->vault,
 						$notificationTrigger->ratio),
 				])

@@ -26,6 +26,11 @@ class VaultUpdatingRatioListener implements ShouldQueue
 		// check ratio - send notifications
 		$users = $vault->users;
 
+		// abort if vault has no users tracking it
+		if ($users->count() === 0) {
+			return;
+		}
+
 		$users->each(function (User $user) use ($vault) {
 			// cancel reporting if vault is not filled or not active
 			if ($vault->collateralRatio < 0 || $vault->state !== VaultStates::ACTIVE) {
