@@ -13,23 +13,28 @@ use Illuminate\Notifications\Messages\MailMessage;
 use NotificationChannels\Telegram\TelegramMessage;
 use Spatie\WebhookServer\WebhookCall;
 
-class VaultFrozenNotification extends BaseUserNotification implements ShouldQueue
+class VaultActiveNotification extends BaseUserNotification implements ShouldQueue
 {
 	use Queueable;
+
+	public function __construct(Vault $vault, protected string $vaultOriginalState)
+	{
+		parent::__construct($vault);
+	}
 
 	public function toTelegram(User $notificationTrigger): TelegramMessage
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
-			->messageTriggerUsed(NotificationTriggerType::FROZEN);
+			->messageTriggerUsed(NotificationTriggerType::ACTIVE);
 
 		return TelegramMessage::create()
 			->content(
-				__('notifications/telegram/frozen.message', [
+				__('notifications/telegram/active.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_name'     => $this->vault->pivot->name ?? '',
 					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'channel_url'    => config('links.defichain_announcement_channel'),
+					'original_state' => __(sprintf('vault/states.%s', $this->vaultOriginalState)),
 				])
 			)
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
@@ -39,12 +44,13 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
-			->messageTriggerUsed(NotificationTriggerType::FROZEN);
+			->messageTriggerUsed(NotificationTriggerType::ACTIVE);
 
 		return (new MailMessage)
-			->subject(sprintf('%s - %s', __('notifications/mail/frozen.subject'), config('app.name')))
-			->markdown('mail.notification.frozen', [
-				'vault' => $this->vault,
+			->subject(sprintf('%s - %s', __('notifications/mail/active.subject'), config('app.name')))
+			->markdown('mail.notification.active', [
+				'vault'        => $this->vault,
+				'stateBefore' => __(sprintf('vault/states.%s', $this->vaultOriginalState)),
 			]);
 	}
 
@@ -55,14 +61,15 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
-			->messageTriggerUsed(NotificationTriggerType::FROZEN);
+			->messageTriggerUsed(NotificationTriggerType::ACTIVE);
 
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::FROZEN,
+				'type' => NotificationTriggerType::ACTIVE,
 				'data' => [
 					'vaultId'       => $this->vault->vaultId,
+					'stateBefore'   => $this->vaultOriginalState,
 					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 				],
 			])->useSecret($user->id);

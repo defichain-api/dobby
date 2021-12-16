@@ -68,6 +68,7 @@ class Vault extends Model
 			VaultStates::INLIQUIDATION => VaultUpdatingStateEvent::class,
 			VaultStates::MAYLIQUIDATE  => VaultUpdatingStateEvent::class,
 			VaultStates::FROZEN        => VaultUpdatingStateEvent::class,
+			VaultStates::ACTIVE        => VaultUpdatingStateEvent::class,
 		],
 		'collateralRatio' => VaultUpdatingRatioEvent::class,
 	];
@@ -75,6 +76,21 @@ class Vault extends Model
 	public function getVaultIdAttribute(): string
 	{
 		return $this->attributes['vaultId'];
+	}
+
+	public static function boot()
+	{
+		parent::boot();
+		self::updated(function (Vault $vault) {
+			if (!$vault->isDirty('state')) {
+				return;
+			}
+			$dirtyState = $vault->original['state'];
+			$possibleStates = [VaultStates::FROZEN, VaultStates::MAYLIQUIDATE];
+			if ((in_array($dirtyState, $possibleStates) && $vault->state === VaultStates::ACTIVE)) {
+				cache([sprintf('dirty_%s_state', $vault->vaultId) => $dirtyState], now()->addMinutes(5));
+			}
+		});
 	}
 
 	public function loanScheme(): BelongsTo
