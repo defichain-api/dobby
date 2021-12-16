@@ -7,6 +7,7 @@ use App\Enum\VaultStates;
 use App\Events\VaultUpdatingStateEvent;
 use App\Models\User;
 use App\Models\Vault;
+use App\Notifications\VaultFrozenNotification;
 use App\Notifications\VaultInLiquidationNotification;
 use App\Notifications\VaultMayLiquidateNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,12 +29,14 @@ class VaultUpdatingStateListener implements ShouldQueue
 				$user->notify(new VaultMayLiquidateNotification($vault));
 			} elseif ($vault->state === VaultStates::INLIQUIDATION) {
 				$user->notify(new VaultInLiquidationNotification($vault));
+			} elseif ($vault->state === VaultStates::FROZEN) {
+				$user->notify(new VaultFrozenNotification($vault));
 			}
 		});
 	}
 
 	protected function vaultShouldNotifyUsers(Vault $vault): bool
 	{
-		return in_array($vault->state, [VaultStates::MAYLIQUIDATE, VaultStates::INLIQUIDATION]);
+		return in_array($vault->state, [VaultStates::MAYLIQUIDATE, VaultStates::INLIQUIDATION, VaultStates::FROZEN]);
 	}
 }
