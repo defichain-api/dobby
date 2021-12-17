@@ -4,6 +4,7 @@ namespace App\Models\Service;
 
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
+use App\Enum\VaultStates;
 use App\Models\Statistic;
 use App\Models\User;
 use App\Models\Vault;
@@ -30,6 +31,7 @@ class StatisticService
 			'vault_count' => Vault::withCount('users')
 				->having('users_count', '>', 0)
 				->where('vaultId', 'NOT LIKE', '%demo%')
+				->whereIn('state', [VaultStates::ACTIVE, VaultStates::MAYLIQUIDATE, VaultStates::FROZEN])
 				->count(),
 		]);
 
@@ -41,7 +43,10 @@ class StatisticService
 		Statistic::updateOrCreate([
 			'date' => today(),
 		], [
-			'sum_collateral' => Vault::where('collateralValue', '>', 0)->sum('collateralValue'),
+			'sum_collateral' => Vault::withCount('users')
+				->having('users_count', '>', 0)
+				->whereIn('state', [VaultStates::ACTIVE, VaultStates::MAYLIQUIDATE, VaultStates::FROZEN])
+				->where('collateralValue', '>', 0)->sum('collateralValue'),
 		]);
 
 		return $this;
@@ -52,7 +57,10 @@ class StatisticService
 		Statistic::updateOrCreate([
 			'date' => today(),
 		], [
-			'sum_loan' => Vault::where('loanValue', '>', 0)->sum('loanValue'),
+			'sum_loan' => Vault::withCount('users')
+				->having('users_count', '>', 0)
+				->whereIn('state', [VaultStates::ACTIVE, VaultStates::MAYLIQUIDATE, VaultStates::FROZEN])
+				->where('loanValue', '>', 0)->sum('loanValue'),
 		]);
 
 		return $this;
@@ -63,7 +71,10 @@ class StatisticService
 		Statistic::updateOrCreate([
 			'date' => today(),
 		], [
-			'avg_ratio' => Vault::where('collateralRatio', '>', 0)->avg('collateralRatio'),
+			'avg_ratio' => Vault::withCount('users')
+				->having('users_count', '>', 0)
+				->whereIn('state', [VaultStates::ACTIVE, VaultStates::MAYLIQUIDATE, VaultStates::FROZEN])
+				->where('collateralRatio', '>', 0)->avg('collateralRatio'),
 		]);
 
 		return $this;
