@@ -23,13 +23,14 @@ class VaultService
 	 */
 	public function setVaultsForUser(User $user, array $ownerAddresses): bool
 	{
-		$vaults = $this->apiClient->getMultipleVaults($ownerAddresses);
+		$vaults = Vault::whereIn('vaultId', $ownerAddresses)
+			->orWhereIn('ownerAddress', $ownerAddresses)
+			->get();
 		if (count($vaults) === 0) {
 			return false;
 		}
 
-		foreach ($vaults as $vaultRaw) {
-			$vault = $this->createOrUpdate($vaultRaw);
+		foreach ($vaults as $vault) {
 			try {
 				if (!$this->userHasVaultId($user, $vault->vaultId)) {
 					$this->attachVaultToUser($vault, $user);
