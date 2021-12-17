@@ -23,6 +23,8 @@ class DemoNotification extends BaseNotification implements ShouldQueue
 
 	public function via(User $user): array
 	{
+		$this->notifiable = $user;
+
 		return match ($this->channel) {
 			NotificationGatewayType::TELEGRAM => [NotificationGatewayType::TELEGRAM],
 			NotificationGatewayType::MAIL => [NotificationGatewayType::MAIL],

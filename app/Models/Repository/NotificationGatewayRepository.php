@@ -4,6 +4,7 @@ namespace App\Models\Repository;
 
 use App\Enum\NotificationGatewayType;
 use App\Exceptions\NotificationGatewayException;
+use App\Models\NotificationGateway;
 use App\Models\NotificationTrigger;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,8 +14,8 @@ class NotificationGatewayRepository
 	/**
 	 * @throws \App\Exceptions\NotificationGatewayException
 	 */
-	public function telegram(User|NotificationTrigger $model
-	): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Relations\HasMany {
+	public function telegram(User|NotificationTrigger $model): NotificationGateway
+	{
 		try {
 			return $model->gateways()->where('type', NotificationGatewayType::TELEGRAM)->firstOrFail();
 		} catch (ModelNotFoundException) {
@@ -22,11 +23,26 @@ class NotificationGatewayRepository
 		}
 	}
 
+	public function removeTelegram(User|NotificationTrigger $model): bool
+	{
+		try {
+			$notificationGateway = $this->telegram($model);
+			\Log::info('deleting blocked telegram gateway', [
+				'message'     => 'user blocked telegram bot',
+				'user'        => $notificationGateway->user->id,
+				'telegram_id' => $notificationGateway->value,
+			]);
+			return $notificationGateway->delete();
+		} catch (NotificationGatewayException) {
+			return false;
+		}
+	}
+
 	/**
 	 * @throws \App\Exceptions\NotificationGatewayException
 	 */
-	public function mail(User|NotificationTrigger $model
-	): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Relations\HasMany {
+	public function mail(User|NotificationTrigger $model): NotificationGateway
+	{
 		try {
 			return $model->gateways()->where('type', NotificationGatewayType::MAIL)->firstOrFail();
 		} catch (ModelNotFoundException) {
@@ -37,8 +53,8 @@ class NotificationGatewayRepository
 	/**
 	 * @throws \App\Exceptions\NotificationGatewayException
 	 */
-	public function webhook(User|NotificationTrigger $model
-	): \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Relations\HasMany {
+	public function webhook(User|NotificationTrigger $model): NotificationGateway
+	{
 		try {
 			return $model->gateways()->where('type', NotificationGatewayType::WEBHOOK)->firstOrFail();
 		} catch (ModelNotFoundException) {
