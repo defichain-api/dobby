@@ -4,6 +4,7 @@ namespace App\Http\BotmanConversation;
 
 use App\Api\Service\NotificationGatewayService;
 use App\Enum\NotificationGatewayType;
+use App\Models\NotificationGateway;
 use App\Models\User;
 use BotMan\BotMan\Messages\Conversations\Conversation;
 use Str;
@@ -30,19 +31,25 @@ class SetupConversation extends Conversation
 		$senderId = $message->getSender();
 		$userId = trim(Str::replace('/start', '', $message->getText()));
 
-		if ($userId === '') {
+		$alreadyRegisteredTelegramId = NotificationGateway::whereType(NotificationGatewayType::TELEGRAM)
+			->whereValue($this->bot->getUser()->getId())
+			->count();
+
+		if ($alreadyRegisteredTelegramId > 0) {
+			$this->telegramMessageService->send(__('bot/setup.already_registered'), $senderId);
+		} elseif ($userId === '') {
 			// default state: clicking on /start
 			$this->telegramMessageService->send(__('bot/setup.enter_user_key', ['url' => config('app.url')]),
 				$senderId);
-		} elseif ($this->gatewayService->hasGatewayWithValue($senderId, NotificationGatewayType::TELEGRAM)) {
-			// already connected
-			$this->gatewayService->createOrUpdateTelegramGateway($userId, $senderId);
-			$this->telegramMessageService->send(__('bot/setup.already_registered'), $senderId);
 		} elseif (!Str::isUuid($userId)
 			|| User::where('id', $userId)->count() === 0) {
 			// not registered yet
 			$this->telegramMessageService->send(__('bot/setup.not_registered', ['url' => config('app.url')]),
 				$senderId);
+		} elseif ($this->gatewayService->hasGatewayWithValue($senderId, NotificationGatewayType::TELEGRAM)) {
+			// already connected
+			$this->gatewayService->createOrUpdateTelegramGateway($userId, $senderId);
+			$this->telegramMessageService->send(__('bot/setup.already_registered'), $senderId);
 		} else {
 			// start registering the user
 			$this->telegramMessageService->send(__('bot/setup.registering.collect_data'), $senderId);
