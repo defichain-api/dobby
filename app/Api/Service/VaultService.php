@@ -2,7 +2,6 @@
 
 namespace App\Api\Service;
 
-use App\ApiClient\DefiChainApiClient;
 use App\Models\LoanScheme;
 use App\Models\User;
 use App\Models\Vault;
@@ -11,13 +10,6 @@ use Str;
 
 class VaultService
 {
-	protected DefiChainApiClient $apiClient;
-
-	public function __construct()
-	{
-		$this->apiClient = new DefiChainApiClient();
-	}
-
 	public function setVaultsForUser(User $user, array $ownerAddresses): bool
 	{
 		$vaults = Vault::whereIn('vaultId', $ownerAddresses)
@@ -53,9 +45,6 @@ class VaultService
 		return true;
 	}
 
-	/**
-	 * @throws \App\Api\Exceptions\DefichainApiException
-	 */
 	public function setVaultForUser(User $user, string $vaultId): bool
 	{
 		return $this->setVaultsForUser($user, [$vaultId]);
