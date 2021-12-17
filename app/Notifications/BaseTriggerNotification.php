@@ -17,6 +17,7 @@ class BaseTriggerNotification extends BaseNotification
 
 	public function via(NotificationTrigger $trigger): array
 	{
+		$this->notifiable = $trigger;
 		$methods = [];
 		if ($trigger->hasGateway(NotificationGatewayType::TELEGRAM)
 			&& $trigger->cooldown(CooldownTypes::TELEGRAM_NOTIFICATION)->passed()) {

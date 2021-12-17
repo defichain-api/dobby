@@ -16,6 +16,7 @@ class BaseUserNotification extends BaseNotification
 
 	public function via(User $user): array
 	{
+		$this->notifiable = $user;
 		$methods = [];
 		if ($user->hasGateway(NotificationGatewayType::TELEGRAM)
 			&& $user->cooldown($this->cooldownIdentifier(CooldownTypes::TELEGRAM_NOTIFICATION))->passed()) {
