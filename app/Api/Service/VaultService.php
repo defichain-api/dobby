@@ -18,9 +18,6 @@ class VaultService
 		$this->apiClient = new DefiChainApiClient();
 	}
 
-	/**
-	 * @throws \App\Api\Exceptions\DefichainApiException
-	 */
 	public function setVaultsForUser(User $user, array $ownerAddresses): bool
 	{
 		$vaults = Vault::whereIn('vaultId', $ownerAddresses)
