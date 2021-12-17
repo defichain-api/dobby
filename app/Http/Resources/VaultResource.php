@@ -37,17 +37,20 @@ class VaultResource extends JsonResource
 
 	public function amountsToArray(array $rawData): array
 	{
+		if (count($rawData) === 0) {
+			return [];
+		}
 		$data = [];
 		foreach ($rawData as $item) {
-			$explodedItem = Str::of($item)->explode('@');
-			$amount = (float) $explodedItem->first();
-			$token = $explodedItem->last();
-			$valueUsd = rescue(fn() => app(FixedIntervalPriceService::class)->calculateValueForToken($token, $amount)
-				, null, false);
+			$amount = (float) $item['amount'];
+			$priceUsd = isset($item['activePrice']['active']['amount']) ? (float) $item['activePrice']['active']['amount'] : 1;
+			$token = $item['symbol'];
+			$name = $item['name'];
+			$valueUsd = rescue(fn() => round($amount * $priceUsd, 2), null, false);
 			$data[] = [
-				'raw'    => $item,
 				'amount' => $amount,
 				'token'  => $token,
+				'name'   => $name,
 				$this->mergeWhen(isset($valueUsd), ['valueUsd' => $valueUsd]),
 			];
 		}

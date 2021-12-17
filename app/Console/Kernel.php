@@ -24,12 +24,13 @@ class Kernel extends ConsoleKernel
 
 	protected function schedule(Schedule $schedule): void
 	{
-		$schedule->command(UpdateVaultDataCommand::class, ['--max=100'])
+		$schedule->command(UpdateVaultDataCommand::class)
 			->everyFiveMinutes()
 			->withoutOverlapping();
 		$schedule->command(UpdateLoanSchemeCommand::class)
 			->daily();
 		$schedule->command(UpdateFixedIntervalPriceCommand::class)
+			->withoutOverlapping()
 			->everyFiveMinutes();
 		$schedule->command(PruneInactiveUsersCommand::class)
 			->weekly();

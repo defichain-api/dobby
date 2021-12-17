@@ -14,13 +14,13 @@ class FixedIntervalPriceService
 	{
 		foreach ($rawPrices as $rawPrice) {
 			FixedIntervalPrice::updateOrCreate([
-				'priceFeedId' => $rawPrice['priceFeedId'],
+				'priceFeedId' => $rawPrice['id'],
 			], [
-				'priceBase'   => Str::of($rawPrice['priceFeedId'])->explode('/')->first(),
-				'activePrice' => $rawPrice['activePrice'],
-				'nextPrice'   => $rawPrice['nextPrice'],
-				'timestamp'   => Carbon::parse($rawPrice['timestamp']),
-				'isLive'      => $rawPrice['isLive'],
+				'priceBase'   => $rawPrice['price']['token'],
+				'activePrice' => (float) $rawPrice['price']['aggregated']['amount'],
+				'nextPrice'   => -1, //tbd
+				'blockHeight' => $rawPrice['price']['block']['height'],
+				'timestamp'   => Carbon::parse($rawPrice['price']['block']['time']),
 			]);
 		}
 	}
