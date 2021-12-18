@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CurrentSummaryNotificationCommand;
+use App\Console\Commands\InactivateVaultsCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
 use App\Console\Commands\StatisticsCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
@@ -20,6 +21,7 @@ class Kernel extends ConsoleKernel
 		PruneInactiveUsersCommand::class,
 		CurrentSummaryNotificationCommand::class,
 		StatisticsCommand::class,
+		InactivateVaultsCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void
@@ -38,6 +40,8 @@ class Kernel extends ConsoleKernel
 			->dailyAt('8:00');
 		$schedule->command(StatisticsCommand::class)
 			->dailyAt('23:59');
+		$schedule->command(InactivateVaultsCommand::class)
+			->hourlyAt(32);
 	}
 
 	protected function commands(): void
