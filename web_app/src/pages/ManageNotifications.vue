@@ -1,8 +1,8 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-  <NotificationChannels />
-  <MakeNotifications />
-  <ManageTriggers />
+    <NotificationChannels />
+    <MakeNotifications />
+    <ManageTriggers />
   </div>
 </template>
 

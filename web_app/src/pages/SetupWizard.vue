@@ -282,7 +282,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { copyToClipboard } from 'quasar'
-import { validate as validateUuid } from 'uuid';
+import { validate as validateUuid } from 'uuid'
 
 export default defineComponent({
   name: 'PageIndex',
