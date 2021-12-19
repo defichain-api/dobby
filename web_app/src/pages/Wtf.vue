@@ -54,14 +54,17 @@
               {{ dev.role }}
             </q-card-section>
             <q-card-section>
-              <q-chip style="background-color: #1DA1F2" text-color="white" icon="fab fa-twitter">
+              <q-chip style="background-color: #1DA1F2" text-color="white" icon="fab fa-twitter" clickable @click="openInNewTab('https://twitter.com/' + dev.twitter)">
                 @{{ dev.twitter }}
               </q-chip>
-              <q-chip style="background-color: #0e76a8" text-color="white" icon="fab fa-linkedin">
+              <q-chip style="background-color: #0e76a8" text-color="white" icon="fab fa-linkedin" clickable @click="openInNewTab('https://linkedin.com/in/' + dev.linkedin)">
                 {{ dev.linkedin }}
               </q-chip>
-              <q-chip v-if="dev.website" color="accent" text-color="white" icon="fal fa-browser">
+              <q-chip v-if="dev.website" color="accent" text-color="white" icon="fal fa-browser" clickable @click="openInNewTab(dev.website)">
                 {{ dev.website }}
+              </q-chip>
+              <q-chip v-for="website in dev.other" :key="website.name" color="positive" text-color="white" icon="fal fa-browser" clickable @click="openInNewTab(website.link)">
+                {{ website.name }}
               </q-chip>
             </q-card-section>
           </q-card>
@@ -72,12 +75,14 @@
       <q-card-section class="q-pb-none">
         <div class="text-h6 q-mb-lg">Buy us a coffee <q-icon name="fal fa-mug-hot" /></div>
         <p>
-          We've got a bunch of questions where DFI can be sent to make a donation. So, here it is:<br />
+          We've got a bunch of questions where to send DFI to make a donation. So, here it is:<br />
         </p>
       </q-card-section>
       <q-card-section class="q-pt-none">
         <q-card flat class="text-center q-mb-md">
           <q-card-section class="bg-primary text-white text-caption" style="font-size: 0.8em;">
+            <q-img src="/img/qr-donations.jpg" alt="" />
+            <br />
             df1qw0522d3tc8t3p5656a0u69mfauwg99xkdst50w
           </q-card-section>
           <q-card-section class="bg-accent">
@@ -90,8 +95,9 @@
 
     <q-card flat :bordered="$q.dark.isActive">
       <q-card-section>
-        <div class="text-h6 q-mb-lg">Funded by community <q-icon name="fal fa-coins" /></div>
+        <div class="text-h6 q-mb-lg">Funded by the community <q-icon name="fal fa-coins" /></div>
         <p>
+          Dobby's development has been supported by the DeFiChain community. Have a look a the Community Fund Proposal, which has been accepted with more than 90% yes votes.
         </p>
         <div class="text-body1 text-italic q-mt-lg">
           <q-btn unelevated rounded type="a" class="full-width q-mb-md" color="primary" @click="toCfp()" icon="fab fa-twitter" label="CFP 2111-02 on GitHub" />
@@ -121,21 +127,25 @@ export default {
             {
               name: 'DFI Signal',
               link: 'https://www.dfi-signal.com'
-            }
-          ]
+            },
+            {
+              name: 'Masternode Health',
+              link: 'https://docs.defichain-masternode-health.com/#introduction'
+            },
+          ],
         },
         {
           name: 'Chris',
           role: 'Hosting & Data Sources',
-          twitter: 'sandrich',
+          twitter: 'sandric28869249',
           linkedin: 'christian-sandrini-060b8039',
           website: null,
           other: [
             {
-              name: 'Masternode Monitor',
-              link: 'https://www.defichain-masternode-monitor.com'
-            }
-          ]
+              name: 'Masternode Health',
+              link: 'https://docs.defichain-masternode-health.com/#introduction'
+            },
+          ],
         },
         {
           name: 'Michael',
@@ -147,8 +157,12 @@ export default {
             {
               name: 'Masternode Monitor',
               link: 'https://www.defichain-masternode-monitor.com'
-            }
-          ]
+            },
+            {
+              name: 'Masternode Health',
+              link: 'https://docs.defichain-masternode-health.com/#introduction'
+            },
+          ],
         },
       ]
     }
@@ -161,7 +175,11 @@ export default {
       openURL(process.env.TELEGRAM_GROUP_LINK)
     },
     toCfp() {
-      openUrl("https://github.com/DeFiCh/dfips/issues/75")
+      console.log("test")
+      openURL("https://github.com/DeFiCh/dfips/issues/75")
+    },
+    openInNewTab(url) {
+      openURL(url)
     },
     toClipboard(text) {
       copyToClipboard(text)
