@@ -19,14 +19,25 @@
             </q-item-section>
 
             <q-item-section style="word-break: break-all;">
-              <div class="row text-caption">
+              <div v-if="!privacy" class="row text-caption">
                 {{ vault.vaultId }}
               </div>
+              <div v-if="privacy" class="row text-caption">
+                🧦🧦🧦🧦🧦🧦🧦🧦🧦
+              </div>
               <div class="row q-mt-sm text-grey">
-                Collateral:<span v-for="(collateral, index) in vault.collateralAmounts" :key="index">&nbsp;{{ collateral.token }} {{ collateral.amount.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                Collateral:
+                <span v-if="!privacy">
+                  <span v-for="(collateral, index) in vault.collateralAmounts" :key="index">&nbsp;{{ collateral.token }} {{ collateral.amount.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </span>
+                <span v-if="privacy" >🧦🧦🧦</span>
               </div>
               <div class="row text-grey" v-if="vault.loanAmounts.length > 0">
-                Loans:<span v-for="(loan, index) in vault.loanAmounts" :key="index">&nbsp;{{ loan.token }} {{ loan.amount.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                Loans:
+                <span v-if="!privacy">
+                  <span v-for="(loan, index) in vault.loanAmounts" :key="index">&nbsp;{{ loan.token }} {{ loan.amount.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</span>
+                </span>
+                <span v-if="privacy" >🧦🧦🧦</span>
               </div>
               <div class="row text-grey" v-if="vault.loanAmounts.length == 0">
                 no loans yet
@@ -176,9 +187,13 @@ export default defineComponent({
     locale: function() {
       return this.$root.$i18n.locale
     },
+    privacy() {
+      return this.settingValue('privacy')
+    },
     ...mapGetters({
       vaults: 'account/vaults',
       userId: 'account/userId',
+      settingValue: 'settings/value',
     }),
   },
   // watch: {
