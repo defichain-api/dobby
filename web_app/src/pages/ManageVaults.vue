@@ -140,6 +140,7 @@ export default defineComponent({
     removeVault(address) {
       this.$api.delete("/user/vault", { "data": { "vaultId": address }})
         .then((result) => {
+          this.clearVaultList()
           this.reloadVaults()
         })
         .catch((error) => {
@@ -181,6 +182,7 @@ export default defineComponent({
 
     ...mapActions({
       reloadVaults: 'account/loadUserData',
+      clearVaultList: 'account/clearVaultList',
     })
   },
   computed: {
