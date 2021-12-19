@@ -36,27 +36,12 @@ export function clearVaultList(state) {
  * @param {object} vaultData
  */
 export function addVault(state, vaultData) {
-    if (state.vaults.length == 0) {
-        // vault list is empty
-        state.vaults = [...state.vaults, vaultData]
-        if (process.env.DEV) { console.log("[DEBUG] ... successfully added " + vaultData.vaultId) }
-        return
-    }
+    const index = state.vaults.findIndex((vault) => vault.vaultId == vaultData.vaultId)
 
-    // TODO refactor --v
-
-    let updated = false
-    // check if this vault already exists, update data if already existing
-    state.vaults.forEach((vault, index) => {
-        if (vault.vaultId == vaultData.vaultId) {
-            // Update existing vault
-            state.vaults[index] = { ...state.vaults[index], vaultData }
-            if (process.env.DEV) { console.log("[DEBUG] ... successfully updated " + vaultData.vaultId) }
-            updated = true
-        }
-    })
-    if (!updated) {
-        // Add new vault entry
+    if (index > -1) {
+        state.vaults[index] = { ...state.vaults[index], ...vaultData }
+        if (process.env.DEV) { console.log("[DEBUG] ... successfully updated " + vaultData.vaultId) }
+    } else {
         state.vaults = [...state.vaults, vaultData]
         if (process.env.DEV) { console.log("[DEBUG] ... successfully added " + vaultData.vaultId) }
     }
