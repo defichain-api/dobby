@@ -1,6 +1,54 @@
 <template>
   <q-separator inset v-if="hasGateways && vaultsWithoutTriggers.size > 0" />
 
+  <div v-if="hasGateways && missingTiggers.length > 0" class="container">
+    <div class="row">
+      <div class="text-h5 col-12 q-mb-md">
+        Add Missing Notifications
+        <q-badge class="q-ml-xs" color="primary" align="top">{{ missingTiggers.length }}</q-badge>
+      </div>
+    </div>
+    <div class="row q-mb-md">
+      Dobby noticed that at least one of your vaults is missing a notification trigger.
+    </div>
+    <div class="row q-gutter-md items-start">
+      <transition-group
+        appear
+        enter-active-class="animated pulse"
+      >
+        <q-card flat :bordered="$q.dark.isActive" v-for="vault in missingTiggers" :key="vault.vaultId" class="vault">
+          <q-card-section class="container">
+            <div class="row">
+              <div class="col-2 text-center q-pt-sm">
+                <q-icon name="fal fa-box-usd" size="sm" />
+              </div>
+              <div class="col-10">
+                <div class="ellipsis">
+                  <span v-if="vault.name.length > 0" class="text-h6">{{ vault.name }}</span>
+                  <span v-else class="text-caption">
+                    <span v-if="!privacy">{{ vault.vaultId }}</span>
+                    <span v-else>🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦🧦</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+          <q-separator />
+          <q-card-section class="container">
+            <q-btn
+              color="primary"
+              class="full-width"
+              :label="'add ' + vault.missing + ' message when < ' + vault.triggerPoint + ' %'"
+              :icon="(vault.missing == 'info') ? 'fal fa-siren-on' : 'fal fa-bomb'"
+              @click="(vault.missing == 'info') ? addInfoTrigger(vault.vaultId) : addWarningTrigger(vault.vaultId)"
+            />
+          </q-card-section>
+        </q-card>
+      </transition-group>
+    </div>
+  </div>
+
+
   <div v-if="hasGateways && vaultsWithoutTriggers.size > 0" class="container">
     <div class="row">
       <div class="text-h5 col-12 q-mb-md">
@@ -122,27 +170,96 @@ export default {
       triggerConfig.type = "warning"
       this.makeNotification(triggerConfig)
     },
+
+    addInfoTrigger(vaultId) {
+      const vault = this.vault(vaultId)
+      const minCollateral = vault.loanScheme.minCollateral
+      let triggerConfig = {
+        "vaultId": vault.vaultId,
+        "ratio": Math.ceil(minCollateral * this.triggerMultipleInfo),
+        "type": "info",
+        "gateways": [ this.gatewayType('telegram').gatewayId ]
+      }
+      this.makeNotification(triggerConfig).then(() => {
+        this.$q.notify({
+          type: 'positive',
+          message: 'Notification trigger enabled',
+        })
+      })
+    },
+
+    addWarningTrigger(vaultId) {
+      const vault = this.vault(vaultId)
+      const minCollateral = vault.loanScheme.minCollateral
+      let triggerConfig = {
+        "vaultId": vault.vaultId,
+        "ratio": Math.ceil(minCollateral * this.triggerMultipleWarning),
+        "type": "warning",
+        "gateways": [ this.gatewayType('telegram').gatewayId ]
+      }
+      this.makeNotification(triggerConfig).then(() => {
+        this.$q.notify({
+          type: 'positive',
+          message: 'Notification trigger enabled',
+        })
+      })
+    },
+
     makeNotification(triggerConfig) {
       return this.$api.post("/user/notification", triggerConfig)
         .then((result) => {
           this.fetchTriggers()
         })
     },
+
+    /**
+     * returns a specific vault, found by it's id
+     */
+    vault: function(vaultId) {
+      return this.vaults.find(vault => vault.vaultId == vaultId);
+    },
+
     ...mapActions({
       fetchTriggers: 'notifications/fetchTriggers',
     })
   },
   computed: {
     /**
-     * Returns all vaults lacking a trigger
+     * Returns all vaults lacking all triggers
      */
     vaultsWithoutTriggers: function() {
       let vaultList = new Set()
+      this.missingTiggers
       this.vaults.forEach((vault) => {
         if(!(vault.vaultId in this.triggersByVault)) {
           vaultList.add(vault)
         }
       })
+      return vaultList
+    },
+
+    /**
+     * Returns all vaults lacking at least one trigger
+     */
+    missingTiggers: function () {
+      let vaultList = []
+
+      for (const [key, vault] of Object.entries(this.triggersByVault)) {
+        if (vault.length < 2) {
+          let data = {
+            vaultId: vault[0].vaultId,
+            name: this.vault(vault[0].vaultId).name,
+          }
+          if (vault[0].type == 'warning') {
+            data.missing = 'info'
+            data.triggerPoint = Math.ceil(this.vault(vault[0].vaultId).loanScheme.minCollateral * this.triggerMultipleWarning)
+          } else if (vault[0].type == 'info') {
+            data.missing = 'warning'
+            data.triggerPoint = Math.ceil(this.vault(vault[0].vaultId).loanScheme.minCollateral * this.triggerMultipleInfo)
+          }
+          vaultList.push(data)
+        }
+      }
       return vaultList
     },
 

@@ -82,3 +82,9 @@ export function processLoanData({ state, commit }) {
 export function addVault({ commit }, vaultData) {
     commit('addVault', vaultData)
 }
+
+// ----------------------------------------------------------------------------------
+
+export function clearVaultList({ commit }) {
+    commit('clearVaultList')
+}

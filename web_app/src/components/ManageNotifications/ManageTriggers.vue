@@ -67,40 +67,40 @@
             </q-item-section>
           </q-item>
           <span v-for="trigger in triggerList" :key="trigger.triggerId">
-          <q-item>
-            <q-item-section top avatar>
-              <q-avatar v-if="trigger.type == 'info'" color="orange" text-color="white" icon="fal fa-siren-on" />
-              <q-avatar v-if="trigger.type == 'warning'" color="negative" text-color="white" icon="fal fa-bomb" />
-            </q-item-section>
+            <q-item>
+              <q-item-section top avatar>
+                <q-avatar v-if="trigger.type == 'info'" color="orange" text-color="white" icon="fal fa-siren-on" />
+                <q-avatar v-if="trigger.type == 'warning'" color="negative" text-color="white" icon="fal fa-bomb" />
+              </q-item-section>
 
-            <q-item-section>
-              <q-item-label>
-                Vault drops <span class="text-primary">below {{ trigger.ratio }} %</span>
-                <EditTrigger
-                  :triggerId="trigger.triggerId"
-                  :ref="'editTrigger-' + trigger.triggerId"
+              <q-item-section>
+                <q-item-label>
+                  Vault drops <span class="text-primary">below {{ trigger.ratio }} %</span>
+                  <EditTrigger
+                    :triggerId="trigger.triggerId"
+                    :ref="'editTrigger-' + trigger.triggerId"
+                  />
+                </q-item-label>
+                <div v-for="gateway in trigger.gateways" :key="gateway.gatewayId">
+                  <q-avatar v-if="gateway.type == 'telegram'" color="telegram" class="q-my-sm q-mr-sm" text-color="white" icon="fab fa-telegram-plane" size="sm" />
+                </div>
+              </q-item-section>
+
+              <q-item-section side top>
+                <q-avatar
+                  clickable
+                  icon="fal fa-edit"
+                  size="md"
+                  @click="showEditTrigger(trigger.triggerId)"
                 />
-              </q-item-label>
-              <div v-for="gateway in trigger.gateways" :key="gateway.gatewayId">
-                <q-avatar v-if="gateway.type == 'telegram'" color="telegram" class="q-my-sm q-mr-sm" text-color="white" icon="fab fa-telegram-plane" size="sm" />
-              </div>
-            </q-item-section>
-
-            <q-item-section side top>
-              <q-avatar
-                clickable
-                icon="fal fa-edit"
-                size="md"
-                @click="showEditTrigger(trigger.triggerId)"
-              />
-              <q-avatar
-                icon="fal fa-trash"
-                size="md"
-                @click="showConfirmDeleteTrigger(trigger.triggerId)"
-              />
-            </q-item-section>
-          </q-item>
-          <q-separator inset="item" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
+                <q-avatar
+                  icon="fal fa-trash"
+                  size="md"
+                  @click="showConfirmDeleteTrigger(trigger.triggerId)"
+                />
+              </q-item-section>
+            </q-item>
+            <q-separator inset="item" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
           </span>
         </q-list>
       </q-card-section>
