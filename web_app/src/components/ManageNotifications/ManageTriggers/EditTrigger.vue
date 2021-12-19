@@ -43,6 +43,10 @@ export default {
       },
       set(newRatio) {
         this.updateTrigger({triggerId: this.triggerId, ratio: newRatio})
+        this.$q.notify({
+          type: 'positive',
+          message: 'Notification trigger set to ' + newRatio + ' %' ,
+        })
       }
     },
     ...mapGetters({
