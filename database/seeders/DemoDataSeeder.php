@@ -15,7 +15,7 @@ class DemoDataSeeder extends Seeder
 		$user = User::create([
 			'id'       => 'demo-demo-demo-demo-demodemodemo',
 			'language' => 'en',
-			'theme'    => 'dark',
+			'theme'    => 'auto',
 		]);
 		$vaultActive = Vault::create([
 			'vaultId'            => 'active_demo__e888c4ea3dd06bd1bf30a4dfa38c625f8fd430e9d321607',
