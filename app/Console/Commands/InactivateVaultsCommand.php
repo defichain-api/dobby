@@ -16,7 +16,8 @@ class InactivateVaultsCommand extends Command
 		$maxAge = $this->option('age');
 		$this->info(sprintf('%s: starting deactivating vaults', now()->toDateTimeString()));
 		// count vaults
-		$vaultQuery = Vault::where('updated_at', '<', now()->subHours($maxAge));
+		$vaultQuery = Vault::where('updated_at', '<', now()->subHours($maxAge))
+			->where('vaultId', 'NOT LIKE', '%demo%');
 		$count = $vaultQuery->count();
 		$vaultQuery->update([
 			'state' => VaultStates::INACTIVE,
