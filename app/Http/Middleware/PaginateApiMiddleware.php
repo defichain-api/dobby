@@ -11,7 +11,11 @@ class PaginateApiMiddleware
 	{
 		$response = $next($request);
 
-		$data = $response->getData(true);
+		$data = rescue(fn() => $response->getData(true), null, false);
+
+		if (is_null($data)) {
+			return $response;
+		}
 
 		if (isset($data['meta']['links'])) {
 			unset($data['meta']['links']);
