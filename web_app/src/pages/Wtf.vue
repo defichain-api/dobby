@@ -81,7 +81,7 @@
       <q-card-section class="q-pt-none">
         <q-card flat class="text-center q-mb-md">
           <q-card-section class="bg-primary text-white text-caption" style="font-size: 0.8em;">
-            <q-img src="/img/qr-donations.jpg" alt="" />
+            <q-img src="/img/qr-donations.jpg" alt="" style="max-width: 400px;"/>
             <br />
             df1qw0522d3tc8t3p5656a0u69mfauwg99xkdst50w
           </q-card-section>
