@@ -7,7 +7,7 @@
       size="3px"
       skip-hijack
     />
-    <q-header class="q-py-xs" height-hint="58">
+    <q-header class="q-py-xs bg-primary-dark" height-hint="58">
       <q-toolbar>
         <q-btn
           flat
@@ -19,12 +19,6 @@
         />
 
         <q-btn flat no-caps no-wrap class="q-ml-xs">
-
-          <!-- <q-img
-            src="/img/dobby-logo-white-border.png"
-            spinner-color="white"
-            style="height: 32px; max-width: 32px"
-          /> -->
           <q-icon :name="this.$store.getters.headline.icon" size="28px" />
           <q-toolbar-title shrink class="text-weight-bold text-h6">
             {{ this.$store.getters.headline.text }}
@@ -32,6 +26,12 @@
         </q-btn>
 
         <q-space />
+
+        <q-spinner
+          color="white"
+          size="2.5em"
+          v-if="requestRunning"
+        />
 
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn round flat>
@@ -93,9 +93,9 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      :width="240"
+      :width="250"
     >
-      <q-scroll-area class="fit">
+      <!--<q-scroll-area class="fit">-->
         <q-list>
           <q-item-label header class="text-weight-bold text-uppercase text-center">
             <q-img
@@ -163,12 +163,14 @@
               <a
                 class="YL__drawer-footer-link text-grey"
               >
-                Version Beta 1
+                Version {{ version }} <br />
+                (Build: {{ release }})<br />
+                (Date: {{ releaseDate }})
               </a>
             </div>
           </div>
         </q-list>
-      </q-scroll-area>
+      <!--</q-scroll-area>-->
     </q-drawer>
 
     <q-page-container>
@@ -178,7 +180,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 
@@ -192,6 +194,9 @@ export default {
     const darkMode = ref($q.dark.isActive)
     const store = useStore()
     const privacy = ref(store.getters['settings/value']('privacy'))
+    const version = process.env.VERSION
+    const release = process.env.CURRENT_RELEASE
+    const releaseDate = process.env.RELEASE_DATE
 
     function toggleLeftDrawer () {
       leftDrawerOpen.value = !leftDrawerOpen.value
@@ -215,9 +220,14 @@ export default {
       bar,
       darkMode,
       privacy,
+      version,
+      release,
+      releaseDate,
 
       toggleLeftDrawer,
       logout,
+
+      requestRunning: computed(() => store.getters["requestRunning"]),
 
       autoReload: true,
       links1: [

@@ -17,6 +17,11 @@
         <span v-if="!showUserId">********-****-****-**************</span>
       </q-chip>
     </q-card-section>
+
+    <q-card-section v-if="showUserId" class="text-center bg-white">
+      <qrcode-vue :value="userId" :size="300" level="M" />
+    </q-card-section>
+
     <q-card-section class="text-center">
       <q-btn
         rounded
@@ -41,9 +46,13 @@
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex'
 import { copyToClipboard } from 'quasar'
+import QrcodeVue from 'qrcode.vue'
 
 export default defineComponent({
   name: 'UserIdSetting',
+  components: {
+    QrcodeVue,
+  },
   data () {
     return {
       showUserId: false
@@ -61,8 +70,8 @@ export default defineComponent({
               message: 'Your dobby user key has been copied to your clipboard',
             })
         })
-        .catch(() => {
-          console.log("error")
+        .catch((error) => {
+          console.log(error)
         })
     },
   },

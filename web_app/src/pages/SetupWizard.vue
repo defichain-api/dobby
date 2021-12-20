@@ -282,7 +282,7 @@
 <script>
 import { defineComponent } from 'vue'
 import { copyToClipboard } from 'quasar'
-import { validate as validateUuid } from 'uuid';
+import { validate as validateUuid } from 'uuid'
 
 export default defineComponent({
   name: 'PageIndex',
@@ -321,6 +321,7 @@ export default defineComponent({
     setExistingUserId: function () {
       this.$store.dispatch('account/setUserId', this.userId)
       this.$store.dispatch('account/loadUserData')
+      this.$store.dispatch('notifications/fetch')
 
       // redirect to dashboard
       this.$router.push({ name: 'dashboard' })
@@ -428,14 +429,13 @@ export default defineComponent({
     toClipboard: function (text) {
       copyToClipboard(text)
         .then(() => {
-            console.log(text)
             this.$q.notify({
               type: 'info',
               message: this.userId + ' copied to your clipboard'
             })
         })
-        .catch(() => {
-          console.log("error")
+        .catch((error) => {
+          console.log(error)
         })
     },
   },

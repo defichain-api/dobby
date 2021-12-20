@@ -47,12 +47,19 @@ module.exports = configure(function (ctx) {
 
       // Enable .env file for configuration
       env: {
+        "VERSION": 'Beta 2',
+        "CURRENT_RELEASE": '1337',
+        "RELEASE_DATE": '4/20/69',
+
         "API_URL": 'https://api.defichain-dobby.com',
         "LOCAL_STORAGE_ACCOUNT_ID_KEY": 'dobbyAccount',
         "LOCAL_STORAGE_SETTINGS_KEY": 'dobbySettings',
-        "DEMO_ACCOUNT_ID": 'demo-demo-demo-demo-demodemodemo',
+        "DEMO_ACCOUNT_ID": 'demodemo-demo-demo-demo-demodemodemo',
         "PREFILL_SETUP": false,
         "TELEGRAM_BOT_LINK": 'https://t.me/defichain_dobby_bot', // https://t.me/defichain_dobby_bot?start=USER_ID
+        "TELEGRAM_GROUP_LINK": 'https://t.me/defichain_dobby',
+        "TWITTER_LINK": 'https://twitter.com/dobby_dfi',
+        "DONATION_ADDRESS": 'df1qw0522d3tc8t3p5656a0u69mfauwg99xkdst50w',
         ...(require('dotenv').config().parsed),
       },
 

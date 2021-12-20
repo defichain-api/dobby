@@ -15,7 +15,6 @@ export function initFromLocalStorage({ commit }) {
 
     if (!LocalStorage.has(localStorageAccountKey) || LocalStorage.getItem(localStorageAccountKey).length == 0) {
         if (process.env.DEV) { console.log("[DEBUG] no dobby account key found in local storage, or key is empty") }
-        //LocalStorage.set(process.env.LOCAL_STORAGE_ACCOUNT_ID_KEY, 'demo-demo-demo-demo-demodemodemo')
         return
     }
 
@@ -50,12 +49,8 @@ export function logout({ commit }) {
 
 // ----------------------------------------------------------------------------------
 
-export async function loadUserData({ commit, dispatch }) {
-
-    // clear
-    await commit('clearVaultList')
-
-    await api
+export function loadUserData({ commit, dispatch }) {
+    return api
         .get('/user')
         .then((response) => {
             response?.data?.vaults?.forEach((vault) => {
@@ -64,10 +59,11 @@ export async function loadUserData({ commit, dispatch }) {
                 // todo: add settings
             })
         })
+        /*
         .catch((error) => {
             // whoops, error :(
         })
-    dispatch('processLoanData')
+        */
 }
 
 // ----------------------------------------------------------------------------------
@@ -85,4 +81,10 @@ export function processLoanData({ state, commit }) {
 
 export function addVault({ commit }, vaultData) {
     commit('addVault', vaultData)
+}
+
+// ----------------------------------------------------------------------------------
+
+export function clearVaultList({ commit }) {
+    commit('clearVaultList')
 }
