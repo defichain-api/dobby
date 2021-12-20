@@ -1,16 +1,16 @@
 <template>
+
   <q-pull-to-refresh
     @refresh="refresh"
     color="white"
     bg-color="primary"
     icon="autorenew"
   >
-
-    <NoNotificationGateways />
+    <NoNotificationGateways v-if="!requestRunning" />
 
     <div class="q-pa-md row items-start q-gutter-md">
       <!-- Show hint when no user is set -->
-      <q-card flat :bordered="$q.dark.isActive" v-if="vaults.length == 0 && !isDemo">
+      <q-card flat :bordered="$q.dark.isActive" v-if="vaults.length == 0 && !isDemo && !requestRunning">
         <q-img src="/img/banner.jpg">
           <div class="absolute-bottom text-h6">
             No vaults set yet
@@ -73,17 +73,22 @@
     <q-separator inset />
 
     <div class="q-pa-md row items-start q-gutter-md">
-      <!-- <q-card flat>
-        <q-card-section>
-          <q-btn color="primary" icon="chat" label="Change notification settings"></q-btn>
-        </q-card-section>
-      </q-card>-->
-
       <transition-group
         appear
         enter-active-class="animated pulse"
       >
-        <q-card flat :bordered="$q.dark.isActive" v-for="vault in vaults" :key="vault.vaultId" class="q-mb-md vault">
+        <q-card
+          flat
+          :bordered="$q.dark.isActive"
+          class="q-mb-md vault"
+          v-for="vault in vaults" :key="vault.vaultId"
+        >
+
+          <q-inner-loading
+            :showing="requestRunning"
+            color="primary"
+          />
+
           <q-card-section
             class="q-py-xs"
             style="height: 15px"
@@ -210,8 +215,10 @@
           </q-card-section>
           -->
         </q-card>
+
       </transition-group>
     </div>
+    <q-separator inset />
     <div class="q-pa-md" v-if="vaults.length > 0">
       <q-btn
         outline
@@ -253,6 +260,7 @@ export default defineComponent({
   created() {
     this.$store.dispatch('setHeadline', {text: 'Your Vaults', icon: 'fal fa-box-usd'})
     this.autoReload = setInterval(() => {
+      if (process.env.DEV) { console.log("[DEBUG] Fetching latest data from API") }
       this.$store.dispatch('account/loadUserData')
     }, 60 * 1000)
   },
@@ -317,6 +325,7 @@ export default defineComponent({
       vaults: 'account/vaults',
       userId: 'account/userId',
       settingValue: 'settings/value',
+      requestRunning: 'requestRunning',
     }),
   }
 

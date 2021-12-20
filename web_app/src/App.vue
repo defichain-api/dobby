@@ -26,8 +26,9 @@ export default defineComponent({
     // set dark mode setting
     this.$q.dark.set(this.getSettingValue('darkMode'))
 
-    // Load user's vaults when there's a userId set in local storage
+    this.setupAxiosInterceptors()
 
+    // Load user's vaults when there's a userId set in local storage
     if (this.userId && this.userId != null && this.userId != '') {
       if (process.env.DEV) { console.log("[DEBUG] initializing with dobby account " + this.userId) }
 
@@ -47,6 +48,36 @@ export default defineComponent({
       // no user account set
       // redirect to setup
       this.$router.push({ name: 'setup' })
+    }
+  },
+  methods: {
+    setupAxiosInterceptors() {
+      this.$api.interceptors.request.use((request) =>{
+        this.$store.commit('requestStart', request.url)
+        return request
+      }, (error) => {
+        this.dataRefreshError()
+        return Promise.reject(error)
+      })
+      this.$api.interceptors.response.use((response) => {
+        this.$store.commit('requestDone', response.config.url)
+        this.$store.commit('apiResponded')
+        return response
+      }, (error) => {
+        this.dataRefreshError()
+        return Promise.reject(error)
+      })
+    },
+    dataRefreshError(message) {
+      this.$store.commit('noApiResponse')
+      if (!message) {
+          message = 'Whoops. Looks like the Dobby API does not respond :/'
+      }
+      this.$q.notify({
+        group: 'dataRefreshError',
+        type: 'negative',
+        message: message,
+      })
     }
   },
   computed: {

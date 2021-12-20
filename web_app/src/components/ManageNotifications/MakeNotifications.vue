@@ -252,10 +252,10 @@ export default {
           }
           if (vault[0].type == 'warning') {
             data.missing = 'info'
-            data.triggerPoint = Math.ceil(this.vault(vault[0].vaultId).loanScheme.minCollateral * this.triggerMultipleWarning)
+            data.triggerPoint = Math.ceil(this.vault(vault[0].vaultId).loanScheme.minCollateral * this.triggerMultipleInfo)
           } else if (vault[0].type == 'info') {
             data.missing = 'warning'
-            data.triggerPoint = Math.ceil(this.vault(vault[0].vaultId).loanScheme.minCollateral * this.triggerMultipleInfo)
+            data.triggerPoint = Math.ceil(this.vault(vault[0].vaultId).loanScheme.minCollateral * this.triggerMultipleWarning)
           }
           vaultList.push(data)
         }

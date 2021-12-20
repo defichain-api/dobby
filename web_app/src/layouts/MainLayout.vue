@@ -19,12 +19,6 @@
         />
 
         <q-btn flat no-caps no-wrap class="q-ml-xs">
-
-          <!-- <q-img
-            src="/img/dobby-logo-white-border.png"
-            spinner-color="white"
-            style="height: 32px; max-width: 32px"
-          /> -->
           <q-icon :name="this.$store.getters.headline.icon" size="28px" />
           <q-toolbar-title shrink class="text-weight-bold text-h6">
             {{ this.$store.getters.headline.text }}
@@ -32,6 +26,12 @@
         </q-btn>
 
         <q-space />
+
+        <q-spinner
+          color="white"
+          size="2.5em"
+          v-if="requestRunning"
+        />
 
         <div class="q-gutter-sm row items-center no-wrap">
           <q-btn round flat>
@@ -180,7 +180,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 
@@ -226,6 +226,8 @@ export default {
 
       toggleLeftDrawer,
       logout,
+
+      requestRunning: computed(() => store.getters["requestRunning"]),
 
       autoReload: true,
       links1: [
