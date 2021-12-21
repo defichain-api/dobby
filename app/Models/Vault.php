@@ -27,6 +27,7 @@ use \Illuminate\Database\Eloquent\Collection;
  * @property float      interestValue
  * @property float      informativeRatio
  * @property integer    collateralRatio
+ * @property integer    nextCollateralRatio
  * @property integer    liquidationHeight
  * @property integer    batchCount
  * @property integer    liquidationPenalty
@@ -47,6 +48,7 @@ class Vault extends Model
 		'loanAmounts',
 		'interestAmounts',
 		'collateralValue',
+		'nextCollateralRatio',
 		'loanValue',
 		'interestValue',
 		'informativeRatio',
