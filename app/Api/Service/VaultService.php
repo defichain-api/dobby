@@ -73,26 +73,54 @@ class VaultService
 		return Vault::updateOrCreate([
 			'vaultId' => (string) $data['vaultId'],
 		], [
-			'loanSchemeId'       => $loanSchemes->where('name', '=', $data['loanScheme']['id'])->first()->id,
-			'ownerAddress'       => $data['ownerAddress'],
-			'state'              => Str::lower($data['state']),
-			'collateralAmounts'  => $data['collateralAmounts'] ?? [],
-			'loanAmounts'        => $data['loanAmounts'] ?? [],
-			'interestAmounts'    => $data['interestAmounts'] ?? [],
-			'collateralValue'    => $data['collateralValue'] ?? null,
-			'loanValue'          => $data['loanValue'] ?? null,
-			'interestValue'      => $data['interestValue'] ?? 0,
-			'informativeRatio'   => $data['informativeRatio'] ?? 0,
-			'collateralRatio'    => $data['collateralRatio'] ?? null,
-			'liquidationHeight'  => $data['liquidationHeight'] ?? null,
-			'batchCount'         => $data['batchCount'] ?? 0,
-			'liquidationPenalty' => $data['liquidationPenalty'] ?? 0,
-			'batches'            => $data['batches'] ?? [],
+			'loanSchemeId'        => $loanSchemes->where('name', '=', $data['loanScheme']['id'])->first()->id,
+			'ownerAddress'        => $data['ownerAddress'],
+			'state'               => Str::lower($data['state']),
+			'collateralAmounts'   => $data['collateralAmounts'] ?? [],
+			'loanAmounts'         => $data['loanAmounts'] ?? [],
+			'interestAmounts'     => $data['interestAmounts'] ?? [],
+			'collateralValue'     => $data['collateralValue'] ?? null,
+			'loanValue'           => $data['loanValue'] ?? null,
+			'interestValue'       => $data['interestValue'] ?? 0,
+			'informativeRatio'    => $data['informativeRatio'] ?? 0,
+			'collateralRatio'     => $data['collateralRatio'] ?? null,
+			'nextCollateralRatio' => rescue(fn() => $this->calculateNextCollateralRatio(
+				$data['collateralAmounts'] ?? [],
+				$data['loanAmounts'] ?? []
+			), null, false),
+			'liquidationHeight'   => $data['liquidationHeight'] ?? null,
+			'batchCount'          => $data['batchCount'] ?? 0,
+			'liquidationPenalty'  => $data['liquidationPenalty'] ?? 0,
+			'batches'             => $data['batches'] ?? [],
 		]);
 	}
 
 	protected function userHasVaultId(User $user, string $vaultId): bool
 	{
 		return $user->vaults->contains($vaultId);
+	}
+
+	public function calculateNextCollateralRatio(array $colAmounts, array $loanAmounts): float
+	{
+		if (count($colAmounts) === 0 || count($loanAmounts) === 0) {
+			return -1;
+		}
+
+		$nextAmount = 0;
+		foreach ($colAmounts as $colAmount) {
+			$nextAmount += (float) $colAmount['amount'] * (float) $colAmount['activePrice']['next']['amount'];
+		}
+
+		$nextLoan = 0;
+		foreach ($loanAmounts as $loanAmount) {
+			if (isset($loanAmount['activePrice'])) {
+				$nextLoan += (float) $loanAmount['amount'] * (float) $loanAmount['activePrice']['next']['amount'];
+				continue;
+			}
+			// for dUSD
+			$nextLoan += (float) $loanAmount['amount'];
+		}
+
+		return round($nextAmount / $nextLoan * 100, 2);
 	}
 }
