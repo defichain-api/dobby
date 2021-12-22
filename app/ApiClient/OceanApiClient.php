@@ -79,4 +79,35 @@ class OceanApiClient
 
 		return json_decode($response->getBody()->getContents(), true)['data'];
 	}
+
+	/**
+	 * @throws \App\Api\Exceptions\OceanApiException
+	 */
+	public function getStats(): array
+	{
+		try {
+			$response = $this->client->get(config('defichain_ocean.stats.get'));
+		} catch (GuzzleException $e) {
+			throw OceanApiException::message('stats', $e);
+		}
+
+		return json_decode($response->getBody()->getContents(), true)['data'];
+	}
+
+	/**
+	 * @throws \App\Api\Exceptions\OceanApiException
+	 * @throws \Exception
+	 */
+	public function currentBlockHeight(): int
+	{
+		return cache()->tags('block_height')->remember('block_height', now()->addMinute(), function () {
+			try {
+				$stats = $this->getStats();
+			} catch (OceanApiException $e) {
+				throw OceanApiException::message('stats', $e);
+			}
+
+			return $stats['count']['blocks'];
+		});
+	}
 }
