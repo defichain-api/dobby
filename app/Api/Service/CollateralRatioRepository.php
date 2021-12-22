@@ -21,22 +21,25 @@ class CollateralRatioRepository
 	 */
 	public function latestPriceTick(): int
 	{
-		$randomVaults = Vault::whereState(VaultStates::ACTIVE)
-			->where('collateralValue', '>', 0)
-			->where('loanValue', '>', 0)
-			->where('collateralRatio', '!=', -1)
-			->limit(100)
-			->get();
+		return cache()->remember('latest_price_tick', now()->addSeconds(15), function() {
+			$randomVaults = Vault::whereState(VaultStates::ACTIVE)
+				->where('collateralValue', '>', 0)
+				->where('loanValue', '>', 0)
+				->where('collateralRatio', '!=', -1)
+				->limit(100)
+				->get();
 
-		foreach($randomVaults as $randomVault) {
-			foreach ($randomVault->collateralAmounts as $collateralAmount) {
-				if (!isset($collateralAmount['activePrice'])) {
-					continue;
+			foreach ($randomVaults as $randomVault) {
+				foreach ($randomVault->collateralAmounts as $collateralAmount) {
+					if (!isset($collateralAmount['activePrice'])) {
+						continue;
+					}
+
+					return $collateralAmount['activePrice']['block']['height'];
 				}
-				return $collateralAmount['activePrice']['block']['height'];
 			}
-		}
-		throw new \Exception(sprintf('%s: not able to find latest price tick', now()->toDateTimeString()));
+			throw new \Exception(sprintf('%s: not able to find latest price tick', now()->toDateTimeString()));
+		});
 	}
 
 	/**
@@ -71,11 +74,12 @@ class CollateralRatioRepository
 	{
 		return cache()->remember('next_tick_response', now()->addMinute(), function () {
 			return [
-				'next_tick' => [
+				'next_tick'                    => [
 					'block_height' => $this->nextPriceTick(),
 					'minutes_left' => $this->minutesToNextTick(),
 					'time'         => now()->addMinutes($this->minutesToNextTick())->toDateTimeString(),
 				],
+				'last_price_tick_block_height' => $this->latestPriceTick(),
 			];
 		});
 	}
