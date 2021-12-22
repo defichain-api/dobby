@@ -35,6 +35,7 @@ class StatisticResource extends JsonResource
 			'sum_collateral' => $this->sum_collateral,
 			'sum_loan'       => $this->sum_loan,
 			'avg_ratio'      => $this->avg_ratio,
+			'median_ratio'   => $this->median_ratio,
 		];
 	}
 }

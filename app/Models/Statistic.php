@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float   sum_collateral
  * @property float   sum_loan
  * @property float   avg_ratio
+ * @property int     median_ratio
  */
 class Statistic extends Model
 {
@@ -41,6 +42,7 @@ class Statistic extends Model
 		'sum_collateral',
 		'sum_loan',
 		'avg_ratio',
+		'median_ratio',
 	];
 	protected $hidden = [
 		'id',
