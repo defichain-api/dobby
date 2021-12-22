@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-class OceanApiClient
+class OceanApiClient implements BaseApiClient
 {
 	protected ClientInterface $client;
 
@@ -100,7 +100,7 @@ class OceanApiClient
 	 */
 	public function currentBlockHeight(): int
 	{
-		return cache()->tags('block_height')->remember('block_height', now()->addMinute(), function () {
+		return cache()->tags('block_height')->remember('block_height', now()->addSeconds(30), function () {
 			try {
 				$stats = $this->getStats();
 			} catch (OceanApiException $e) {
