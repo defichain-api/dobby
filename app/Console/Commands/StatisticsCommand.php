@@ -16,6 +16,7 @@ class StatisticsCommand extends Command
 			->updateVaultCount()
 			->updateCollateralSum()
 			->updateLoanSum()
-			->updateAvgRatio();
+			->updateAvgRatio()
+			->updateMedianRatio();
 	}
 }
