@@ -74,7 +74,25 @@ class StatisticService
 			'avg_ratio' => Vault::withCount('users')
 				->having('users_count', '>', 0)
 				->whereIn('state', [VaultStates::ACTIVE, VaultStates::MAYLIQUIDATE, VaultStates::FROZEN])
-				->where('collateralRatio', '>', 0)->avg('collateralRatio'),
+				->where('collateralRatio', '>', 0)
+				->where('collateralRatio', '<', 10000)
+				->avg('collateralRatio'),
+		]);
+
+		return $this;
+	}
+
+	public function updateMedianRatio(): self
+	{
+		Statistic::updateOrCreate([
+			'date' => today(),
+		], [
+			'median_ratio' => Vault::withCount('users')
+				->having('users_count', '>', 0)
+				->whereIn('state', [VaultStates::ACTIVE, VaultStates::MAYLIQUIDATE, VaultStates::FROZEN])
+				->where('collateralRatio', '>', 0)
+				->pluck('collateralRatio')
+				->median(),
 		]);
 
 		return $this;
