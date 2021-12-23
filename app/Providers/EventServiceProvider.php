@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\VaultUpdatingNextRatioEvent;
 use App\Events\VaultUpdatingRatioEvent;
 use App\Events\VaultUpdatingStateEvent;
+use App\Listeners\VaultUpdatingNextRatioListener;
 use App\Listeners\VaultUpdatingRatioListener;
 use App\Listeners\VaultUpdatingStateListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -11,10 +13,13 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 class EventServiceProvider extends ServiceProvider
 {
 	protected $listen = [
-		VaultUpdatingRatioEvent::class => [
+		VaultUpdatingRatioEvent::class     => [
 			VaultUpdatingRatioListener::class,
 		],
-		VaultUpdatingStateEvent::class => [
+		VaultUpdatingNextRatioEvent::class => [
+			VaultUpdatingNextRatioListener::class,
+		],
+		VaultUpdatingStateEvent::class     => [
 			VaultUpdatingStateListener::class,
 		],
 	];

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enum\VaultStates;
+use App\Events\VaultUpdatingNextRatioEvent;
 use App\Events\VaultUpdatingRatioEvent;
 use App\Events\VaultUpdatingStateEvent;
 use Envant\Fireable\FireableAttributes;
@@ -66,13 +67,14 @@ class Vault extends Model
 		'batches'           => 'array',
 	];
 	protected array $fireableAttributes = [
-		'state'           => [
+		'state'               => [
 			VaultStates::INLIQUIDATION => VaultUpdatingStateEvent::class,
 			VaultStates::MAYLIQUIDATE  => VaultUpdatingStateEvent::class,
 			VaultStates::FROZEN        => VaultUpdatingStateEvent::class,
 			VaultStates::ACTIVE        => VaultUpdatingStateEvent::class,
 		],
-		'collateralRatio' => VaultUpdatingRatioEvent::class,
+		'collateralRatio'     => VaultUpdatingRatioEvent::class,
+		'nextCollateralRatio' => VaultUpdatingNextRatioEvent::class,
 	];
 
 	public function getVaultIdAttribute(): string
