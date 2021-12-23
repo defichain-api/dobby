@@ -21,7 +21,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
-    boot: ["basics", "i18n", "axios", "addressbar-color", "fontawesome-pro", "notify-defaults"],
+    boot: ["basics", "i18n", "axios", "addressbar-color", "fontawesome-pro", "notify-defaults", "chartkick"],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ["app.scss"],
