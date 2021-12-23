@@ -3,6 +3,7 @@
 use App\Api\Controller\LanguageController;
 use App\Api\Controller\NotificationGatewayController;
 use App\Api\Controller\NotificationTriggerController;
+use App\Api\Controller\PriceTickerController;
 use App\Api\Controller\SetupController;
 use App\Api\Controller\StatisticController;
 use App\Api\Controller\UserController;
@@ -20,6 +21,9 @@ Route::post('setup', [SetupController::class, 'setup'])
 	->name('setup');
 Route::get('statistics', [StatisticController::class, 'getStatistics'])
 	->name('statistics');
+
+Route::get('price_ticker', [PriceTickerController::class, 'getNextTick'])
+	->name('vault.ticker');
 
 Route::middleware(['webapp_auth'])->group(function () {
 	/**

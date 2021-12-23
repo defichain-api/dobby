@@ -14,4 +14,7 @@ return [
 	'fixed_interval_prices' => [
 		'get' => 'prices',
 	],
+	'stats' => [
+		'get' => 'stats',
+	],
 ];

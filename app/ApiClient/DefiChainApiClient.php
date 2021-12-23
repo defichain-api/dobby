@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
-class DefiChainApiClient
+class DefiChainApiClient implements BaseApiClient
 {
 	protected ClientInterface $client;
 
@@ -29,7 +29,7 @@ class DefiChainApiClient
 			$response = $this->client->post(config('defichain_api.vaults.multiple'), [
 				'form_params' => [
 					'addresses' => $addresses,
-				]
+				],
 			]);
 		} catch (GuzzleException $e) {
 			throw DefichainApiException::message('multiple_vault', $e);
@@ -64,5 +64,29 @@ class DefiChainApiClient
 		}
 
 		return json_decode($response->getBody()->getContents(), true)['data'];
+	}
+
+	public function loadVaultsForPage(string $nextPage = ''): array
+	{
+		// TODO: Implement loadVaultsForPage() method.
+		return [];
+	}
+
+	public function getVault(string $address): array
+	{
+		// TODO: Implement getVault() method.
+		return [];
+	}
+
+	public function getStats(): array
+	{
+		// TODO: Implement getStats() method.
+		return [];
+	}
+
+	public function currentBlockHeight(): int
+	{
+		// TODO: Implement currentBlockHeight() method.
+		return -1;
 	}
 }
