@@ -26,7 +26,7 @@ class VaultResource extends JsonResource
 			'interestValue'       => $this->interestValue,
 			'informativeRatio'    => $this->informativeRatio,
 			'collateralRatio'     => $this->collateralRatio,
-			'nextCollateralValue' => $this->nextCollateralValue,
+			'nextCollateralRatio' => $this->nextCollateralRatio,
 			'liquidationHeight'   => $this->liquidationHeight,
 			'batchCount'          => $this->batchCount,
 			'liquidationPenalty'  => $this->liquidationPenalty,
