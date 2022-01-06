@@ -15,11 +15,13 @@ use Spatie\WebhookServer\WebhookCall;
 class VaultNextRatioNotification extends BaseTriggerNotification
 {
 	protected CollateralRatioRepository $ratioRepository;
+	protected string $vaultName;
 
-	public function __construct(Vault $vault)
+	public function __construct(Vault $vault, string $vaultName = null)
 	{
 		parent::__construct($vault);
 		$this->ratioRepository = app(CollateralRatioRepository::class);
+		$this->vaultName = $vaultName;
 	}
 
 	/**
@@ -37,7 +39,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 			->content(
 				__('notifications/telegram/next_ratio.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
-					'vault_name'     => $this->vault->pivot->name ?? '',
+					'vault_name'     => $this->vaultName ?? '',
 					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'next_ratio'     => $this->vault->nextCollateralRatio,
 					'block_diff'     => $this->ratioRepository->diffToNextTick(),
@@ -69,6 +71,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 			->markdown('mail.notification.info', [
 				'notificationTrigger' => $notificationTrigger,
 				'vault'               => $this->vault,
+				'vaultName'           => $this->vaultName,
 				'ratioRepository'     => $this->ratioRepository,
 			]);
 	}

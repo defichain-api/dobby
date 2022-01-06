@@ -27,6 +27,7 @@ class VaultUpdatingNextRatioListener implements ShouldQueue
 
 		// check ratio - send notifications
 		$users = $vault->users;
+		ray($users, $vault, $vault?->pivot?->name);
 
 		// abort if vault has no users tracking it
 		if ($users->count() === 0) {
@@ -44,7 +45,7 @@ class VaultUpdatingNextRatioListener implements ShouldQueue
 				return true;
 			}
 
-			$trigger->notify(new VaultNextRatioNotification($vault));
+			$trigger->notify(new VaultNextRatioNotification($vault, $user->pivot->name));
 		});
 	}
 }
