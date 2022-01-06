@@ -27,6 +27,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	 */
 	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramFile
 	{
+		ray('triggered');
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);

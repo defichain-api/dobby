@@ -58,13 +58,13 @@ class User extends Model
 	/**
 	 * @throws NotificationTriggerNotAvailableException
 	 */
-	public function nearestTriggerBelowRatio(Vault $vault): NotificationTrigger
+	public function nearestTriggerBelowRatio(Vault $vault, int $currentRatio): NotificationTrigger
 	{
 		try {
 			return $this->notificationTrigger()
 				->where('vaultId', $vault->vaultId)
 				->sortBy('ratio')
-				->where('ratio', '>=', $vault->collateralRatio)
+				->where('ratio', '>=', $currentRatio)
 				->firstOrFail();
 		} catch (ItemNotFoundException) {
 			throw new NotificationTriggerNotAvailableException();
