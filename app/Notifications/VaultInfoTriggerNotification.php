@@ -83,6 +83,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 				'type' => NotificationTriggerType::INFO,
 				'data' => [
 					'vaultId'          => $this->vault->vaultId,
+					'vaultName'        => $this->vaultName,
 					'vaultDeeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'            => $notificationTrigger->ratio,
 					'currentRatio'     => $this->vault->collateralRatio,

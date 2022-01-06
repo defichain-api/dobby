@@ -30,7 +30,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM, now()->addMinutes(30));
+		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM . '_next', now()->addMinutes(30));
 
 		return TelegramFile::create()
 			->content(
@@ -61,7 +61,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL, now()->addHour());
+		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL . '_next', now()->addHour());
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/next_ratio.subject'), config('app.name')))
@@ -81,7 +81,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::WEBHOOK, now()->addMinutes(15));
+		$this->snooze($notificationTrigger, NotificationGatewayType::WEBHOOK . '_next', now()->addMinutes(15));
 
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
@@ -89,6 +89,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 				'type' => NotificationTriggerType::NEXT_RATIO,
 				'data' => [
 					'vaultId'                         => $this->vault->vaultId,
+					'vaultName'                       => $this->vaultName,
 					'vaultDeeplink'                   => sprintf(config('links.vault_info_deeplink'),
 						$this->vault->vaultId),
 					'ratioTriggered'                  => $notificationTrigger->ratio,
