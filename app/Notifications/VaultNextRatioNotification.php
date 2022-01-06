@@ -65,7 +65,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/next_ratio.subject'), config('app.name')))
-			->markdown('mail.notification.info', [
+			->markdown('mail.notification.next_ratio', [
 				'notificationTrigger' => $notificationTrigger,
 				'vault'               => $this->vault,
 				'vaultName'           => $this->vaultName,

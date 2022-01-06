@@ -2,7 +2,7 @@
 # {{ __('notifications/mail/next_ratio.greeting') }}
 {{ __('notifications/mail/next_ratio.message', [
 	'vault_id'       => str_truncate_middle($vault->vaultId, 15, '...'),
-	'vault_name'     => $vault->pivot->name ?? '',
+	'vault_name'     => $vaultName ?? '',
 	'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
 	'next_ratio'     => $vault->nextCollateralRatio,
 	'block_diff'     => $ratioRepository->diffToNextTick(),

@@ -44,9 +44,9 @@ class VaultUpdatingRatioListener implements ShouldQueue
 			}
 
 			if ($trigger->type === NotificationTriggerType::INFO) {
-				$trigger->notify(new VaultInfoTriggerNotification($vault));
+				$trigger->notify(new VaultInfoTriggerNotification($vault, $user->pivot->name));
 			} elseif ($trigger->type === NotificationTriggerType::WARNING) {
-				$trigger->notify(new VaultWarningTriggerNotification($vault));
+				$trigger->notify(new VaultWarningTriggerNotification($vault, $user->pivot->name));
 			}
 		});
 	}
