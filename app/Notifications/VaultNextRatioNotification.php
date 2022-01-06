@@ -15,7 +15,7 @@ use Spatie\WebhookServer\WebhookCall;
 class VaultNextRatioNotification extends BaseTriggerNotification
 {
 	protected CollateralRatioRepository $ratioRepository;
-	protected string $vaultName;
+	protected ?string $vaultName;
 
 	public function __construct(Vault $vault, string $vaultName = null)
 	{
