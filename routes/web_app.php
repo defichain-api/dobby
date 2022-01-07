@@ -32,7 +32,7 @@ Route::middleware(['webapp_auth'])->group(function () {
 	Route::name('user.')->prefix('user')->group(function () {
 		Route::get('/', [UserController::class, 'getUser'])
 			->name('get');
-		Route::put('/', [UserController::class, 'updateUser'])
+		Route::put('settings', [UserController::class, 'updateUserSetting'])
 			->name('update');
 		Route::delete('/', [UserController::class, 'deleteUser'])
 			->middleware('uneditable_demo')

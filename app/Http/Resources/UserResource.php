@@ -11,8 +11,7 @@ class UserResource extends JsonResource
 	{
 		return [
 			'userId'   => $this->id,
-			'language' => $this->language,
-			'theme'    => $this->theme,
+			'settings' => new UserSettingResource($this->setting),
 			'vaults'   => VaultResource::collection($this->vaults),
 		];
 	}

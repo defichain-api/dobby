@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
@@ -16,21 +17,17 @@ use Kurozora\Cooldown\HasCooldowns;
 
 /**
  * @mixin \Eloquent
- * @property string     id
- * @property string     language
- * @property string     theme
- * @property Collection vaults
- * @property Collection notificationGateways
+ * @property string      id
+ * @property Collection  vaults
+ * @property Collection  notificationGateways
+ * @property UserSetting setting
  */
 class User extends Model
 {
 	use HasFactory, UsesUuidPrimary, Notifiable, UseNotificationConfig, HasCooldowns;
 
-	protected $fillable = [
-		'id',
-		'language',
-		'theme',
-	];
+	protected $fillable = ['id'];
+	protected $with = ['setting'];
 	protected $hidden = [
 		'created_at',
 		'updated_at',
@@ -40,6 +37,11 @@ class User extends Model
 	{
 		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId')
 			->withPivot('name');
+	}
+
+	public function setting(): HasOne
+	{
+		return $this->hasOne(UserSetting::class, 'userId', 'id');
 	}
 
 	public function notificationTrigger(): Collection

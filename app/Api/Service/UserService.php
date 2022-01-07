@@ -5,26 +5,34 @@ namespace App\Api\Service;
 use App\Api\Requests\SetupRequest;
 use App\Api\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Models\UserSetting;
 use App\Models\Vault;
 
 class UserService
 {
 	public function create(SetupRequest $request): User
 	{
-		return User::create([
+		$user = User::create();
+		UserSetting::create([
+			'userId'   => $user->id,
 			'language' => $request->language(),
 			'theme'    => $request->theme(),
 		]);
+
+		return $user;
 	}
 
 	public function update(UpdateUserRequest $request): bool
 	{
-		/** @var \App\Models\User $user */
-		$user = $request->get('user');
+		/** @var \App\Models\UserSetting $userSetting */
+		$userSetting = $request->get('user')->setting
+			?? UserSetting::create([
+				'userId' => $request->get('user')->id,
+			]);
 
-		return $user->update([
-			'language' => $request->hasLanguage() ? $request->language() : $user->language,
-			'theme'    => $request->hasTheme() ? $request->theme() : $user->theme,
+		return $userSetting->update([
+			'language' => $request->hasLanguage() ? $request->language() : $userSetting->language,
+			'theme'    => $request->hasTheme() ? $request->theme() : $userSetting->theme,
 		]);
 	}
 
