@@ -27,7 +27,7 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 			->content(
 				__('notifications/telegram/warning.message', [
 					'vault_id'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
-					'vault_name'        => $this->vault->pivot->name ?? '',
+					'vault_name'        => $this->vaultName ?? '',
 					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
@@ -86,6 +86,7 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 			->markdown('mail.notification.warning', [
 				'notificationTrigger' => $notificationTrigger,
 				'vault'               => $this->vault,
+				'vaultName'           => $this->vaultName,
 			]);
 	}
 }

@@ -27,14 +27,14 @@ class VaultUpdatingStateListener implements ShouldQueue
 		$users = $vault->users;
 		$users->each(function (User $user) use ($vault) {
 			if ($vault->state === VaultStates::MAYLIQUIDATE) {
-				$user->notify(new VaultMayLiquidateNotification($vault));
+				$user->notify(new VaultMayLiquidateNotification($vault, $user->pivot->name));
 			} elseif ($vault->state === VaultStates::INLIQUIDATION) {
-				$user->notify(new VaultInLiquidationNotification($vault));
+				$user->notify(new VaultInLiquidationNotification($vault, $user->pivot->name));
 			} elseif ($vault->state === VaultStates::FROZEN) {
-				$user->notify(new VaultFrozenNotification($vault));
+				$user->notify(new VaultFrozenNotification($vault, $user->pivot->name));
 			} elseif ($vault->state === VaultStates::ACTIVE && cache()->has(sprintf('dirty_%s_state', $vault->vaultId))) {
 				$vaultOriginalState = cache(sprintf('dirty_%s_state', $vault->vaultId));
-				$user->notify(new VaultActiveNotification($vault, $vaultOriginalState));
+				$user->notify(new VaultActiveNotification($vault, $vaultOriginalState, $user->pivot->name));
 			}
 		});
 	}

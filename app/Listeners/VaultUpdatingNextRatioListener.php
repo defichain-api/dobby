@@ -5,21 +5,23 @@ namespace App\Listeners;
 use App\Enum\NotificationTriggerType;
 use App\Enum\QueueName;
 use App\Enum\VaultStates;
+use App\Events\VaultUpdatingNextRatioEvent;
 use App\Events\VaultUpdatingRatioEvent;
 use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\User;
 use App\Notifications\VaultInfoTriggerNotification;
+use App\Notifications\VaultNextRatioNotification;
 use App\Notifications\VaultWarningTriggerNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class VaultUpdatingRatioListener implements ShouldQueue
+class VaultUpdatingNextRatioListener implements ShouldQueue
 {
 	public string $queue = QueueName::LISTENER_QUEUE;
 
-	public function handle(VaultUpdatingRatioEvent $event): void
+	public function handle(VaultUpdatingNextRatioEvent $event): void
 	{
 		$vault = $event->vault();
-		if ($vault->collateralRatio <= 0) {
+		if ($vault->nextCollateralRatio <= 0) {
 			return;
 		}
 
@@ -33,21 +35,16 @@ class VaultUpdatingRatioListener implements ShouldQueue
 
 		$users->each(function (User $user) use ($vault) {
 			// cancel reporting if vault is not filled or not active
-			if ($vault->collateralRatio < 0 || $vault->state !== VaultStates::ACTIVE) {
+			if ($vault->nextCollateralRatio < 0 || $vault->state !== VaultStates::ACTIVE) {
 				return true;
 			}
-
 			try {
-				$trigger = $user->nearestTriggerBelowRatio($vault, $vault->collateralRatio);
+				$trigger = $user->nearestTriggerBelowRatio($vault, $vault->nextCollateralRatio);
 			} catch (NotificationTriggerNotAvailableException) {
 				return true;
 			}
 
-			if ($trigger->type === NotificationTriggerType::INFO) {
-				$trigger->notify(new VaultInfoTriggerNotification($vault, $user->pivot->name));
-			} elseif ($trigger->type === NotificationTriggerType::WARNING) {
-				$trigger->notify(new VaultWarningTriggerNotification($vault, $user->pivot->name));
-			}
+			$trigger->notify(new VaultNextRatioNotification($vault, $user->pivot->name));
 		});
 	}
 }
