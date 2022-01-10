@@ -31,8 +31,9 @@ class UserService
 			]);
 
 		return $userSetting->update([
-			'language' => $request->hasLanguage() ? $request->language() : $userSetting->language,
-			'theme'    => $request->hasTheme() ? $request->theme() : $userSetting->theme,
+			'language'         => $request->hasLanguage() ? $request->language() : $userSetting->language,
+			'theme'            => $request->hasTheme() ? $request->theme() : $userSetting->theme,
+			'summary_interval' => $request->hasSummaryInterval() ? $request->summaryInterval() : $userSetting->summary_interval,
 		]);
 	}
 

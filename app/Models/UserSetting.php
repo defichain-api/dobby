@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string userId
  * @property string language
  * @property string theme
+ * @property string summary_interval
  */
 class UserSetting extends Model
 {
@@ -19,6 +20,7 @@ class UserSetting extends Model
 		'userId',
 		'language',
 		'theme',
+		'summary_interval',
 	];
 	protected $hidden = [
 		'id',
