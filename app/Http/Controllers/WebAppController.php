@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 class WebAppController extends Controller
 {
-	public function index(): View
+	public function index():JsonResponse
 	{
-		return view('spa');
+		return response()->json([
+			'message' => 'frontend is not available',
+		]);
 	}
 }

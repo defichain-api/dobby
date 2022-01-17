@@ -10,6 +10,3 @@ const mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-
-mix.copy('web_app/dist/spa/index.html', 'resources/views/spa.blade.php')
-    .copyDirectory('web_app/dist/spa', 'public');
