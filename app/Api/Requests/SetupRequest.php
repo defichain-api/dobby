@@ -7,22 +7,22 @@ use JetBrains\PhpStorm\ArrayShape;
 
 class SetupRequest extends ApiRequest
 {
-	#[ArrayShape(['language' => "array", 'theme' => "array", 'ownerAddresses' => "string[]"])]
+	#[ArrayShape(['language' => "array", 'uiTheme' => "array", 'ownerAddresses' => "string[]"])]
 	public function rules(): array
 	{
 		return [
 			'language'       => ['required', 'string', Rule::in(config('app.available_locales'))],
-			'theme'          => ['required', 'string', Rule::in(config('app.available_themes'))],
+			'uiTheme'        => ['required', 'string', Rule::in(config('app.available_themes'))],
 			'ownerAddresses' => ['sometimes', 'array'],
 		];
 	}
 
-	#[ArrayShape(['language.in' => "string", 'theme.in' => "string"])]
+	#[ArrayShape(['language.in' => "string", 'uiTheme.in' => "string"])]
 	public function messages(): array
 	{
 		return [
 			'language.in' => sprintf('possible values are: %s', implode(', ', config('app.available_locales'))),
-			'theme.in'    => sprintf('possible values are: %s', implode(', ', config('app.available_themes'))),
+			'uiTheme.in'  => sprintf('possible values are: %s', implode(', ', config('app.available_themes'))),
 		];
 	}
 

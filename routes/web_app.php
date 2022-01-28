@@ -1,6 +1,7 @@
 <?php
 
 use App\Api\Controller\LanguageController;
+use App\Api\Controller\ListController;
 use App\Api\Controller\NotificationGatewayController;
 use App\Api\Controller\NotificationTriggerController;
 use App\Api\Controller\PriceTickerController;
@@ -15,6 +16,13 @@ Route::name('language.')->prefix('language')->group(function () {
 		->name('list');
 	Route::get('{iso}', [LanguageController::class, 'languageIso'])
 		->name('iso');
+});
+
+Route::name('list.')->prefix('list')->group(function () {
+	Route::get('timezones', [ListController::class, 'timezones'])
+		->name('timezones');
+	Route::get('summary_interval', [ListController::class, 'summaryInterval'])
+		->name('summary_interval');
 });
 
 Route::post('setup', [SetupController::class, 'setup'])

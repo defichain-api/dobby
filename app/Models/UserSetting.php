@@ -10,8 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property User   user
  * @property string userId
  * @property string language
- * @property string theme
+ * @property string ui_theme
  * @property string summary_interval
+ * @property bool   current_ratio_enabled
+ * @property bool   ui_privacy_enabled
+ * @property bool   ui_dashboard_healthSummary_enabled
+ * @property bool   ui_dashboard_collateralInfo_enabled
+ * @property bool   ui_dashboard_collateralWaypoints_enabled
+ * @property string timezone
  */
 class UserSetting extends Model
 {
@@ -19,8 +25,14 @@ class UserSetting extends Model
 	protected $fillable = [
 		'userId',
 		'language',
-		'theme',
 		'summary_interval',
+		'current_ratio_enabled',
+		'timezone',
+		'ui_theme',
+		'ui_privacy_enabled',
+		'ui_dashboard_healthSummary_enabled',
+		'ui_dashboard_collateralInfo_enabled',
+		'ui_dashboard_collateralWaypoints_enabled',
 	];
 	protected $hidden = [
 		'id',
