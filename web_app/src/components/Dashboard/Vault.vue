@@ -79,6 +79,7 @@
               rounded
               color="primary"
               type="a"
+              target="blank"
               :href="'https://defiscan.live/vaults/' + vault.vaultId + '/auctions/0'"
               label="see auction details on DeFiScan"
             />
