@@ -208,16 +208,8 @@ export default {
     padding: 0
     li
       list-style: none
+
   .q-card
       width: 100%
 
-
-  body.screen--xs
-    .q-card
-      width: 100%
-      max-width: inherit
-
-  body.screen--sm
-    .q-card
-      width: 31%
 </style>
