@@ -57,21 +57,20 @@
           color="primary"
         />
         <q-card-section class="q-py-sm">
-          <div class="text-body1"><q-icon name="fal fa-hourglass-half" class="q-mr-sm" />Next Price Tick</div>
+          <div class="text-body1"><q-icon name="fal fa-hourglass-half" class="q-mr-sm" />Next Price Tick in...</div>
         </q-card-section>
         <q-separator inset />
-        <q-card-section class="row q-py-sm">
-          <div class="col-4 text-left">
-            <div class="text-primary text-body1">{{ nextTick.block_height }}</div>
+        <q-card-section class="row q-py-sm text-center">
+          <div class="col-5">
+            <div class="text-primary text-h4">{{ nextTick.minutes_left }} min</div>
+          </div>
+          <div class="col-3">
             <div>at block</div>
+            <div class="text-primary text-body1">{{ nextTick.block_height }}</div>
           </div>
-          <div class="col-4 text-center">
-            <div class="text-primary text-body1">~{{ nextTick.minutes_left }} min</div>
-            <div>left</div>
-          </div>
-          <div class="col-4 text-right">
-            <div class="text-primary text-body1">{{ moment(nextTick.time).format('LTS') }}</div>
+          <div class="col-4">
             <div>last tick</div>
+            <div class="text-primary text-body1">{{ moment(nextTick.time).format('LTS') }}</div>
           </div>
         </q-card-section>
       </q-card>
@@ -104,7 +103,7 @@
     </div>
 
     <div v-if="!showVaultsAsCarousel" class="row" :class="{'q-gutter-md q-mx-none': !$q.platform.is.mobile, 'q-mx-none q-mr-md q-gutter-md': $q.platform.is.mobile}">
-      <Vault  :vault="vault" v-for="vault in vaults" :key="vault.vaultId" />
+      <Vault :vault="vault" v-for="vault in vaults" :key="vault.vaultId" />
     </div>
 
     <q-separator class="q-mt-md" inset />
@@ -117,7 +116,7 @@
         to="manage-vaults"
         icon="fas fa-plus-circle"
         class="text-center"
-        :class="{'full-width': $q.platform.is.mobile}"
+        :class="{'full-width': $q.screen.lt.sm}"
         color="primary"
         label="add another vault"
       />
@@ -207,12 +206,15 @@ export default defineComponent({
   .q-carousel
     width: 100%
 
-  body.screen--xs
+  .screen--xs
     .q-card
       width: 100%
-      max-width: inherit
 
-  body.screen--sm
+  .screen--sm
     .q-card
-      width: 31%
+      width: 50vw
+
+  .screen--md
+    .q-card
+      width: 31vw
 </style>
