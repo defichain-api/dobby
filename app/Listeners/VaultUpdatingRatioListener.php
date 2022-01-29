@@ -23,8 +23,8 @@ class VaultUpdatingRatioListener implements ShouldQueue
 			return;
 		}
 
-		// check ratio - send notifications
-		$users = $vault->users;
+		// check ratio - send notifications, only with enabled current ratio notifications
+		$users = $vault->usersWithCurrentRatioNotification;
 
 		// abort if vault has no users tracking it
 		if ($users->count() === 0) {

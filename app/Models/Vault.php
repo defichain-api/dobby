@@ -16,6 +16,7 @@ use \Illuminate\Database\Eloquent\Collection;
  * @mixin \Eloquent
  * @property string     vaultId
  * @property Collection users
+ * @property Collection usersWithCurrentRatioNotification
  * @property LoanScheme loanScheme
  * @property string     loanSchemeId
  * @property string     ownerAddress
@@ -106,5 +107,13 @@ class Vault extends Model
 	{
 		return $this->belongsToMany(User::class, 'user_vault', 'vaultId', 'userId')
 			->withPivot('name');
+	}
+
+	public function usersWithCurrentRatioNotification(): BelongsToMany
+	{
+		return $this->users()
+			->whereHas('setting', function ($query) {
+				$query->where('current_ratio_enabled', true);
+			});
 	}
 }

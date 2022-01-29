@@ -8,23 +8,53 @@ use JetBrains\PhpStorm\ArrayShape;
 
 class UpdateUserRequest extends ApiRequest
 {
-	#[ArrayShape(['language' => "string[]", 'theme' => "string[]", 'summaryInterval' => "string[]"])]
+	#[ArrayShape([
+		'language'                              => "array",
+		'uiTheme'                               => "array",
+		'summaryInterval'                       => "array",
+		'currentRatioEnabled'                   => "string[]",
+		'uiPrivacyEnabled'                      => "string[]",
+		'uiDashboardHealthSummaryEnabled'       => "string[]",
+		'uiDashboardCollateralInfoEnabled'      => "string[]",
+		'uiDashboardCollateralWaypointsEnabled' => "string[]",
+		'timezone'                              => "array",
+	])]
 	public function rules(): array
 	{
 		return [
-			'language'        => ['sometimes', 'string', Rule::in(config('app.available_locales'))],
-			'theme'           => ['sometimes', 'string', Rule::in(config('app.available_themes'))],
-			'summaryInterval' => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
+			'language'                              => [
+				'sometimes',
+				'string',
+				Rule::in(config('app.available_locales')),
+			],
+			'uiTheme'                               => [
+				'sometimes',
+				'string',
+				Rule::in(config('app.available_themes')),
+			],
+			'summaryInterval'                       => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
+			'currentRatioEnabled'                   => ['sometimes', 'boolean'],
+			'uiPrivacyEnabled'                      => ['sometimes', 'boolean'],
+			'uiDashboardHealthSummaryEnabled'       => ['sometimes', 'boolean'],
+			'uiDashboardCollateralInfoEnabled'      => ['sometimes', 'boolean'],
+			'uiDashboardCollateralWaypointsEnabled' => ['sometimes', 'boolean'],
+			'timezone'                              => ['sometimes', 'string', Rule::in(array_keys(__('timezones')))],
 		];
 	}
 
-	#[ArrayShape(['language.in' => "string", 'theme.in' => "string", 'summaryInterval.in' => "string"])]
+	#[ArrayShape([
+		'language.in'        => "string",
+		'uiTheme.in'         => "string",
+		'summaryInterval.in' => "string",
+		'timezone.in'        => "string",
+	])]
 	public function messages(): array
 	{
 		return [
 			'language.in'        => sprintf('possible values are: %s', implode(', ', config('app.available_locales'))),
-			'theme.in'           => sprintf('possible values are: %s', implode(', ', config('app.available_themes'))),
+			'uiTheme.in'         => sprintf('possible values are: %s', implode(', ', config('app.available_themes'))),
 			'summaryInterval.in' => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
+			'timezone.in'        => sprintf('possible values are visible at: %s', route('web_app.list.timezones')),
 		];
 	}
 
@@ -35,12 +65,42 @@ class UpdateUserRequest extends ApiRequest
 
 	public function hasTheme(): bool
 	{
-		return $this->has('theme');
+		return $this->has('uiTheme');
 	}
 
 	public function hasSummaryInterval(): bool
 	{
 		return $this->has('summaryInterval');
+	}
+
+	public function hasCurrentRatioEnabled(): bool
+	{
+		return $this->has('currentRatioEnabled');
+	}
+
+	public function hasUiPrivacyEnabled(): bool
+	{
+		return $this->has('uiPrivacyEnabled');
+	}
+
+	public function hasUiDashboardHealthSummaryEnabled(): bool
+	{
+		return $this->has('uiDashboardHealthSummaryEnabled');
+	}
+
+	public function hasUiDashboardCollateralInfoEnabled(): bool
+	{
+		return $this->has('uiDashboardCollateralInfoEnabled');
+	}
+
+	public function hasUiDashboardCollateralWaypointsEnabled(): bool
+	{
+		return $this->has('uiDashboardCollateralWaypointsEnabled');
+	}
+
+	public function hasTimezone(): bool
+	{
+		return $this->has('timezone');
 	}
 
 	public function language(): string
@@ -50,7 +110,37 @@ class UpdateUserRequest extends ApiRequest
 
 	public function theme(): string
 	{
-		return $this->input('theme');
+		return $this->input('uiTheme');
+	}
+
+	public function currentRatioEnabled(): string
+	{
+		return $this->input('currentRatioEnabled');
+	}
+
+	public function uiPrivacyEnabled(): bool
+	{
+		return $this->input('uiPrivacyEnabled');
+	}
+
+	public function uiDashboardHealthSummaryEnabled(): bool
+	{
+		return $this->input('uiDashboardHealthSummaryEnabled');
+	}
+
+	public function uiDashboardCollateralInfoEnabled(): bool
+	{
+		return $this->input('uiDashboardCollateralInfoEnabled');
+	}
+
+	public function uiDashboardCollateralWaypointsEnabled(): bool
+	{
+		return $this->input('uiDashboardCollateralWaypointsEnabled');
+	}
+
+	public function timezone(): string
+	{
+		return $this->input('timezone');
 	}
 
 	public function summaryInterval(): string
