@@ -13,14 +13,15 @@
     <q-card-section
       class="q-py-xs"
       style="height: 15px"
-      :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'mayLiquidate', 'bg-negative': vault.state == 'in_liquidation', 'bg-blue': vault.state == 'frozen'}"
+      :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'may_liquidate', 'bg-negative': vault.state == 'in_liquidation', 'bg-blue': vault.state == 'frozen'}"
     />
 
     <q-card-section class="q-my-sm q-py-none">
       <div class="row no-wrap text-left">
         <div class="col-12">
           <div class="ellipsis" :class="{'text-h5': vault.name.length > 0, 'text-caption': vault.name.length == 0}">
-            <q-icon name="fal fa-box-usd" size="sm" class="q-mr-sm" />
+            <q-icon v-if="!isFrozen" name="fal fa-box-usd" size="sm" class="q-mr-sm" />
+            <q-icon v-if="isFrozen" name="fal fa-snowman" size="sm" class="q-mr-sm" color="blue" />
             <span v-if="vault.name.length > 0">{{ vault.name }}</span>
             <span v-else>
               <span v-if="!privacy">{{ vault.vaultId }}</span>
@@ -40,7 +41,7 @@
           <div class="caption">Loan Value</div>
         </div>
         <div v-if="vault.loanValue > 0" class="col-8 text-right">
-          <div class="text-h4 text-primary">{{ vault.collateralRatio.toLocaleString(locale) }} %</div>
+          <div class="text-h4" :class="{'text-primary': !isFrozen, 'text-blue': isFrozen}">{{ vault.collateralRatio.toLocaleString(locale) }} %</div>
           <div class="caption" v-if="vault.nextCollateralRatio">Next: <span class="text-primary">{{ vault.nextCollateralRatio.toLocaleString(locale) }} %</span></div>
         </div>
       </div>
@@ -64,12 +65,32 @@
     </q-card-section>
 
     <q-card-section class="main-info" v-if="vault.state == 'in_liquidation'">
-      <div class="row items-center no-wrap">
-        <div class="col">
+      <div class="text-center">
           <div class="text-h6">In Liquidation</div>
           <div class="text-subtitle2">At Block Height {{ vault.liquidationHeight }}</div>
-        </div>
+          <q-icon class="q-my-lg" name="fal fa-skull-crossbones" size="xl" />
+          <p>You're in trouble, friend.</p>
+          <p>
+            You can try to bid on the corresponding auction, using your DeFiChain wallet app.
+          </p>
+          <p>
+            <q-btn
+              outline
+              rounded
+              color="primary"
+              type="a"
+              :href="'https://defiscan.live/vaults/' + vault.vaultId + '/auctions/0'"
+              label="see auction details on DeFiScan"
+            />
+          </p>
       </div>
+    </q-card-section>
+
+    <q-separator inset v-if="isFrozen" />
+
+    <q-card-section class="coll-progress q-py-sm text-center" v-if="isFrozen">
+      <q-icon name="fal fa-snowman" size="xl" color="blue" />
+      <div class="text-h6 text-blue">Vault is frozen</div>
     </q-card-section>
 
     <q-separator inset />
@@ -232,6 +253,9 @@ export default {
     awayFromWarningState() {
       return 0
     },
+    isFrozen() {
+      return this.vault.state == 'frozen'
+    },
     ...mapGetters({
       settingValue: 'settings/value',
       requestRunning: 'requestRunning',
@@ -241,8 +265,8 @@ export default {
   }
 }
 </script>
+<!--
 
-<style lang="sass" scoped>
   .vault
     min-width: 290px
     max-width: 32vw
@@ -250,7 +274,8 @@ export default {
   .screen--xs .vault
     width: 100%
     max-width: inherit
-
+-->
+<style lang="sass" scoped>
   ul
     padding-left: 10px
 </style>

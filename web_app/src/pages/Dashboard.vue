@@ -8,9 +8,9 @@
   >
     <NoNotificationGateways v-if="!requestRunning && !isDemo" />
 
-    <div class="q-pa-md row items-start q-gutter-md">
+    <div class="q-pa-md row q-gutter-md">
       <!-- Show hint when no user is set -->
-      <q-card flat v-if="vaults.length == 0 && !isDemo && !requestRunning">
+      <q-card flat v-if="vaults.size == 0 && !isDemo && !requestRunning">
         <q-img src="/img/banner.jpg">
           <div class="absolute-bottom text-h6">
             No vaults set yet
@@ -51,6 +51,23 @@
         </q-card-section>
       </q-card>
 
+      <q-card flat v-if="frozenVaults.size > 0">
+        <q-card-section
+          class="q-py-xs bg-blue"
+          style="height: 15px"
+        />
+        <q-card-section>
+          <div class="text-h6 text-blue">Frozen vaults</div>
+        </q-card-section>
+        <q-card-section>
+          Dobby has detected that you've got frozen vaults.
+          That's no reason to panic. This happens due to several reasons.
+          The most common one is that some price oracle did not respond or a price dropped unusally fast.
+          To protect affected vaults, DeFiChain has automatically put them into freezing state.
+          This will be undone when everything is fine again.
+        </q-card-section>
+      </q-card>
+
       <q-card flat>
         <q-inner-loading
           :showing="requestRunning"
@@ -74,9 +91,12 @@
           </div>
         </q-card-section>
       </q-card>
+
     </div>
 
-    <div class="q-pa-md row items-start q-gutter-md" v-if="showVaultsAsCarousel">
+    <q-separator class="q-mb-md" inset />
+
+    <div class="q-px-md" v-if="showVaultsAsCarousel">
       <q-carousel
         v-model="slide"
         transition-prev="slide-right"
@@ -102,17 +122,25 @@
       </q-carousel>
     </div>
 
-    <div v-if="!showVaultsAsCarousel" class="row" :class="{'q-gutter-md q-mx-none': !$q.platform.is.mobile, 'q-mx-none q-mr-md q-gutter-md': $q.platform.is.mobile}">
-      <Vault :vault="vault" v-for="vault in vaults" :key="vault.vaultId" />
+    <div
+      v-if="!showVaultsAsCarousel"
+      class="row"
+      :class="{'q-gutter-md q-mx-none': $q.screen.gt.sm, 'q-mx-none q-mr-md q-gutter-md': $q.screen.lt.sm}"
+    >
+      <Vault
+        :vault="vault"
+        v-for="vault in vaults"
+        :key="vault.vaultId"
+      />
     </div>
 
     <q-separator class="q-mt-md" inset />
 
-    <div class="q-pa-md" v-if="vaults.length > 0">
+    <div class="q-pa-md" v-if="vaults.size > 0">
       <q-btn
         outline
         rounded
-        :dense="$q.platform.is.mobile"
+        :dense="$q.screen.lt.sm"
         to="manage-vaults"
         icon="fas fa-plus-circle"
         class="text-center"
@@ -179,10 +207,19 @@ export default defineComponent({
     isDemo() {
       return this.demoAccountID == this.userId
     },
+    frozenVaults() {
+      let vaultList = new Set()
+      this.allVaults.forEach((vault) => {
+        if(vault.state == 'frozen') {
+          vaultList.add(vault)
+        }
+      })
+      return vaultList
+    },
     vaults() {
       let vaultList = new Set()
       this.allVaults.forEach((vault) => {
-        if(vault.state != 'inactive') {
+        if (vault.state != 'inactive') {
           vaultList.add(vault)
         }
       })
@@ -212,9 +249,18 @@ export default defineComponent({
 
   .screen--sm
     .q-card
-      width: 50vw
+      width: 47vw
 
   .screen--md
     .q-card
       width: 31vw
+
+  .screen--lg
+    .q-card
+      width: 23vw
+
+  .q-carousel
+    .q-card
+      width: 100%
+
 </style>

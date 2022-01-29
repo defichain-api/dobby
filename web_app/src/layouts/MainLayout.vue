@@ -89,10 +89,13 @@
       </q-toolbar>
     </q-header>
 
+    <!--
+      show-if-above
+    -->
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
 
+      behavior="mobile"
       :width="250"
     >
       <!--<q-scroll-area class="fit">-->
