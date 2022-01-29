@@ -41,7 +41,10 @@
           <div class="caption">Loan Value</div>
         </div>
         <div v-if="vault.loanValue > 0" class="col-8 text-right">
-          <div class="text-h4" :class="{'text-primary': !isFrozen, 'text-blue': isFrozen}">{{ vault.collateralRatio.toLocaleString(locale) }} %</div>
+          <div class="text-h4" :class="{'text-primary': !isFrozen, 'text-blue': isFrozen}">
+            <span v-if="vault.loanValue > 0">{{ vault.collateralRatio.toLocaleString(locale) }} %</span>
+            <span v-if="vault.loanValue <= 0">N/A</span>
+          </div>
           <div class="caption" v-if="vault.nextCollateralRatio">Next: <span class="text-primary">{{ vault.nextCollateralRatio.toLocaleString(locale) }} %</span></div>
         </div>
       </div>
