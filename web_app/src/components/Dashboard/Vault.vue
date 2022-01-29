@@ -2,7 +2,6 @@
   <q-card
     ref="vault"
     flat
-
     class="q-mb-none vault"
   >
 
@@ -14,7 +13,7 @@
     <q-card-section
       class="q-py-xs"
       style="height: 15px"
-      :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'mayLiquidate', 'bg-negative': vault.state == 'inLiquidation'}"
+      :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'mayLiquidate', 'bg-negative': vault.state == 'in_liquidation'}"
     />
 
     <q-card-section class="q-my-sm q-py-none">
@@ -34,28 +33,28 @@
 
     <q-separator inset />
 
-    <q-card-section class="main-info" v-if="vault.state != 'inLiquidation'">
+    <q-card-section class="main-info" v-if="vault.state != 'in_liquidation'">
       <div class="row">
-        <div :class="{'col-4': vault.state != 'inLiquidation', 'col-12': vault.state == 'inLiquidation'}">
+        <div :class="{'col-4': vault.state != 'in_liquidation', 'col-12': vault.state == 'in_liquidation'}">
           <div class="text-h6"><span v-if="!privacy || vault.loanValue == 0 ">{{ vault.loanValue.toLocaleString(locale, numberFormats.currency) }}</span><span v-if="privacy && vault.loanValue > 0">$ <span class="text-body1">🧦🧦🧦</span></span></div>
           <div class="caption">Loan Value</div>
         </div>
         <div v-if="vault.loanValue > 0" class="col-8 text-right">
           <div class="text-h4 text-primary">{{ vault.collateralRatio.toLocaleString(locale) }} %</div>
-          <div class="caption">Next: {{ vault.nextCollateralRatio.toLocaleString(locale) }} %</div>
+          <div class="caption">Next: <span class="text-primary">{{ vault.nextCollateralRatio.toLocaleString(locale) }} %</span></div>
         </div>
       </div>
       <div class="row q-mt-md">
         <div class="col-2">
-          <q-linear-progress v-if="vault.state != 'inLiquidation'" size="md" :value="1" color="negative" track-color="negative" />
+          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="md" :value="1" color="negative" track-color="negative" />
         </div>
         <div class="col-3">
-          <q-linear-progress v-if="vault.state != 'inLiquidation'" size="md" :value="1" color="warning" track-color="warning" />
+          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="md" :value="1" color="warning" track-color="warning" />
         </div>
         <div class="col-7">
-          <q-linear-progress v-if="vault.state != 'inLiquidation'" size="md" :value="awayFromInfoState" color="positive" track-color="positive" />
+          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="md" :value="awayFromInfoState" color="positive" track-color="positive" />
         </div>
-        <q-linear-progress v-if="vault.state == 'inLiquidation'" size="md" :value="0" :color="trackColor(vault)" :track-color="trackColor(vault)" />
+        <q-linear-progress v-if="vault.state == 'in_liquidation'" size="md" :value="0" :color="trackColor(vault)" :track-color="trackColor(vault)" />
         <div class="row full-width">
           <div class="col-2 text-left">{{ vault.loanScheme.minCollateral }} %</div>
           <div class="col-8 text-center text-primary">{{ vault.collateralRatio.toLocaleString(locale) }} %</div>
@@ -64,7 +63,7 @@
       </div>
     </q-card-section>
 
-    <q-card-section class="main-info" v-if="vault.state == 'inLiquidation'">
+    <q-card-section class="main-info" v-if="vault.state == 'in_liquidation'">
       <div class="row items-center no-wrap">
         <div class="col">
           <div class="text-h6">In Liquidation</div>
@@ -75,7 +74,7 @@
 
     <q-separator inset />
 
-    <q-card-section class="coll-progress q-py-sm" v-if="settingValue('dashboardCardsInfo.healthSummary')">
+    <q-card-section class="coll-progress q-py-sm" v-if="settingValue('dashboardCardsInfo.healthSummary') && vault.state != 'in_liquidation'">
       <div v-if="vault.loanValue > 0">
         <div class="row">
           <div class="col-12 text-caption q-mb-md">
@@ -97,29 +96,29 @@
       </div>
     </q-card-section>
 
-    <q-separator inset v-if="settingValue('dashboardCardsInfo.healthSummary')" />
+    <q-separator inset v-if="settingValue('dashboardCardsInfo.collateralInfo') && vault.state != 'in_liquidation'" />
 
-    <q-card-section class="coll-info row text-center" v-if="settingValue('dashboardCardsInfo.collateralInfo')">
+    <q-card-section class="coll-info row text-center" v-if="settingValue('dashboardCardsInfo.collateralInfo') && vault.state != 'in_liquidation'">
       <div class="col-12 text-overline text-left">Collateral</div>
       <div class="col-4">
-        <span class="text-h6 text-accent" v-if="vault.state != 'inLiquidation'"><span v-if="!privacy">{{ vault.collateralValue.toLocaleString(locale, numberFormats.currency) }}</span><span v-if="privacy">$🧦🧦🧦</span></span>
-        <span class="text-h6 text-accent" v-if="vault.state == 'inLiquidation'">Funds Frozen</span>
+        <span class="text-h6 text-accent" v-if="vault.state != 'in_liquidation'"><span v-if="!privacy">{{ vault.collateralValue.toLocaleString(locale, numberFormats.currency) }}</span><span v-if="privacy">$🧦🧦🧦</span></span>
+        <span class="text-h6 text-accent" v-if="vault.state == 'in_liquidation'">Funds Frozen</span>
         <div class="caption">Amount</div>
       </div>
-      <div class="col-4" v-if="vault.state != 'inLiquidation'">
-        <span class="text-h6 text-accent" v-if="vault.state != 'inLiquidation'">{{ vault.loanScheme.minCollateral }} %</span>
-        <span class="text-h6 text-accent" v-if="vault.state == 'inLiquidation'">Funds Frozen</span>
+      <div class="col-4" v-if="vault.state != 'in_liquidation'">
+        <span class="text-h6 text-accent" v-if="vault.state != 'in_liquidation'">{{ vault.loanScheme.minCollateral }} %</span>
+        <span class="text-h6 text-accent" v-if="vault.state == 'in_liquidation'">Funds Frozen</span>
         <div class="caption">Min Ratio</div>
       </div>
-      <div v-if="vault.state != 'inLiquidation' && vault.loanValue > 0" class="col-4">
-          <div class="text-h6 text-primary">{{ vault.collateralRatio }} %</div>
-          <div class="caption">Current Ratio</div>
+      <div class="col-4" v-if="vault.state != 'in_liquidation' && vault.loanValue > 0">
+          <div class="text-h6 text-accent">{{ vault.nextCollateralRatio }} %</div>
+          <div class="caption">Next Ratio</div>
       </div>
     </q-card-section>
 
-    <q-separator inset v-if="settingValue('dashboardCardsInfo.collateralInfo')" />
+    <q-separator inset v-if="settingValue('dashboardCardsInfo.collateralWaypoints') && vault.state != 'in_liquidation'" />
 
-    <q-card-section class="coll-info row text-center" v-if="settingValue('dashboardCardsInfo.collateralWaypoints')">
+    <q-card-section class="coll-info row text-center" v-if="settingValue('dashboardCardsInfo.collateralWaypoints') && vault.state != 'in_liquidation'">
       <div class="col-12 text-overline text-left">Add/Remove Collateral</div>
       <div class="col-3">
         <span class="text-accent">200 %</span>
@@ -183,7 +182,7 @@ export default {
         color = 'positive'
       } else if (vault.state == 'mayLiquidate') {
         color = 'warning'
-      } else if (vault.state == 'inLiquidation') {
+      } else if (vault.state == 'in_liquidation') {
         color = 'negative'
       }
       return color
@@ -246,7 +245,11 @@ export default {
 <style lang="sass" scoped>
   .vault
     min-width: 290px
-    max-width: 23%
+    max-width: 32vw
+
+  .screen--xs .vault
+    width: 100%
+    max-width: inherit
 
   ul
     padding-left: 10px
