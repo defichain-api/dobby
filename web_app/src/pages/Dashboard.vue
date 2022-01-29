@@ -180,8 +180,17 @@ export default defineComponent({
     isDemo() {
       return this.demoAccountID == this.userId
     },
+    vaults() {
+      let vaultList = new Set()
+      this.allVaults.forEach((vault) => {
+        if(vault.state != 'inactive') {
+          vaultList.add(vault)
+        }
+      })
+      return vaultList
+    },
     ...mapGetters({
-      vaults: 'account/vaults',
+      allVaults: 'account/vaults',
       userId: 'account/userId',
       settingsValue: 'settings/value',
       requestRunning: 'requestRunning',
