@@ -13,7 +13,7 @@
     <q-card-section
       class="q-py-xs"
       style="height: 15px"
-      :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'mayLiquidate', 'bg-negative': vault.state == 'in_liquidation'}"
+      :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'mayLiquidate', 'bg-negative': vault.state == 'in_liquidation', 'bg-blue': vault.state == 'frozen'}"
     />
 
     <q-card-section class="q-my-sm q-py-none">
