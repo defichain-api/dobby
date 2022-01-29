@@ -33,7 +33,7 @@
     enter-active-class="animated pulse"
   >
 
-    <q-card flat v-for="(triggerList, vaultId) in triggersByVault" :key="vaultId" :bordered="$q.dark.isActive" class="vault">
+    <q-card flat v-for="(triggerList, vaultId) in triggersByVault" :key="vaultId" class="vault">
       <q-card-section class="container">
         <div class="row text-left">
           <div class="col-12">
@@ -49,7 +49,7 @@
         </div>
       </q-card-section>
 
-      <q-separator />
+      <q-separator inset />
 
       <q-card-section class="q-px-none">
         <q-list>
@@ -100,7 +100,7 @@
                 />
               </q-item-section>
             </q-item>
-            <q-separator inset="item" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
+            <q-separator inset="item" class="q-mr-md" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
           </span>
         </q-list>
       </q-card-section>

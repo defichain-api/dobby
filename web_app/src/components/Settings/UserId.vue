@@ -1,5 +1,5 @@
 <template>
-  <q-card flat :bordered="$q.dark.isActive" style="min-width: 320px;">
+  <q-card flat>
 
     <q-card-section>
       <div class="text-primary text-h6">{{ $t('Your Dobby User Key') }}</div>

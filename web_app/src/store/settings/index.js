@@ -7,16 +7,24 @@ export default {
             darkMode: 'auto',
             language: 'en',
             privacy: false,
-            numberFormats: {
-                currency: { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 },
-            },
             triggerMultipleInfo: 1.5,
             triggerMultipleWarning: 1.25,
-        }
+            'dashboardCardsInfo.healthSummary': true,
+            'dashboardCardsInfo.collateralInfo': true,
+            'dashboardCardsInfo.collateralWaypoints': true,
+            dashboardCardsAsCarousel: 'auto',
+        },
+        numberFormats: {
+            currency: { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 },
+            currencyNoDecimals: { style: 'currency', currency: 'USD', maximumFractionDigits: 0 },
+        },
     },
     getters: {
         value: (state) => (key) => {
             return state.settings[key]
+        },
+        numberFormats: (state) => {
+            return state.numberFormats
         }
     },
     actions: {

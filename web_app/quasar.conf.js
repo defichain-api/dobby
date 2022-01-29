@@ -54,7 +54,7 @@ module.exports = configure(function (ctx) {
         "API_URL": 'https://api.defichain-dobby.com',
         "LOCAL_STORAGE_ACCOUNT_ID_KEY": 'dobbyAccount',
         "LOCAL_STORAGE_SETTINGS_KEY": 'dobbySettings',
-        "DEMO_ACCOUNT_ID": 'demodemo-demo-demo-demo-demodemodemo',
+        "DEMO_ACCOUNT_ID": 'demo-demo-demo-demo-demodemodemo',
         "PREFILL_SETUP": false,
         "TELEGRAM_BOT_LINK": 'https://t.me/defichain_dobby_bot', // https://t.me/defichain_dobby_bot?start=USER_ID
         "TELEGRAM_GROUP_LINK": 'https://t.me/defichain_dobby',

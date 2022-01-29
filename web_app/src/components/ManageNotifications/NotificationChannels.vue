@@ -26,7 +26,7 @@
     </template>
   </q-expansion-item>
 
-  <q-card flat :bordered="$q.dark.isActive" style="max-width: 500px;">
+  <q-card flat style="max-width: 500px;">
     <q-card-section class="container">
       <div class="row">
         <div class="col-5">

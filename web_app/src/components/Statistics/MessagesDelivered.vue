@@ -1,7 +1,7 @@
 <template>
   <q-card flat :bordered="$q.dark.isActive">
     <q-card-section class="q-pb-none">
-      <div class="text-h6">Messages Delivered</div>
+      <div class="text-h6">Daily Messages Delivered</div>
     </q-card-section>
     <q-card-section class="container text-center">
       <div class="row">
@@ -44,10 +44,20 @@
         </div>
       </div>
     </q-card-section>
+    <q-separator inset  />
+    <q-card-section>
+      <area-chart :data="history" :colors="[getColor('accent')]" :download="true" style="height: 200px;" />
+    </q-card-section>
+    <q-card-section>
+      <line-chart :data="historyTypes" :colors="[getColor('accent'), getColor('primary'), getColor('secondary')]" :download="true" style="height: 200px;" />
+    </q-card-section>
   </q-card>
 </template>
 
 <script>
+import { colors } from 'quasar'
+const { getPaletteColor } = colors
+
 export default {
   name: 'MessagesDelivered',
   props: {
@@ -60,12 +70,50 @@ export default {
 
     }
   },
+  methods: {
+    getColor(name) {
+      return getPaletteColor(name)
+    },
+  },
   computed: {
     latest: function() {
       return this.statistics[0]
     },
     locale: function() {
       return this.$root.$i18n.locale
+    },
+    history: function() {
+      let collection = {}
+      this.statistics.forEach(function(day) {
+        collection[day.date] = day.messages.sum_messages
+      })
+      return [{name:"Sum", data: collection}]
+    },
+    historyTypes: function() {
+      let collection = []
+
+      // Info
+      let tmp = {name: 'Info', data: {}}
+      this.statistics.forEach(function(day) {
+        tmp['data'][day.date] = day.messages.types.info
+      })
+      collection.push(tmp)
+
+      // Warning
+      tmp = {name: 'Warning', data: {}}
+      this.statistics.forEach(function(day) {
+        tmp['data'][day.date] = day.messages.types.warning
+      })
+      collection.push(tmp)
+
+      // Daily
+      tmp = {name: 'Daily', data: {}}
+      this.statistics.forEach(function(day) {
+        tmp['data'][day.date] = day.messages.types.daily
+      })
+      collection.push(tmp)
+
+      return collection
     },
   }
 }

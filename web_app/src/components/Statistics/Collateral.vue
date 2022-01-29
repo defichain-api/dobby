@@ -24,10 +24,20 @@
         </div>
       </div>
     </q-card-section>
+    <q-separator inset />
+    <q-card-section>
+      <area-chart :data="history" :colors="[getColor('accent')]" :download="true" style="height: 200px;"/>
+    </q-card-section>
+    <q-card-section>
+      <line-chart :data="historyAvg" :colors="[getColor('accent'), getColor('primary')]" :download="true" style="height: 200px;"/>
+    </q-card-section>
   </q-card>
 </template>
 
 <script>
+import { colors } from 'quasar'
+const { getPaletteColor } = colors
+
 export default {
   name: 'Collateral',
   props: {
@@ -42,12 +52,43 @@ export default {
       },
     }
   },
+  methods: {
+    getColor(name) {
+      return getPaletteColor(name)
+    },
+  },
   computed: {
     latest: function() {
       return this.statistics[0]
     },
     locale: function() {
       return this.$root.$i18n.locale
+    },
+    history: function() {
+      let collection = {}
+      this.statistics.forEach(function(day) {
+        collection[day.date] = day.sum_collateral
+      })
+      return [{name:"Sum", data: collection}]
+    },
+    historyAvg: function() {
+      let collection = []
+
+      // Sum
+      let tmp = {name: 'AVG User', data: {}}
+      this.statistics.forEach(function(day) {
+        tmp['data'][day.date] = (day.sum_collateral / day.user_count )
+      })
+      collection.push(tmp)
+
+      // Per User
+      tmp = {name: 'AVG Vault', data: {}}
+      this.statistics.forEach(function(day) {
+        tmp['data'][day.date] = (day.sum_collateral / day.vault_count )
+      })
+      collection.push(tmp)
+
+      return collection
     },
   }
 }
