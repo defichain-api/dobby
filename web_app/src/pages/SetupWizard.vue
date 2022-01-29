@@ -56,9 +56,6 @@
                 @click="showSetup = !showSetup"
               ></q-btn>
               <div class="q-my-md">
-                Luckily, your vaultsn    
-              </div>
-              <div class="q-my-md">
               - OR -
               </div>
               <q-input
@@ -412,8 +409,6 @@ export default defineComponent({
      */
     getSetupData: function () {
       return {
-        "language": "en",
-        "theme": (this.$q.dark.isActive) ? "dark" : "light",
         "ownerAddresses": JSON.parse(JSON.stringify(this.addresses))
       }
     },
