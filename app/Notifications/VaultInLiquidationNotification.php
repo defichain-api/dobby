@@ -61,6 +61,7 @@ class VaultInLiquidationNotification extends BaseUserNotification implements Sho
 			->url($user->routeNotificationForWebhook())
 			->payload([
 				'type' => NotificationTriggerType::IN_LIQUIDATION,
+				'message' => 'vault switched to state ' . NotificationTriggerType::IN_LIQUIDATION,
 				'data' => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,

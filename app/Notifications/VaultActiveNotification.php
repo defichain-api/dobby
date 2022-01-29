@@ -67,8 +67,9 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::ACTIVE,
-				'data' => [
+				'type'    => NotificationTriggerType::ACTIVE,
+				'message' => 'vault switched back to state ' . NotificationTriggerType::ACTIVE,
+				'data'    => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,
 					'stateBefore'   => $this->vaultOriginalState,

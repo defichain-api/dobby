@@ -70,8 +70,9 @@ class DemoNotification extends BaseNotification implements ShouldQueue
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::DEMO,
-				'data' => [
+				'type'    => NotificationTriggerType::DEMO,
+				'message' => 'this is a demo webhook',
+				'data'    => [
 					'state'   => 'ok',
 					'message' => 'webhook notification is setup correctly',
 				],
