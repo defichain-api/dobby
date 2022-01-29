@@ -172,9 +172,8 @@ export default defineComponent({
   },
   computed: {
     showVaultsAsCarousel() {
-      console.log(this.settingsValue('dashboardCardsAsCarousel'))
       if (this.settingsValue('dashboardCardsAsCarousel') == 'auto') {
-        return this.$q.platform.is.mobile
+        return this.$q.screen.lt.sm
       }
       return this.settingsValue('dashboardCardsAsCarousel')
     },
