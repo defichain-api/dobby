@@ -6,7 +6,7 @@
     bg-color="primary"
     icon="autorenew"
   >
-    <NoNotificationGateways v-if="!requestRunning" />
+    <NoNotificationGateways v-if="!requestRunning && !isDemo" />
 
     <div class="q-pa-md row items-start q-gutter-md">
       <!-- Show hint when no user is set -->
@@ -35,7 +35,7 @@
       </q-card>
 
       <!-- Show hint when demo user is active -->
-      <q-card flat v-if="userId == demoAccountID">
+      <q-card flat v-if="isDemo">
         <q-card-section>
           <div class="text-h6">Demo Mode</div>
           <div class="text-subtitle2">take your time to look around :)</div>
