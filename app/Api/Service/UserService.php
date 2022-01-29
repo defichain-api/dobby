@@ -14,9 +14,7 @@ class UserService
 	{
 		$user = User::create();
 		UserSetting::create([
-			'userId'   => $user->id,
-			'language' => $request->language(),
-			'theme'    => $request->theme(),
+			'userId' => $user->id,
 		]);
 
 		return $user;
