@@ -41,7 +41,7 @@
         </div>
         <div v-if="vault.loanValue > 0" class="col-8 text-right">
           <div class="text-h4 text-primary">{{ vault.collateralRatio.toLocaleString(locale) }} %</div>
-          <div class="caption">Next: <span class="text-primary">{{ vault.nextCollateralRatio.toLocaleString(locale) }} %</span></div>
+          <div class="caption" v-if="vault.nextCollateralRatio">Next: <span class="text-primary">{{ vault.nextCollateralRatio.toLocaleString(locale) }} %</span></div>
         </div>
       </div>
       <div class="row q-mt-md">
