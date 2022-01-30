@@ -79,7 +79,6 @@
       <q-slide-transition>
         <div v-show="testChannelExpanded">
           <q-card-section class="text-subitle2 q-gutter-md">
-            <!--<TestTelegramChannel unelevated rounded outline v-if="hasGatewayType('telegram')" />-->
             <TestChannel
               v-if="hasGatewayType('telegram')"
               label="Test Telegram"
@@ -108,7 +107,6 @@
 <script>
 import ConnectTelegramChannel from 'components/ManageNotifications/NotificationChannels/ConnectTelegramChannel.vue'
 import ConnectWebhookChannel from 'components/ManageNotifications/NotificationChannels/ConnectWebhookChannel.vue'
-//import TestTelegramChannel from 'components/ManageNotifications/NotificationChannels/TestTelegramChannel.vue'
 import TestChannel from 'components/ManageNotifications/NotificationChannels/TestChannel.vue'
 
 import { mapGetters } from 'vuex'
@@ -116,7 +114,6 @@ import { mapGetters } from 'vuex'
 export default {
     components: {
         ConnectTelegramChannel,
-        //TestTelegramChannel,
         ConnectWebhookChannel,
         TestChannel,
     },

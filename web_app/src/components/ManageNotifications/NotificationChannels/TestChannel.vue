@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'TestTelegramChannel',
+  name: 'TestChannel',
   props: {
     channel: {
       required: true,
