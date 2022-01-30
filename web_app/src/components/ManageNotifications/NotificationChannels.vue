@@ -31,7 +31,7 @@
     <q-card flat style="max-width: 500px;">
       <q-card-section class="container">
         <div class="row">
-          <div class="col-5">
+          <div class="col-6">
             <div class="text-body1">Connected</div>
             <q-chip v-if="hasGatewayType('telegram')" icon="fab fa-telegram-plane" color="telegram" text-color="white">
               Telegram
@@ -39,8 +39,11 @@
             <q-chip v-if="hasGatewayType('webhook')" icon="fal fa-send-back" color="red" text-color="white">
               Webhook
             </q-chip>
+            <q-chip v-if="hasGatewayType('email')" icon="fal fa-mailbox" color="green" text-color="white">
+              Email
+            </q-chip>
           </div>
-          <div class="col-7">
+          <div class="col-6">
             <div class="text-body1">Available</div>
             <q-chip v-if="!hasGatewayType('telegram')" clickable @click="showConnectTelegram = !showConnectTelegram" icon="fab fa-telegram-plane" color="telegram" text-color="white">
               connect Telegram
@@ -48,8 +51,8 @@
             <q-chip v-if="!hasGatewayType('webhook')" clickable @click="showConnectWebhook = !showConnectWebhook" icon="fal fa-send-back" color="red" text-color="white">
               &nbsp;webhook
             </q-chip>
-            <q-chip disabled icon="fal fa-mailbox" style="" color="green" text-color="white">
-              &nbsp;email (soon)
+            <q-chip v-if="!hasGatewayType('email')" clickable @click="showConnectEmail = !showConnectEmail" icon="fal fa-mailbox" style="" color="green" text-color="white">
+              &nbsp;email
             </q-chip>
           </div>
         </div>
@@ -60,6 +63,9 @@
       </q-slide-transition>
       <q-slide-transition>
         <ConnectWebhookChannel v-if="showConnectWebhook" />
+      </q-slide-transition>
+      <q-slide-transition>
+        <ConnectEmailChannel v-if="showConnectEmail" />
       </q-slide-transition>
 
       <q-separator />
@@ -97,6 +103,15 @@
               rounded
               outline
             />
+            <TestChannel
+              v-if="hasGatewayType('email')"
+              label="Test email"
+              channel="email"
+              color="green"
+              icon="fal fa-mailbox"
+              rounded
+              outline
+            />
           </q-card-section>
         </div>
       </q-slide-transition>
@@ -107,6 +122,7 @@
 <script>
 import ConnectTelegramChannel from 'components/ManageNotifications/NotificationChannels/ConnectTelegramChannel.vue'
 import ConnectWebhookChannel from 'components/ManageNotifications/NotificationChannels/ConnectWebhookChannel.vue'
+import ConnectEmailChannel from 'components/ManageNotifications/NotificationChannels/ConnectEmailChannel.vue'
 import TestChannel from 'components/ManageNotifications/NotificationChannels/TestChannel.vue'
 
 import { mapGetters } from 'vuex'
@@ -115,6 +131,7 @@ export default {
     components: {
         ConnectTelegramChannel,
         ConnectWebhookChannel,
+        ConnectEmailChannel,
         TestChannel,
     },
     data() {
@@ -122,6 +139,7 @@ export default {
         infoExpanded: false,
         showConnectTelegram: false,
         showConnectWebhook: false,
+        showConnectEmail: false,
         testChannelExpanded: false,
       }
     },
