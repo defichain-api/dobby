@@ -125,7 +125,7 @@
     <div
       v-if="!showVaultsAsCarousel"
       class="row"
-      :class="{'q-gutter-md q-mx-none': $q.screen.gt.sm, 'q-mx-none q-mr-md q-gutter-md': $q.screen.lt.sm}"
+      :class="{'q-gutter-md q-mx-none': $q.screen.gt.xs, 'q-mx-none q-mr-md q-gutter-md': $q.screen.lt.sm}"
     >
       <Vault
         :vault="vault"
