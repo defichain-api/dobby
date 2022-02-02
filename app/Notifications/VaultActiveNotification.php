@@ -17,9 +17,9 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 {
 	use Queueable;
 
-	public function __construct(Vault $vault, protected string $vaultOriginalState)
+	public function __construct(Vault $vault, protected string $vaultOriginalState, ?string $vaultName = null)
 	{
-		parent::__construct($vault);
+		parent::__construct($vault, $vaultName);
 	}
 
 	public function toTelegram(User $notificationTrigger): TelegramMessage
@@ -32,7 +32,7 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 			->content(
 				__('notifications/telegram/active.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
-					'vault_name'     => $this->vault->pivot->name ?? '',
+					'vault_name'     => $this->vaultName ?? '',
 					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 					'original_state' => __(sprintf('vault/states.%s', $this->vaultOriginalState)),
 				])
@@ -49,7 +49,8 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/active.subject'), config('app.name')))
 			->markdown('mail.notification.active', [
-				'vault'        => $this->vault,
+				'vault'       => $this->vault,
+				'vaultName'   => $this->vaultName,
 				'stateBefore' => __(sprintf('vault/states.%s', $this->vaultOriginalState)),
 			]);
 	}
@@ -69,6 +70,7 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 				'type' => NotificationTriggerType::ACTIVE,
 				'data' => [
 					'vaultId'       => $this->vault->vaultId,
+					'vaultName'     => $this->vaultName,
 					'stateBefore'   => $this->vaultOriginalState,
 					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
 				],

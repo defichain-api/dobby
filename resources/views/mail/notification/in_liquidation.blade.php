@@ -2,7 +2,7 @@
 # {{ __('notifications/mail/in_liquidation.greeting') }}
 {{ __('notifications/mail/in_liquidation.message', [
 	'vault_id'          => str_truncate_middle($vault->vaultId, 15, '...'),
-	'vault_name'        => $vault->pivot->name ?? '',
+	'vault_name'        => $vaultName ?? '',
     'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
 	'liquidation_block' => $vault->liquidationHeight,
 ]) }}

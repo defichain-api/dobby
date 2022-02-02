@@ -12,6 +12,7 @@ class NotificationTriggerType
 	const FROZEN = 'frozen';
 	const ACTIVE = 'active';
 	const LIQUIDATED = 'liquidated';
+	const NEXT_RATIO = 'next_ratio';
 	const DEMO = 'demo';
 	const ALL = [
 		self::INFO,
@@ -22,6 +23,7 @@ class NotificationTriggerType
 		self::FROZEN,
 		self::ACTIVE,
 		self::LIQUIDATED,
+		self::NEXT_RATIO,
 		self::DEMO,
 	];
 }

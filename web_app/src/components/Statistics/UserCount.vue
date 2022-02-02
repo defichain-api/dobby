@@ -10,6 +10,10 @@
     <q-card-section>
       <area-chart :data="history" :colors="[getColor('accent')]" :download="true" style="height: 200px;"/>
     </q-card-section>
+    <q-separator />
+    <q-card-section>
+      <area-chart :data="history" :colors="[getColor('accent')]" :download="true" style="height: 200px;"/>
+    </q-card-section>
   </q-card>
 </template>
 

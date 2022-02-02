@@ -9,7 +9,7 @@ use App\Models\Vault;
 
 class BaseUserNotification extends BaseNotification
 {
-	public function __construct(protected Vault $vault)
+	public function __construct(protected Vault $vault, protected ?string $vaultName = null)
 	{
 		parent::__construct();
 	}

@@ -46,8 +46,11 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+.q-card
+    width: 100%
+/*
   .q-card
-    min-width: 290px
+    min-width: 340px
     max-width: 23%
     min-height: 250px
 
