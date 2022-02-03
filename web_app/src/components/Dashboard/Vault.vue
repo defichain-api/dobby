@@ -32,6 +32,11 @@
       </div>
     </q-card-section>
 
+    <q-card-section v-if="!hasTriggers && vault.state != 'in_liquidation'" class="text-white bg-warning">
+      <q-icon name="fal fa-exclamation-triangle"></q-icon>
+      Please head over to <q-btn dense flat type="href" to="manage-notifications">Manage Notifications</q-btn> to set up notifications for this vault.
+    </q-card-section>
+
     <q-separator inset />
 
     <q-card-section class="main-info" v-if="vault.state != 'in_liquidation'">
@@ -53,7 +58,7 @@
         {{ vault.collateralRatio.toLocaleString(locale) }} %
       </div>
       -->
-      <div class="row q-mt-sm">
+      <div class="row q-mt-sm" v-if="hasTriggers">
         <div class="col-2">
           <q-linear-progress v-if="vault.state != 'in_liquidation'" size="lg" :value="awayFromLiquidationState" color="negative" track-color="negative">
           </q-linear-progress>
