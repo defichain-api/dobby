@@ -5,7 +5,8 @@ const routes = [
     component: () => import("layouts/MainLayout.vue"),
     children: [{
       path: "",
-      component: () => import("pages/Dashboard.vue")
+      component: () => import("pages/Dashboard.vue"),
+      meta: { requiresAuth: true },
     }],
   },
   {
@@ -14,17 +15,21 @@ const routes = [
     children: [{
       name: 'dashboard',
       path: "",
-      component: () => import("pages/Dashboard.vue")
+      component: () => import("pages/Dashboard.vue"),
+      meta: { requiresAuth: true },
     }],
   },
   {
     path: "/setup",
     component: () => import("layouts/SetupWizardLayout.vue"),
-    children: [{
-      name: "setup",
-      path: "",
-      component: () => import("pages/SetupWizard.vue")
-    }],
+    children: [
+      {
+        name: "setup",
+        path: ":vaults?",
+        component: () => import("pages/SetupWizard.vue"),
+        meta: { requiresAuth: false },
+      },
+    ],
   },
   {
     path: "/manage-notifications",
@@ -32,7 +37,8 @@ const routes = [
     children: [{
       name: "manage-notifications",
       path: "",
-      component: () => import("src/pages/ManageNotifications.vue")
+      component: () => import("src/pages/ManageNotifications.vue"),
+      meta: { requiresAuth: true },
     }],
   },
   {
@@ -41,7 +47,8 @@ const routes = [
     children: [{
       name: "manage-vaults",
       path: "",
-      component: () => import("pages/ManageVaults.vue")
+      component: () => import("pages/ManageVaults.vue"),
+      meta: { requiresAuth: true },
     }],
   },
   {
@@ -50,7 +57,8 @@ const routes = [
     children: [{
       name: "settings",
       path: "",
-      component: () => import("pages/Settings.vue")
+      component: () => import("pages/Settings.vue"),
+      meta: { requiresAuth: true },
     }],
   },
   {
@@ -59,7 +67,8 @@ const routes = [
     children: [{
       name: "wtf",
       path: "",
-      component: () => import("pages/Wtf.vue")
+      component: () => import("pages/Wtf.vue"),
+      meta: { requiresAuth: false },
     }],
   },
   {
@@ -68,7 +77,8 @@ const routes = [
     children: [{
       name: "statistics",
       path: "",
-      component: () => import("pages/Statistics.vue")
+      component: () => import("pages/Statistics.vue"),
+      meta: { requiresAuth: false },
     }],
   },
 

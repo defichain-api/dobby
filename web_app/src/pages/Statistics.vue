@@ -54,13 +54,13 @@ export default {
     max-width: 23%
     min-height: 250px
 
-  body.screen--xs
+  body.screen--xs, body.screen--sm
     .q-card
       width: 100%
       max-width: inherit
 
-  body.screen--sm
+  body.screen--md
     .q-card
-      width: 31%
-      */
+      width: 47vw
+      max-width: inherit
 </style>

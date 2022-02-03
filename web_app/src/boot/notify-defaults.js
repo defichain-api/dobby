@@ -13,3 +13,8 @@ Notify.registerType('positive', {
   icon: 'fas fa-check',
   color: 'accent',
 })
+
+Notify.registerType('negative', {
+  icon: 'fal fa-exclamation-triangle',
+  color: 'negative',
+})

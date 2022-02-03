@@ -1,10 +1,13 @@
 <template>
   <router-view v-slot="{ Component }">
+    <!--
     <transition
       enter-active-class="animated fadeIn"
       leave-active-class="animated fadeOut"
       appear
     >
+    -->
+    <transition name="fade">
       <component :is="Component" />
     </transition>
   </router-view>
@@ -44,10 +47,8 @@ export default defineComponent({
       // Fetch user's notifications
       this.loadUserNotifications
 
-    } else {
-      // no user account set
-      // redirect to setup
-      this.$router.push({ name: 'setup' })
+      // Fetch latest Chain Data
+      this.fetchChainData
     }
   },
   methods: {
@@ -64,7 +65,22 @@ export default defineComponent({
         this.$store.commit('apiResponded')
         return response
       }, (error) => {
-        this.dataRefreshError()
+        if (error.response.status === 401) {
+          this.$q.notify({
+            group: 'userError',
+            type: 'negative',
+            message: 'Your user key is incorrect',
+            timeout: 60000,
+            actions: [
+              { label: 'Go to Login', color: 'white', icon: 'fal fa-sign-in', handler: () => {
+                this.$router.push({name:'setup'})
+                this.$store.dispatch('account/logout')
+              }}
+            ]
+          })
+        } else {
+          this.dataRefreshError()
+        }
         return Promise.reject(error)
       })
     },
@@ -80,14 +96,26 @@ export default defineComponent({
       })
     }
   },
+  watch: {
+    vaults: function(vaults) {
+      let vaultCollRatios = ''
+      vaults.forEach(vault => {
+        vaultCollRatios += `[${vault.name} ${Math.round(vault.nextCollateralRatio)}%] `
+      })
+      vaultCollRatios = vaultCollRatios.slice(0, -1)
+      document.title = `${vaultCollRatios} -  DeFiChain Dobby`
+    }
+  },
   computed: {
     ...mapGetters({
       userId: 'account/userId',
       getSettingValue: 'settings/value',
+      vaults: 'account/vaults',
     }),
     ...mapActions({
       loadUserData: 'account/loadUserData',
       loadUserNotifications: 'notifications/fetch',
+      fetchChainData: 'chain/fetch',
     })
   }
 })
