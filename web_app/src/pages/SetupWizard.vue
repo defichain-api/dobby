@@ -313,10 +313,9 @@ export default defineComponent({
     if (this.$route.params?.vaults && addresses.length > 0) {
       //this.showSetup = true
 
-      // todo: check if user is already logged in
+      // todo: [X] check if user is already logged in
       // todo: redirect to dashboard if these addresses are already part of user's portfolio
       // todo: If there's an unknown address, ask to add it to user's portfolio
-
 
       if (!this.userIsLoggedIn) {
         this.prefilled = true
@@ -343,14 +342,6 @@ export default defineComponent({
       allVaults: 'account/vaults',
     }),
   },
-  /*
-  watch: {
-    allVaults: function (newVaults) {
-      console.log(this.userIsLoggedIn)
-      console.log("test")
-    },
-  },
-  */
   methods: {
     /**
      * Check if a string is a valid UUID
