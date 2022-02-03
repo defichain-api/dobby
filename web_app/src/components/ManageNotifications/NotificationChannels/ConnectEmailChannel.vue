@@ -41,7 +41,7 @@
       </p>
       <TestChannel
         label="Send test message to webhook"
-        channel="email"
+        channel="mail"
         color="red"
         icon="fal fa-mailbox"
         rounded
@@ -67,17 +67,18 @@ export default {
       email: '',
       connectedEmailGateway: false,
       sentTestMessage: false,
+      emailPattern: /^(?=[a-zA-Z0-9@.\-_+]{6,254}$)[a-zA-Z0-9.\-_+]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/,
     }
   },
   methods: {
     isEmail() {
-      return true
+      return this.emailPattern.test(this.email)
     },
     createEmailGateway() {
       this.loading = true
 
       this.$api
-      .post('user/gateways', {type: 'email', value: this.email})
+      .post('user/gateways', {type: 'mail', value: this.email})
       .then((result) => {
         setTimeout(() => {
           this.connectedEmailGateway = true

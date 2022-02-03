@@ -39,7 +39,7 @@
             <q-chip v-if="hasGatewayType('webhook')" icon="fal fa-send-back" color="red" text-color="white">
               Webhook
             </q-chip>
-            <q-chip v-if="hasGatewayType('email')" icon="fal fa-mailbox" color="green" text-color="white">
+            <q-chip v-if="hasGatewayType('mail')" icon="fal fa-mailbox" color="green" text-color="white">
               Email
             </q-chip>
           </div>
@@ -51,7 +51,7 @@
             <q-chip v-if="!hasGatewayType('webhook')" clickable @click="showConnectWebhook = !showConnectWebhook" icon="fal fa-send-back" color="red" text-color="white">
               &nbsp;webhook
             </q-chip>
-            <q-chip v-if="!hasGatewayType('email')" clickable @click="showConnectEmail = !showConnectEmail" icon="fal fa-mailbox" style="" color="green" text-color="white">
+            <q-chip v-if="!hasGatewayType('mail')" clickable @click="showConnectEmail = !showConnectEmail" icon="fal fa-mailbox" style="" color="green" text-color="white">
               &nbsp;email
             </q-chip>
           </div>
@@ -104,9 +104,9 @@
               outline
             />
             <TestChannel
-              v-if="hasGatewayType('email')"
+              v-if="hasGatewayType('mmail')"
               label="Test email"
-              channel="email"
+              channel="mail"
               color="green"
               icon="fal fa-mailbox"
               rounded
