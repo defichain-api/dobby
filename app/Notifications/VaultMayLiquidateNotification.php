@@ -60,8 +60,9 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::MAY_LIQUIDATION,
-				'data' => [
+				'type'    => NotificationTriggerType::MAY_LIQUIDATION,
+				'message' => 'vault switched to state ' . NotificationTriggerType::MAY_LIQUIDATION,
+				'data'    => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,
 					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
