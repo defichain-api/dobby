@@ -5,7 +5,7 @@ namespace App\Enum;
 class NotificationGatewayType
 {
 	const TELEGRAM = 'telegram';
-	const MAIL = 'mail';
+	const MAIL = 'email';
 	const WEBHOOK = 'webhook';
 	const WEBPUSH = 'webpush';
 	const ACTIVE_NOTIFICATIONS = [
