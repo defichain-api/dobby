@@ -61,8 +61,9 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::FROZEN,
-				'data' => [
+				'type'    => NotificationTriggerType::FROZEN,
+				'message' => 'vault switched to state ' . NotificationTriggerType::FROZEN,
+				'data'    => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,
 					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),

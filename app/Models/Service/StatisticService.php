@@ -101,7 +101,7 @@ class StatisticService
 	public function messageTriggerUsed(string $type): self
 	{
 		$type = match ($type) {
-			NotificationTriggerType::DAILY => 'sum_daily_messages',
+			NotificationTriggerType::SUMMARY => 'sum_daily_messages',
 			NotificationTriggerType::INFO => 'sum_info_notifications',
 			NotificationTriggerType::WARNING => 'sum_warning_notifications',
 			NotificationTriggerType::MAY_LIQUIDATION => 'sum_may_liquidate_notifications',

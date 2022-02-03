@@ -61,8 +61,9 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::WARNING,
-				'data' => [
+				'type'    => NotificationTriggerType::WARNING,
+				'message' => 'vaults ratio triggered this warning notification',
+				'data'    => [
 					'vaultId'          => $this->vault->vaultId,
 					'ratio'            => $notificationTrigger->ratio,
 					'currentRatio'     => $this->vault->collateralRatio,
