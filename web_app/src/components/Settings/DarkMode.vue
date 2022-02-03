@@ -1,24 +1,30 @@
 <template>
-  <!-- <q-card flat :bordered="!this.$q.dark.isActive" style="min-width: 320px;"> -->
-  <q-card flat :bordered="$q.dark.isActive" style="min-width: 320px;">
+  <q-card flat>
 
     <q-card-section>
     <div class="text-primary text-h6">{{ $t('Color Theme') }}</div>
     </q-card-section>
 
-    <q-card-section class="q-pt-none">
-      Light
+    <q-card-section class="q-pt-none text-center row">
+      <div class="col-4 text-right q-mt-md" :class="{'text-grey-6': mode != false}">
+        Light
+      </div>
       <q-toggle
+        class="col-3 text-center"
         toggle-indeterminate
         indeterminate-value="auto"
         v-model="this.$q.dark.mode"
-        size="lg"
-        icon="auto_awesome"
-        checked-icon="dark_mode"
-        unchecked-icon="light_mode"
+        size="xl"
+        icon="fal fa-hat-wizard"
+        checked-icon="fal fa-moon-stars"
+        unchecked-icon="fal fa-sun"
+        color="primary"
+        :keep-color="true"
       />
-      Dark
-      <div v-if="mode =='auto'">{{ $t('Determined by your system settings') }}</div>
+      <div class="col-5 text-left q-mt-md" :class="{'text-grey-6': mode != true}">
+        Dark
+      </div>
+      <div class="text-center full-width" :class="{'text-grey-6': mode != 'auto'}">{{ $t('Determined by device\'s system settings') }}</div>
     </q-card-section>
 
   </q-card>
@@ -30,41 +36,10 @@ import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'DarkModeSetting',
-  data() {
-    return {
-      //mode: this.$q.dark.mode,
-      options: [
-        { value: 'auto', label: 'Auto' },
-        { value: false, label: this.$t('Off') },
-        { value: true, label: this.$t('On') },
-      ]
-    }
-  },
   watch: {
     mode(mode) {
       this.$store.dispatch('settings/set', { key: 'darkMode', value: mode })
       this.$q.dark.set(mode)
-
-      let message = ''
-      switch (mode) {
-        case true:
-          message = this.$t('Dark mode enabled')
-          break;
-
-        case false:
-          message = this.$t('Light mode enabled')
-          break;
-
-        case 'auto':
-          message = this.$t('Color mode detected automatically')
-          break;
-      }
-
-      this.$q.notify({
-        group: 'darkMode',
-        type: 'positive',
-        message: message,
-      })
     }
   },
   computed: {

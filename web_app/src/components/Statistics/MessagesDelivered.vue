@@ -1,7 +1,7 @@
 <template>
   <q-card flat :bordered="$q.dark.isActive">
     <q-card-section class="q-pb-none">
-      <div class="text-h6">Messages Delivered</div>
+      <div class="text-h6">Daily Messages Delivered</div>
     </q-card-section>
     <q-card-section class="container text-center">
       <div class="row">
@@ -44,12 +44,12 @@
         </div>
       </div>
     </q-card-section>
-    <q-separator />
+    <q-separator inset  />
     <q-card-section>
-      <area-chart :data="history" :colors="[getColor('accent')]" :download="true" style="height: 200px;"/>
+      <area-chart :data="history" :colors="[getColor('accent')]" :download="true" style="height: 200px;" />
     </q-card-section>
     <q-card-section>
-      <line-chart :data="historyTypes" :colors="[getColor('accent'), getColor('primary'), getColor('secondary')]" :download="true" style="height: 200px;"/>
+      <line-chart :data="historyTypes" :colors="[getColor('accent'), getColor('primary'), getColor('secondary')]" :download="true" style="height: 200px;" />
     </q-card-section>
   </q-card>
 </template>

@@ -1,12 +1,13 @@
 <template>
   <div class="q-pa-md row items-start q-gutter-md">
-    <transition-group
-      appear
-      enter-active-class="animated pulse"
-    >
+    <div class="text-h6 col-12">App</div>
       <UserId key="userId" />
       <DarkMode key="darkMode" />
-    </transition-group>
+  </div>
+  <div class="q-pa-md row items-start q-gutter-md">
+    <div class="text-h6 col-12">Dashboard</div>
+      <DashboardCardsInfo key="dashboardCardsInfo" />
+      <DashboardCardsDisplay key="DashboardCardsDisplay" />
   </div>
 </template>
 
@@ -14,12 +15,16 @@
 import { defineComponent } from 'vue';
 import UserId from 'components/Settings/UserId.vue'
 import DarkMode from 'components/Settings/DarkMode.vue'
+import DashboardCardsInfo from 'components/Settings/DashboardCardsInfo.vue'
+import DashboardCardsDisplay from 'components/Settings/DashboardCardsDisplay.vue'
 
 export default defineComponent({
   name: 'Settings',
   components: {
     UserId,
     DarkMode,
+    DashboardCardsInfo,
+    DashboardCardsDisplay,
   },
   created() {
     this.$store.dispatch('setHeadline', {text: 'Dobby Settings', icon: 'fal fa-sliders-h'})
@@ -27,24 +32,23 @@ export default defineComponent({
 })
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
   .q-card
-    min-width: 290px
-
-    .main-info
-      min-height: 105px
-
-    .coll-progress
-      min-height: 70px
-
-    .coll-info
-      min-height: 100px
+    min-width: 320px
+    min-height: 200px
 
   body.screen--xs
     .q-card
       width: 100%
+      min-width: inherit
 
   body.screen--sm
     .q-card
+      width: 47.5%
+      min-width: inherit
+
+  body.screen--md
+    .q-card
       width: 31%
+      min-width: 300px
 </style>

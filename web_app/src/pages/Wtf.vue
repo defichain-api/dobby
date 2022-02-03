@@ -75,7 +75,10 @@
       <q-card-section class="q-pb-none">
         <div class="text-h6 q-mb-lg">Buy us a coffee <q-icon name="fal fa-mug-hot" /></div>
         <p>
-          We've got a bunch of questions where to send DFI to make a donation. So, here it is:<br />
+          We've got a bunch of questions where to send DFI to make a donation. So, here it is.<br />
+        </p>
+        <p>
+          Oh, by the way: Dobby will <span @click="toTwitter()"><u>tweet</u></span> when he received a new donation.
         </p>
       </q-card-section>
       <q-card-section class="q-pt-none">
@@ -100,7 +103,7 @@
           Dobby's development has been supported by the DeFiChain community. Have a look a the Community Fund Proposal, which has been accepted with more than 90% yes votes.
         </p>
         <div class="text-body1 text-italic q-mt-lg">
-          <q-btn unelevated rounded type="a" class="full-width q-mb-md" color="primary" @click="toCfp()" icon="fab fa-twitter" label="CFP 2111-02 on GitHub" />
+          <q-btn unelevated rounded type="a" class="full-width q-mb-md" color="primary" @click="toCfp()" icon="fab fa-github" label="CFP 2111-02 on GitHub" />
         </div>
       </q-card-section>
     </q-card>
@@ -167,6 +170,9 @@ export default {
       ]
     }
   },
+  created() {
+    this.$store.dispatch('setHeadline', {text: 'About Dobby', icon: 'fal fa-question-circle'})
+  },
   methods: {
     toTwitter() {
       openURL(process.env.TWITTER_LINK)
@@ -202,16 +208,8 @@ export default {
     padding: 0
     li
       list-style: none
+
   .q-card
       width: 100%
 
-
-  body.screen--xs
-    .q-card
-      width: 100%
-      max-width: inherit
-
-  body.screen--sm
-    .q-card
-      width: 31%
 </style>

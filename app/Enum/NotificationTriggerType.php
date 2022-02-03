@@ -6,7 +6,7 @@ class NotificationTriggerType
 {
 	const INFO = 'info';
 	const WARNING = 'warning';
-	const DAILY = 'daily';
+	const SUMMARY = 'summary';
 	const IN_LIQUIDATION = 'inLiquidation';
 	const MAY_LIQUIDATION = 'mayLiquidate';
 	const FROZEN = 'frozen';
@@ -17,7 +17,7 @@ class NotificationTriggerType
 	const ALL = [
 		self::INFO,
 		self::WARNING,
-		self::DAILY,
+		self::SUMMARY,
 		self::IN_LIQUIDATION,
 		self::MAY_LIQUIDATION,
 		self::FROZEN,

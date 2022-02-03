@@ -8,7 +8,7 @@
       <div class="q-pa-lg" v-if="!showSetup">
         <div class="text-h4 q-my-lg">Hello, friend <q-icon name="fas fa-hat-wizard" /></div>
         <div class="text-body1 text-italic q-mt-lg">
-          This is Dobby - your personal <a href="https://defichain.com/" class="text-primary">DeFiChain</a> house elf. Dobby is happy because you found your way to him.
+          This is Dobby - your personal <a href="https://defichain.com/" class="text-primary">DeFiChain</a> house elf. Dobby is happy that you found your way to him.
           He is very useful because he keeps you informed about your <a href="https://defichain.com/" class="text-primary">DeFiChain</a> vaults when they get in trouble.
           <br />
           <q-chip v-if="!showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-info-circle" @click="showMore = !showMore">Read more...</q-chip>
@@ -269,7 +269,7 @@
               <div class="q-my-md">{{ userId }}</div>
 
               <q-stepper-navigation>
-                <q-btn unelevated rounded to="dashboard" color="primary" label="Show my vaults" />
+                <q-btn unelevated rounded to="/dashboard" color="primary" label="Show my vaults" />
               </q-stepper-navigation>
             </q-step>
           </q-stepper>
@@ -288,6 +288,7 @@ export default defineComponent({
   name: 'PageIndex',
   data () {
     return {
+      prefilled: false,
       showMore: (process.env.DEV && process.env.PREFILL_SETUP) ? false : false,
       showSetup: (process.env.DEV && process.env.PREFILL_SETUP) ? false : false,
       step: (process.env.DEV && process.env.PREFILL_SETUP) ? 2 : 1,
@@ -298,6 +299,24 @@ export default defineComponent({
       userId: (process.env.DEV && process.env.PREFILL_SETUP) ? 'c00e07e1-0705-47a1-aef5-8544fe13adc1' : '',
 
       addressToAdd: (process.env.DEV && process.env.PREFILL_SETUP) ? 'tedT9idRxCzmmxT4sST9gHmAZ5Mh24a2Wm' : '',
+
+    }
+  },
+  created() {
+    // 33619a6f9ede32d007cbcd1732fef80595df2a5d563a9558f00cfa08648b7708,b23f9d01a2e56d71272f0395d534132288da9ccdabfa8375ec0fa1c042cfe058,c3f6997e0b6b4faea06435f8e261c45a562ec0e64e551b3c9a81e04bf0bae8db
+    let addresses = []
+
+    addresses = this.$route.params?.vaults?.split(",") || []
+    console.log(addresses)
+
+    if (this.$route.params?.vaults && addresses.length > 0) {
+      //this.showSetup = true
+      this.prefilled = true
+      addresses.forEach((address) => {
+        if (this.stringIsVaultId(address) || this.stringIsDfiAddress(address)) {
+          this.addAddress(address)
+        }
+      })
 
     }
   },
@@ -390,8 +409,6 @@ export default defineComponent({
      */
     getSetupData: function () {
       return {
-        "language": "en",
-        "theme": (this.$q.dark.isActive) ? "dark" : "light",
         "ownerAddresses": JSON.parse(JSON.stringify(this.addresses))
       }
     },

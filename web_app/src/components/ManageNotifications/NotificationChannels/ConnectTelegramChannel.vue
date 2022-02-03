@@ -51,7 +51,18 @@
             </div>
           </div>
           <div class="row q-my-md">
-            <TestTelegramChannel unelevated rounded class="full-width" @click="sentTestMessage = true" />
+            <!--<TestTelegramChannel unelevated rounded class="full-width" @click="sentTestMessage = true" />-->
+            <TestChannel
+              v-if="hasGatewayType('telegram')"
+              label="Test Telegram"
+              channel="telegram"
+              color="telegram"
+              icon="fab fa-telegram-plane"
+              rounded
+              unelevated
+              class="full-width"
+              @click="sentTestMessage = true"
+            />
           </div>
           <div class="row" v-if="sentTestMessage">
             <div class="col-12 text-center">
@@ -59,15 +70,6 @@
             </div>
           </div>
           <div class="row" v-if="sentTestMessage">
-            <div class="col-6 q-pa-sm">
-              <q-btn
-                outline
-                rounded
-                dense
-                icon="fal fa-times"
-                class="full-width"
-                label="no" />
-            </div>
             <div class="col-6 q-pa-sm">
               <q-btn
                 outline
@@ -123,7 +125,7 @@
 </template>
 
 <script>
-import TestTelegramChannel from 'components/ManageNotifications/NotificationChannels/TestTelegramChannel.vue'
+import TestChannel from 'components/ManageNotifications/NotificationChannels/TestChannel.vue'
 
 import { mapGetters, mapActions } from 'vuex'
 import { openURL } from 'quasar'
@@ -131,7 +133,7 @@ import { openURL } from 'quasar'
 export default {
   name: 'ConnectTelegramChannel',
   components: {
-    TestTelegramChannel,
+    TestChannel,
   },
   data() {
     return {
