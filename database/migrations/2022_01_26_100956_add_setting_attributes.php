@@ -9,7 +9,7 @@ class AddSettingAttributes extends Migration
 	public function up()
 	{
 		Schema::table('user_settings', function (Blueprint $table) {
-			$table->boolean('current_ratio_enabled')->default(true);
+			$table->boolean('current_ratio_enabled')->default(false);
 			$table->string('timezone')->default('UTC');
 
 			$table->boolean('ui_privacy_enabled')->default(true);
