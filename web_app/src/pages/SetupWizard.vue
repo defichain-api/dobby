@@ -55,8 +55,8 @@
                 icon="fal fa-wand-magic"
                 @click="showSetup = !showSetup"
               ></q-btn>
-              <div class="q-my-md">
-              - OR -
+              <div class="q-my-md" v-if="!prefilled">
+                - OR -
               </div>
               <q-input
                 ref="existingUserId"
@@ -70,6 +70,7 @@
                 debounce="250"
                 error-message="This is not a valid Dobby User ID"
                 :error="!userIdIsValid"
+                v-if="!prefilled"
               >
                 <template v-slot:append>
                   <!--<q-icon name="fas fa-paste" color="primary" cliackable />-->
@@ -180,22 +181,15 @@
               icon="create_new_folder"
               :done="step > 2"
             >
-              Fill in your <b>DeFiChain addresses</b> holding vaults or your <b>vault IDs</b>
-              directly.
-              Please add at least one. If you don't have a vault yet, you can take
-              a look at the <!--<q-chip outline clickable color="accent" text-color="dark" icon="fas fa-quidditch" >demo</q-chip>--> demo.
-
-              <q-input
-                outlined
-                dense
-                class="q-pt-md"
-                color="primary"
-                label-color="primary"
-                v-model="addressToAdd"
-                label="paste in a DFI address or a vault ID"
-                :loading="false"
-              ></q-input>
-              <q-btn @click="addAddress(addressToAdd); addressToAdd = ''" :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 42 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle " color="primary" label="add" class="q-my-sm full-width"></q-btn>
+              <p v-if="!prefilled">
+                Fill in your <b>DeFiChain addresses</b> holding vaults or your <b>vault IDs</b>
+                directly.
+                Please add at least one. If you don't have a vault yet, you can take
+                a look at the <!--<q-chip outline clickable color="accent" text-color="dark" icon="fas fa-quidditch" >demo</q-chip>--> demo.
+              </p>
+              <p v-if="prefilled">
+                Dobby has aleady filled in at least one vault for you because you came from an app or website which is able to do that. You can add more <b>DeFiChain addresses</b> holding vaults or your <b>vault IDs</b> now or do that later.
+              </p>
 
               <q-list bordered padding v-if="addresses.length > 0" class="q-mt-md">
                 <!--
@@ -228,7 +222,17 @@
                   <q-separator spaced v-if="addresses.length > key+1" />
                 </span>
               </q-list>
-
+              <q-input
+                outlined
+                dense
+                class="q-pt-md"
+                color="primary"
+                label-color="primary"
+                v-model="addressToAdd"
+                :label="(addresses.length > 0) ? 'paste in another DFI address or a vault ID' : 'paste in a DFI address or a vault ID'"
+                :loading="false"
+              ></q-input>
+              <q-btn @click="addAddress(addressToAdd); addressToAdd = ''" :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 42 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle " color="primary" label="add" class="q-my-sm full-width"></q-btn>
 
               <q-stepper-navigation>
                 <q-btn unelevated rounded :disabled="addresses.length < 1" @click="makeAccount()" color="primary" label="Continue and create account" />
@@ -244,7 +248,7 @@
               icon="assignment"
               :done="step > 3"
             >
-              <q-card class="text-center q-mb-md">
+              <q-card flat class="text-center q-mb-md">
                 <q-card-section class="bg-primary text-white">
                   {{ userId }}
                 </q-card-section>
