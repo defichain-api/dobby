@@ -444,7 +444,7 @@ export default defineComponent({
      * TODO: check for alphanumeric characters only
      */
     stringIsDfiAddress(string) {
-      return string.length == 34
+      return string.length == 34 || string.length == 42
     },
 
     /**
