@@ -104,7 +104,7 @@
               outline
             />
             <TestChannel
-              v-if="hasGatewayType('mmail')"
+              v-if="hasGatewayType('mail')"
               label="Test email"
               channel="mail"
               color="green"
