@@ -49,10 +49,10 @@
               connect Telegram
             </q-chip>
             <q-chip v-if="!hasGatewayType('webhook')" clickable @click="showConnectWebhook = !showConnectWebhook" icon="fal fa-send-back" color="red" text-color="white">
-              &nbsp;webhook
+              &nbsp;connect webhook
             </q-chip>
             <q-chip v-if="!hasGatewayType('mail')" clickable @click="showConnectEmail = !showConnectEmail" icon="fal fa-mailbox" style="" color="green" text-color="white">
-              &nbsp;email
+              &nbsp;connect email
             </q-chip>
           </div>
         </div>
@@ -70,7 +70,7 @@
 
       <q-separator />
 
-      <q-card-actions clickable @click="testChannelExpanded = !testChannelExpanded">
+      <q-card-actions clickable v-if="gateways.length > 0" @click="testChannelExpanded = !testChannelExpanded">
         <span class="text-body1 q-ml-sm">Send Test Message</span>
         <q-space />
         <q-btn
@@ -142,6 +142,13 @@ export default {
         showConnectEmail: false,
         testChannelExpanded: false,
       }
+    },
+    watch: {
+      gateways() {
+        if (this.gateways.length == 0) {
+          this.infoExpanded = true
+        }
+      },
     },
     computed: {
       ...mapGetters({
