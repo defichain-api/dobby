@@ -48,12 +48,20 @@
             <q-chip v-if="!hasGatewayType('telegram')" clickable @click="showConnectTelegram = !showConnectTelegram" icon="fab fa-telegram-plane" color="telegram" text-color="white">
               connect Telegram
             </q-chip>
+            <q-chip icon="fal fa-send-back" color="red" text-color="white">
+              &nbsp;webhook (soon)
+            </q-chip>
+            <q-chip icon="fal fa-mailbox" style="" color="green" text-color="white">
+              &nbsp;email  (soon)
+            </q-chip>
+            <!--
             <q-chip v-if="!hasGatewayType('webhook')" clickable @click="showConnectWebhook = !showConnectWebhook" icon="fal fa-send-back" color="red" text-color="white">
               &nbsp;connect webhook
             </q-chip>
             <q-chip v-if="!hasGatewayType('mail')" clickable @click="showConnectEmail = !showConnectEmail" icon="fal fa-mailbox" style="" color="green" text-color="white">
               &nbsp;connect email
             </q-chip>
+            -->
           </div>
         </div>
       </q-card-section>

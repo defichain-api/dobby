@@ -36,7 +36,7 @@
       <q-icon name="fal fa-exclamation-triangle"></q-icon>
       Please head over to <q-btn dense flat type="href" to="manage-notifications">Manage Notifications</q-btn> to set up notifications for this vault.
     </q-card-section>
-    
+
     <q-separator inset />
 
     <q-card-section class="main-info" v-if="vault.state != 'in_liquidation'">
@@ -299,10 +299,7 @@ export default {
 
       if (aboveLiquidationStateRatio < 0) {
         return 0
-      } else {
-        console.log(this.vault.name + ': ' + warningStateRatio)
       }
-
       return aboveLiquidationStateRatio / aboveLiquidationStateSpectrum
     },
     collateralState() {
