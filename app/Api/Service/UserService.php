@@ -9,14 +9,6 @@ use App\Models\Vault;
 
 class UserService
 {
-	public function create(SetupRequest $request): User
-	{
-		return User::create([
-			'language' => $request->language(),
-			'theme'    => $request->theme(),
-		]);
-	}
-
 	public function update(UpdateUserRequest $request): bool
 	{
 		/** @var \App\Models\User $user */
