@@ -40,9 +40,9 @@
         Successfully connected. Let's give it a try!
       </p>
       <TestChannel
-        label="Send test message to webhook"
+        label="Send test message to email"
         channel="mail"
-        color="red"
+        color="green"
         icon="fal fa-mailbox"
         rounded
         outline

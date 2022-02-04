@@ -48,12 +48,20 @@
             <q-chip v-if="!hasGatewayType('telegram')" clickable @click="showConnectTelegram = !showConnectTelegram" icon="fab fa-telegram-plane" color="telegram" text-color="white">
               connect Telegram
             </q-chip>
+            <q-chip icon="fal fa-send-back" color="red" text-color="white">
+              &nbsp;webhook (soon)
+            </q-chip>
+            <q-chip icon="fal fa-mailbox" style="" color="green" text-color="white">
+              &nbsp;email  (soon)
+            </q-chip>
+            <!--
             <q-chip v-if="!hasGatewayType('webhook')" clickable @click="showConnectWebhook = !showConnectWebhook" icon="fal fa-send-back" color="red" text-color="white">
-              &nbsp;webhook
+              &nbsp;connect webhook
             </q-chip>
             <q-chip v-if="!hasGatewayType('mail')" clickable @click="showConnectEmail = !showConnectEmail" icon="fal fa-mailbox" style="" color="green" text-color="white">
-              &nbsp;email
+              &nbsp;connect email
             </q-chip>
+            -->
           </div>
         </div>
       </q-card-section>
@@ -70,7 +78,7 @@
 
       <q-separator />
 
-      <q-card-actions clickable @click="testChannelExpanded = !testChannelExpanded">
+      <q-card-actions clickable v-if="gateways.length > 0" @click="testChannelExpanded = !testChannelExpanded">
         <span class="text-body1 q-ml-sm">Send Test Message</span>
         <q-space />
         <q-btn
@@ -104,7 +112,7 @@
               outline
             />
             <TestChannel
-              v-if="hasGatewayType('mmail')"
+              v-if="hasGatewayType('mail')"
               label="Test email"
               channel="mail"
               color="green"
@@ -142,6 +150,13 @@ export default {
         showConnectEmail: false,
         testChannelExpanded: false,
       }
+    },
+    watch: {
+      gateways() {
+        if (this.gateways.length == 0) {
+          this.infoExpanded = true
+        }
+      },
     },
     computed: {
       ...mapGetters({
