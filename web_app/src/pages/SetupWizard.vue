@@ -283,6 +283,7 @@
 import { defineComponent } from 'vue'
 import { copyToClipboard } from 'quasar'
 import { validate as validateUuid } from 'uuid'
+import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'PageIndex',
@@ -307,24 +308,39 @@ export default defineComponent({
     let addresses = []
 
     addresses = this.$route.params?.vaults?.split(",") || []
-    console.log(addresses)
+    //console.log(addresses)
 
     if (this.$route.params?.vaults && addresses.length > 0) {
       //this.showSetup = true
-      this.prefilled = true
-      addresses.forEach((address) => {
-        if (this.stringIsVaultId(address) || this.stringIsDfiAddress(address)) {
-          this.addAddress(address)
-        }
-      })
 
+      // todo: [X] check if user is already logged in
+      // todo: redirect to dashboard if these addresses are already part of user's portfolio
+      // todo: If there's an unknown address, ask to add it to user's portfolio
+
+      if (!this.userIsLoggedIn) {
+        this.prefilled = true
+        addresses.forEach((address) => {
+          if (this.stringIsVaultId(address) || this.stringIsDfiAddress(address)) {
+            this.addAddress(address)
+          }
+        })
+      } else {
+        this.$router.push({name: 'dashboard'})
+      }
     }
   },
   computed: {
     userIdIsValid() {
       if (this.userId.length == 0) return true
       return this.isUuid(this.userId)
-    }
+    },
+    userIsLoggedIn() {
+      return this.loggedInUserId.length > 0
+    },
+    ...mapGetters({
+      loggedInUserId: 'account/userId',
+      allVaults: 'account/vaults',
+    }),
   },
   methods: {
     /**

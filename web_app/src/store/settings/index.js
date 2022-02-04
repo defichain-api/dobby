@@ -17,6 +17,7 @@ export default {
         numberFormats: {
             currency: { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 },
             currencyNoDecimals: { style: 'currency', currency: 'USD', maximumFractionDigits: 0 },
+            twoDecimals: { minimumFractionDigits:2, maximumFractionDigits: 2 },
         },
     },
     getters: {

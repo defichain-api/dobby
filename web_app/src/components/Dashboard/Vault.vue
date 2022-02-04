@@ -13,7 +13,7 @@
     <q-card-section
       class="q-py-xs"
       style="height: 15px"
-      :class="{'bg-positive': vault.state == 'active', 'bg-warning': vault.state == 'may_liquidate', 'bg-negative': vault.state == 'in_liquidation', 'bg-blue': vault.state == 'frozen'}"
+      :class="{'bg-negative': collateralState == 'warning', 'bg-warning': collateralState == 'info', 'bg-positive': collateralState == 'healthy', 'bg-blue': vault.state == 'frozen'}"
     />
 
     <q-card-section class="q-my-sm q-py-none">
@@ -32,6 +32,11 @@
       </div>
     </q-card-section>
 
+    <q-card-section v-if="!hasTriggers && vault.state != 'in_liquidation'" class="text-white bg-warning">
+      <q-icon name="fal fa-exclamation-triangle"></q-icon>
+      Please head over to <q-btn dense flat type="href" to="manage-notifications">Manage Notifications</q-btn> to set up notifications for this vault.
+    </q-card-section>
+    
     <q-separator inset />
 
     <q-card-section class="main-info" v-if="vault.state != 'in_liquidation'">
@@ -48,21 +53,29 @@
           <div class="caption" v-if="vault.nextCollateralRatio">Next: <span class="text-primary">{{ vault.nextCollateralRatio.toLocaleString(locale) }} %</span></div>
         </div>
       </div>
-      <div class="row q-mt-md">
+      <!--
+      <div class="col-12 text-center q-mt-md" :class="{'text-negative': collateralState == 'warning', 'text-warning': collateralState == 'info', 'text-positive': collateralState == 'healthy'}">
+        {{ vault.collateralRatio.toLocaleString(locale) }} %
+      </div>
+      -->
+      <div class="row q-mt-sm" v-if="hasTriggers">
         <div class="col-2">
-          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="md" :value="1" color="negative" track-color="negative" />
+          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="lg" :value="awayFromLiquidationState" color="negative" track-color="negative">
+          </q-linear-progress>
         </div>
         <div class="col-3">
-          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="md" :value="1" color="warning" track-color="warning" />
+          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="lg" :value="awayFromWarningState" color="warning" track-color="warning" label="test">
+          </q-linear-progress>
         </div>
         <div class="col-7">
-          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="md" :value="awayFromInfoState" color="positive" track-color="positive" />
+          <q-linear-progress v-if="vault.state != 'in_liquidation'" size="lg" :value="awayFromInfoState" color="positive" track-color="positive">
+          </q-linear-progress>
         </div>
-        <q-linear-progress v-if="vault.state == 'in_liquidation'" size="md" :value="0" :color="trackColor(vault)" :track-color="trackColor(vault)" />
         <div class="row full-width">
-          <div class="col-2 text-left">{{ vault.loanScheme.minCollateral }} %</div>
-          <div class="col-8 text-center text-primary">{{ vault.collateralRatio.toLocaleString(locale) }} %</div>
-          <div class="col-2 text-right">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div>
+          <div class="col-2 text-left text-negative">{{ vault.loanScheme.minCollateral }} %</div>
+          <div class="col-3 text-left text-warning" style="margin-left: -12px">{{ this.triggers['warning']?.ratio.toLocaleString(locale) }} %</div>
+          <div class="col-5 text-left text-positive">{{ this.triggers['info']?.ratio.toLocaleString(locale) }} %</div>
+          <div class="col-2 text-right text-positive" style="margin-left: 12px">{{ vault.loanScheme.minCollateral * overCollateralizationFactor}} %</div>
         </div>
       </div>
     </q-card-section>
@@ -107,7 +120,12 @@
             <ul class="q-mt-none q-mb-md">
               <li>is <span class="text-primary">{{ awayFromLiqudation(vault) }} %</span> over liquidation collateral</li>
               <li>
-                will change it's collateral ratio by <span class="text-primary">{{ (vault.nextCollateralRatio - vault.collateralRatio).toLocaleString(locale) }} %</span> within less than 120 blocks
+                will change it's collateral ratio by
+                <span class="text-primary">
+                  <span v-if="vault.nextCollateralRatio - vault.informativeRatio > 0">+</span>{{ (vault.nextCollateralRatio - vault.informativeRatio).toLocaleString(locale, numberFormats.twoDecimals) }} %
+                </span>
+                within the next
+                <span v-if="nextTick.minutes_left > 0">{{ nextTick.minutes_left }} minutes</span><span v-else>block</span>
               </li>
             </ul>
             <span class="text-overline">will liquidate when...</span>
@@ -198,7 +216,6 @@ export default {
   },
   mounted() {
     this.$emit('update:height', this.$refs.vault.$el.clientHeight)
-    //console.log(this.triggers)
   },
   methods: {
     trackColor(vault) {
@@ -246,25 +263,65 @@ export default {
       })
       return triggerTypes
     },
+    maximumDisplayedOvercollateralisationRatio() {
+      return this.overCollateralizationFactor * this.vault.loanScheme.minCollateral
+    },
     awayFromInfoState() {
       const infoStateRatio = this.triggers['info']?.ratio || 0
       const vaultCollateralRatio = this.vault.collateralRatio
-      if ((vaultCollateralRatio - infoStateRatio) < 0) {
-        return 0.5
+      const aboveInfoStateSpectrum = this.maximumDisplayedOvercollateralisationRatio - infoStateRatio
+      const aboveInfoStateRatio = vaultCollateralRatio - infoStateRatio
+
+      if ((aboveInfoStateRatio) < 0) {
+        return 0
       }
-      return vaultCollateralRatio - infoStateRatio
+      return aboveInfoStateRatio / aboveInfoStateSpectrum
     },
     awayFromWarningState() {
-      return 0
+      const infoStateRatio = this.triggers['info']?.ratio || 0
+      const warningStateRatio = this.triggers['warning']?.ratio || 0
+      const vaultCollateralRatio = this.vault.collateralRatio
+      const aboveWarningStateSpectrum = infoStateRatio - warningStateRatio
+      const aboveWarningStateRatio = vaultCollateralRatio - warningStateRatio
+
+      if ((aboveWarningStateRatio) < 0) {
+        return 0
+      }
+
+      return aboveWarningStateRatio / aboveWarningStateSpectrum
+    },
+    awayFromLiquidationState() {
+      const warningStateRatio = this.triggers['warning']?.ratio || 0
+      const liquidationStateRatio = this.vault.loanScheme.minCollateral
+      const vaultCollateralRatio = this.vault.collateralRatio
+      const aboveLiquidationStateSpectrum = warningStateRatio - liquidationStateRatio
+      const aboveLiquidationStateRatio = vaultCollateralRatio - liquidationStateRatio
+
+      if (aboveLiquidationStateRatio < 0) {
+        return 0
+      } else {
+        console.log(this.vault.name + ': ' + warningStateRatio)
+      }
+
+      return aboveLiquidationStateRatio / aboveLiquidationStateSpectrum
+    },
+    collateralState() {
+      if (this.awayFromLiquidationState < 1) return 'warning'
+      if (this.awayFromWarningState < 1) return 'info'
+      return 'healthy'
     },
     isFrozen() {
       return this.vault.state == 'frozen'
+    },
+    hasTriggers() {
+      return Object.keys(this.triggers).length > 0
     },
     ...mapGetters({
       settingValue: 'settings/value',
       requestRunning: 'requestRunning',
       numberFormats: 'settings/numberFormats',
       vaultTriggers: 'notifications/vaultTriggers',
+      nextTick: 'chain/nextTick',
     }),
   }
 }
