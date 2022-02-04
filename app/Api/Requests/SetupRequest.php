@@ -11,8 +11,8 @@ class SetupRequest extends ApiRequest
 	public function rules(): array
 	{
 		return [
-			'language'       => ['required', 'string', Rule::in(config('app.available_locales'))],
-			'theme'          => ['required', 'string', Rule::in(config('app.available_themes'))],
+			'language'       => ['sometimes', 'string', Rule::in(config('app.available_locales'))],
+			'theme'          => ['sometimes', 'string', Rule::in(config('app.available_themes'))],
 			'ownerAddresses' => ['sometimes', 'array'],
 		];
 	}
