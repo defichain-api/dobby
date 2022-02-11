@@ -33,6 +33,17 @@ class User extends Model
 		'updated_at',
 	];
 
+	public static function boot()
+	{
+		parent::boot();
+
+		static::created(function(User $model) {
+			UserSetting::create([
+				'userId' => $model->id,
+			]);
+		});
+	}
+
 	public function vaults(): BelongsToMany
 	{
 		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId')
@@ -81,6 +92,6 @@ class User extends Model
 
 	public function preferredLocale(): string
 	{
-		return $this->language ?? config('app.locale');
+		return $this->setting->language ?? config('app.locale');
 	}
 }

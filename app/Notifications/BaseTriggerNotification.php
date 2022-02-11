@@ -36,7 +36,7 @@ class BaseTriggerNotification extends BaseNotification
 
 	public function formatNumberForTrigger(NotificationTrigger $trigger, float|int $number, int $decimals = 2): string
 	{
-		$language = rescue(fn() => $trigger->user()->language, 'en', false);
+		$language = rescue(fn() => $trigger->user()->setting->language, 'en', false);
 
 		return number_format_for_language($number, 2, $language);
 	}
