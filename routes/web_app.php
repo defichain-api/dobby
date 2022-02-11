@@ -56,7 +56,7 @@ Route::middleware(['webapp_auth'])->group(function () {
 			->name('create');
 		Route::put('{vault}', [VaultController::class, 'updateUserVaultName'])
 			->middleware('uneditable_demo')
-			->name('create');
+			->name('update');
 		Route::delete('/', [VaultController::class, 'deleteUserVault'])
 			->middleware('uneditable_demo')
 			->name('delete');
