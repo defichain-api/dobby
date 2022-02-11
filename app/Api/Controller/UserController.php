@@ -16,13 +16,13 @@ class UserController
 		return response()->json(new UserResource($request->get('user')), Response::HTTP_OK);
 	}
 
-	public function updateUser(UpdateUserRequest $request, UserService $service): JsonResponse
+	public function updateUserSetting(UpdateUserRequest $request, UserService $service): JsonResponse
 	{
 		$service->update($request);
 
 		return response()->json([
 			'state'   => 'ok',
-			'message' => 'user updated',
+			'message' => 'user settings updated',
 		], Response::HTTP_OK);
 	}
 

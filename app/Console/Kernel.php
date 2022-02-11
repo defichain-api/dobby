@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
 		$schedule->command(PruneInactiveUsersCommand::class)
 			->weekly();
 		$schedule->command(CurrentSummaryNotificationCommand::class)
-			->dailyAt('8:00');
+			->hourlyAt(2);
 		$schedule->command(StatisticsCommand::class)
 			->dailyAt('23:59');
 		$schedule->command(InactivateVaultsCommand::class)
