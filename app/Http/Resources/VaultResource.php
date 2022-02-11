@@ -41,6 +41,9 @@ class VaultResource extends JsonResource
 		}
 		$data = [];
 		foreach ($rawData as $item) {
+			if (is_string($item)) {
+				break;
+			}
 			$amount = (float) $item['amount'];
 			$priceUsd = isset($item['activePrice']['active']['amount']) ? (float) $item['activePrice']['active']['amount'] : 1;
 			$token = $item['symbol'];

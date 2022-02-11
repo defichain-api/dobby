@@ -4,7 +4,11 @@
       <div class="text-h6">User Accounts</div>
     </q-card-section>
     <q-card-section>
-      <div class="text-h3 text-primary">{{ this.latest.user_count }}</div>
+      <div class="text-h3 text-primary">{{ this.latest.user_count.toLocaleString(locale) }}</div>
+    </q-card-section>
+    <q-separator inset />
+    <q-card-section>
+      <area-chart :data="history" :colors="[getColor('accent')]" :download="true" style="height: 200px;"/>
     </q-card-section>
     <q-separator />
     <q-card-section>
@@ -44,6 +48,9 @@ export default {
         collection[day.date] = day.user_count
       })
       return collection
+    },
+    locale: function() {
+      return this.$root.$i18n.locale
     },
   }
 }

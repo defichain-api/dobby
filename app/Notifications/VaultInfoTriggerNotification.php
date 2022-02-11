@@ -80,12 +80,13 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::INFO,
-				'data' => [
+				'type'    => NotificationTriggerType::INFO,
+				'message' => 'vaults ratio triggered this info notification',
+				'data'    => [
 					'vaultId'          => $this->vault->vaultId,
 					'vaultName'        => $this->vaultName,
 					'vaultDeeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
-					'ratio'            => $notificationTrigger->ratio,
+					'ratioTrigger'     => $notificationTrigger->ratio,
 					'currentRatio'     => $this->vault->collateralRatio,
 					'collateralAmount' => $this->formatNumberForTrigger($notificationTrigger,
 						$this->vault->collateralValue, 2),

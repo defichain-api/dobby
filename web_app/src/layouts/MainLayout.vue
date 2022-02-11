@@ -89,10 +89,13 @@
       </q-toolbar>
     </q-header>
 
+    <!--
+      show-if-above
+    -->
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
-      bordered
+
+      behavior="mobile"
       :width="250"
     >
       <!--<q-scroll-area class="fit">-->
@@ -106,7 +109,7 @@
             />
           </q-item-label>
 
-          <q-separator class="q-mt-ms q-mb-xs" />
+          <q-separator inset class="q-mt-ms q-mb-xs" />
 
           <q-item v-for="link in links1" :key="link.text" v-ripple clickable :to="link.to">
             <q-item-section avatar>
@@ -121,31 +124,7 @@
             </q-badge>
           </q-item>
 
-          <q-separator class="q-mt-ms q-mb-xs" />
-
-          <!-- <q-item-label header class="text-weight-bold text-uppercase">
-            Your Notification Channels
-          </q-item-label>
-
-
-          <q-item v-for="link in links2" :key="link.text" v-ripple clickable>
-            <q-item-section avatar>
-              <q-icon color="grey" :name="link.icon" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>{{ link.text }}</q-item-label>
-            </q-item-section>
-            <q-item-section>
-              <q-toggle
-              v-model="link.active"
-              checked-icon="check"
-              color="primary"
-              unchecked-icon="clear"
-              />
-            </q-item-section>
-          </q-item>
-
-          <q-separator class="q-my-md" /> -->
+          <q-separator inset class="q-mt-ms q-mb-xs" />
 
           <q-item v-for="link in links4" :key="link.text" :to="link.to" v-ripple clickable>
             <q-item-section avatar>
@@ -156,17 +135,13 @@
             </q-item-section>
           </q-item>
 
-          <q-separator class="q-mt-md q-mb-lg" />
+          <q-separator inset class="q-mt-md q-mb-lg" />
 
           <div class="q-px-md text-grey-9">
-            <div class="row items-center q-gutter-x-sm q-gutter-y-xs">
-              <a
-                class="YL__drawer-footer-link text-grey"
-              >
-                Version {{ version }} <br />
-                (Build: {{ release }})<br />
-                (Date: {{ releaseDate }})
-              </a>
+            <div class="row items-center q-gutter-x-sm q-gutter-y-xs text-grey drawer-footer">
+                <div class="text-body1">Version: {{ version }}</div>
+                <div style="width: 200px;" class="ellipsis">Build: <span style="font-size: 0.6em">{{ release }}</span></div>
+                <div>Date: {{ releaseDate }}</div>
             </div>
           </div>
         </q-list>
@@ -262,26 +237,7 @@ export default {
 </script>
 
 <style lang="sass">
-.YL
-
-  &__toolbar-input-container
-    min-width: 100px
-    width: 55%
-
-  &__toolbar-input-btn
-    border-radius: 0
-    border-style: solid
-    border-width: 1px 1px 1px 0
-    border-color: rgba(0,0,0,.24)
-    max-width: 60px
-    width: 100%
-
-  &__drawer-footer-link
-    color: inherit
-    text-decoration: none
+.drawer-footer
     font-weight: 500
     font-size: .75rem
-
-    &:hover
-      color: #000
 </style>

@@ -60,6 +60,25 @@ export default {
       return state.triggers.find(trigger => trigger.triggerId == triggerId);
     },
 
+    vaultTriggers: (state) => (vaultId = false) => {
+      let vaultTriggers = {}
+      state.triggers.forEach(function (trigger) {
+        if (typeof vaultTriggers[trigger.vaultId] == 'undefined') {
+          vaultTriggers[trigger.vaultId] = []
+        }
+        vaultTriggers[trigger.vaultId].push(trigger)
+        vaultTriggers[trigger.vaultId].sort(( a, b ) => {
+          if ( a.ratio < b.ratio ){return -1}
+          if ( a.ratio > b.ratio ){return 1}
+          return 0;
+        })
+      })
+      if (vaultId) {
+        return vaultTriggers[vaultId] || {}
+      } else {
+        return vaultTriggers
+      }
+    },
   },
 
   actions: {

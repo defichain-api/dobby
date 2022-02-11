@@ -10,16 +10,6 @@ use App\Models\Vault;
 
 class UserService
 {
-	public function create(SetupRequest $request): User
-	{
-		$user = User::create();
-		UserSetting::create([
-			'userId' => $user->id,
-		]);
-
-		return $user;
-	}
-
 	public function update(UpdateUserRequest $request): bool
 	{
 		/** @var \App\Models\UserSetting $userSetting */

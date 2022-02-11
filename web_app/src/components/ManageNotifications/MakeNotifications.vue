@@ -231,7 +231,10 @@ export default {
       let vaultList = new Set()
       this.missingTiggers
       this.vaults.forEach((vault) => {
-        if(!(vault.vaultId in this.triggersByVault)) {
+        if( !(vault.vaultId in this.triggersByVault)
+            &&
+            (vault.state != 'in_liquidation' && vault.state != 'inactive')
+        ) {
           vaultList.add(vault)
         }
       })

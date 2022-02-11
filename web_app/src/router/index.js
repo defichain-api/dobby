@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import { LocalStorage } from 'quasar'
 
 /*
  * If not building with SSR mode, you can
@@ -24,6 +25,23 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE)
+  })
+
+  Router.beforeEach((to, from, next) => {
+
+    if (to.meta.requiresAuth == false) {
+      next()
+      return
+    }
+
+    // redirect to setup wizard when no account key is set
+    const localStorageAccountKey = process.env.LOCAL_STORAGE_ACCOUNT_ID_KEY
+    if (!LocalStorage.has(localStorageAccountKey) || LocalStorage.getItem(localStorageAccountKey).length == 0) {
+      next({ name: 'setup' })
+      return
+    } else {
+      next()
+    }
   })
 
   return Router

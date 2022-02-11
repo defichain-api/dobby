@@ -6,6 +6,7 @@ use App\Api\Requests\SetupRequest;
 use App\Api\Service\UserService;
 use App\Api\Service\VaultService;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,10 +17,9 @@ class SetupController
 	 */
 	public function setup(
 		SetupRequest $request,
-		UserService  $setupService,
 		VaultService $userVaultService
 	): JsonResponse {
-		$user = $setupService->create($request);
+		$user = User::create();
 
 		if ($request->hasOwnerAddresses()) {
 			$userVaultService->setVaultsForUser($user, $request->ownerAddresses());

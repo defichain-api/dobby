@@ -28,13 +28,15 @@
   </q-expansion-item>
 
   <div class="row q-gutter-md q-ml-none q-mt-none">
+  <!--
   <transition-group
     appear
     enter-active-class="animated pulse"
   >
+  -->
 
-    <q-card flat v-for="(triggerList, vaultId) in triggersByVault" :key="vaultId" :bordered="$q.dark.isActive" class="vault">
-      <q-card-section class="container">
+    <q-card flat v-for="(triggerList, vaultId) in triggersByVault" :key="vaultId" class="vault">
+      <q-card-section class="container" v-if="vault(vaultId)">
         <div class="row text-left">
           <div class="col-12">
             <div class="ellipsis" :class="{'text-h5': vault(vaultId).name.length > 0, 'text-caption': vault(vaultId).name.length == 0}">
@@ -49,7 +51,7 @@
         </div>
       </q-card-section>
 
-      <q-separator />
+      <q-separator inset />
 
       <q-card-section class="q-px-none">
         <q-list>
@@ -100,12 +102,12 @@
                 />
               </q-item-section>
             </q-item>
-            <q-separator inset="item" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
+            <q-separator inset="item" class="q-mr-md" v-if="trigger.triggerId != triggerList[lastKeyOfObject(triggerList)].triggerId" />
           </span>
         </q-list>
       </q-card-section>
     </q-card>
-  </transition-group>
+  <!--</transition-group>-->
   </div>
 </template>
 
@@ -161,7 +163,7 @@ export default {
      * returns a specific vault, found by it's id
      */
     vault: function(vaultId) {
-      return this.vaults.find(vault => vault.vaultId == vaultId);
+      return this.vaults.find(vault => vault.vaultId == vaultId) || false
     },
 
     ...mapActions({

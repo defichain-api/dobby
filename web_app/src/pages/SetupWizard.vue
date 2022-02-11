@@ -8,7 +8,7 @@
       <div class="q-pa-lg" v-if="!showSetup">
         <div class="text-h4 q-my-lg">Hello, friend <q-icon name="fas fa-hat-wizard" /></div>
         <div class="text-body1 text-italic q-mt-lg">
-          This is Dobby - your personal <a href="https://defichain.com/" class="text-primary">DeFiChain</a> house elf. Dobby is happy because you found your way to him.
+          This is Dobby - your personal <a href="https://defichain.com/" class="text-primary">DeFiChain</a> house elf. Dobby is happy that you found your way to him.
           He is very useful because he keeps you informed about your <a href="https://defichain.com/" class="text-primary">DeFiChain</a> vaults when they get in trouble.
           <br />
           <q-chip v-if="!showMore" dense clickable color="secondary" text-color="dark" icon="fas fa-info-circle" @click="showMore = !showMore">Read more...</q-chip>
@@ -55,8 +55,8 @@
                 icon="fal fa-wand-magic"
                 @click="showSetup = !showSetup"
               ></q-btn>
-              <div class="q-my-md">
-              - OR -
+              <div class="q-my-md" v-if="!prefilled">
+                - OR -
               </div>
               <q-input
                 ref="existingUserId"
@@ -70,6 +70,7 @@
                 debounce="250"
                 error-message="This is not a valid Dobby User ID"
                 :error="!userIdIsValid"
+                v-if="!prefilled"
               >
                 <template v-slot:append>
                   <!--<q-icon name="fas fa-paste" color="primary" cliackable />-->
@@ -180,22 +181,15 @@
               icon="create_new_folder"
               :done="step > 2"
             >
-              Fill in your <b>DeFiChain addresses</b> holding vaults or your <b>vault IDs</b>
-              directly.
-              Please add at least one. If you don't have a vault yet, you can take
-              a look at the <!--<q-chip outline clickable color="accent" text-color="dark" icon="fas fa-quidditch" >demo</q-chip>--> demo.
-
-              <q-input
-                outlined
-                dense
-                class="q-pt-md"
-                color="primary"
-                label-color="primary"
-                v-model="addressToAdd"
-                label="paste in a DFI address or a vault ID"
-                :loading="false"
-              ></q-input>
-              <q-btn @click="addAddress(addressToAdd); addressToAdd = ''" :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 42 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle " color="primary" label="add" class="q-my-sm full-width"></q-btn>
+              <p v-if="!prefilled">
+                Fill in your <b>DeFiChain addresses</b> holding vaults or your <b>vault IDs</b>
+                directly.
+                Please add at least one. If you don't have a vault yet, you can take
+                a look at the <!--<q-chip outline clickable color="accent" text-color="dark" icon="fas fa-quidditch" >demo</q-chip>--> demo.
+              </p>
+              <p v-if="prefilled">
+                Dobby has aleady filled in at least one vault for you because you came from an app or website which is able to do that. You can add more <b>DeFiChain addresses</b> holding vaults or your <b>vault IDs</b> now or do that later.
+              </p>
 
               <q-list bordered padding v-if="addresses.length > 0" class="q-mt-md">
                 <!--
@@ -228,7 +222,17 @@
                   <q-separator spaced v-if="addresses.length > key+1" />
                 </span>
               </q-list>
-
+              <q-input
+                outlined
+                dense
+                class="q-pt-md"
+                color="primary"
+                label-color="primary"
+                v-model="addressToAdd"
+                :label="(addresses.length > 0) ? 'paste in another DFI address or a vault ID' : 'paste in a DFI address or a vault ID'"
+                :loading="false"
+              ></q-input>
+              <q-btn @click="addAddress(addressToAdd); addressToAdd = ''" :disabled="!(addressToAdd.length == 34 || addressToAdd.length == 42 || addressToAdd.length == 64)"  outline rounded dense icon="fas fa-plus-circle " color="primary" label="add" class="q-my-sm full-width"></q-btn>
 
               <q-stepper-navigation>
                 <q-btn unelevated rounded :disabled="addresses.length < 1" @click="makeAccount()" color="primary" label="Continue and create account" />
@@ -244,7 +248,7 @@
               icon="assignment"
               :done="step > 3"
             >
-              <q-card class="text-center q-mb-md">
+              <q-card flat class="text-center q-mb-md">
                 <q-card-section class="bg-primary text-white">
                   {{ userId }}
                 </q-card-section>
@@ -269,7 +273,7 @@
               <div class="q-my-md">{{ userId }}</div>
 
               <q-stepper-navigation>
-                <q-btn unelevated rounded to="dashboard" color="primary" label="Show my vaults" />
+                <q-btn unelevated rounded to="/dashboard" color="primary" label="Show my vaults" />
               </q-stepper-navigation>
             </q-step>
           </q-stepper>
@@ -283,11 +287,13 @@
 import { defineComponent } from 'vue'
 import { copyToClipboard } from 'quasar'
 import { validate as validateUuid } from 'uuid'
+import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'PageIndex',
   data () {
     return {
+      prefilled: false,
       showMore: (process.env.DEV && process.env.PREFILL_SETUP) ? false : false,
       showSetup: (process.env.DEV && process.env.PREFILL_SETUP) ? false : false,
       step: (process.env.DEV && process.env.PREFILL_SETUP) ? 2 : 1,
@@ -301,11 +307,44 @@ export default defineComponent({
 
     }
   },
+  created() {
+    // 33619a6f9ede32d007cbcd1732fef80595df2a5d563a9558f00cfa08648b7708,b23f9d01a2e56d71272f0395d534132288da9ccdabfa8375ec0fa1c042cfe058,c3f6997e0b6b4faea06435f8e261c45a562ec0e64e551b3c9a81e04bf0bae8db
+    let addresses = []
+
+    addresses = this.$route.params?.vaults?.split(",") || []
+    //console.log(addresses)
+
+    if (this.$route.params?.vaults && addresses.length > 0) {
+      //this.showSetup = true
+
+      // todo: [X] check if user is already logged in
+      // todo: redirect to dashboard if these addresses are already part of user's portfolio
+      // todo: If there's an unknown address, ask to add it to user's portfolio
+
+      if (!this.userIsLoggedIn) {
+        this.prefilled = true
+        addresses.forEach((address) => {
+          if (this.stringIsVaultId(address) || this.stringIsDfiAddress(address)) {
+            this.addAddress(address)
+          }
+        })
+      } else {
+        this.$router.push({name: 'dashboard'})
+      }
+    }
+  },
   computed: {
     userIdIsValid() {
       if (this.userId.length == 0) return true
       return this.isUuid(this.userId)
-    }
+    },
+    userIsLoggedIn() {
+      return this.loggedInUserId.length > 0
+    },
+    ...mapGetters({
+      loggedInUserId: 'account/userId',
+      allVaults: 'account/vaults',
+    }),
   },
   methods: {
     /**
@@ -390,8 +429,6 @@ export default defineComponent({
      */
     getSetupData: function () {
       return {
-        "language": "en",
-        "theme": (this.$q.dark.isActive) ? "dark" : "light",
         "ownerAddresses": JSON.parse(JSON.stringify(this.addresses))
       }
     },
@@ -411,7 +448,7 @@ export default defineComponent({
      * TODO: check for alphanumeric characters only
      */
     stringIsDfiAddress(string) {
-      return string.length == 34
+      return string.length == 34 || string.length == 42
     },
 
     /**

@@ -75,6 +75,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 
 	/**
 	 * @throws \App\Exceptions\NotificationGatewayException
+	 * @throws \App\Api\Exceptions\OceanApiException
 	 */
 	public function toWebhook(NotificationTrigger $notificationTrigger): WebhookCall
 	{
@@ -86,8 +87,9 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::NEXT_RATIO,
-				'data' => [
+				'type'    => NotificationTriggerType::NEXT_RATIO,
+				'message' => 'vaults next ratio triggered this info notification',
+				'data'    => [
 					'vaultId'                         => $this->vault->vaultId,
 					'vaultName'                       => $this->vaultName,
 					'vaultDeeplink'                   => sprintf(config('links.vault_info_deeplink'),
@@ -95,6 +97,8 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 					'ratioTriggered'                  => $notificationTrigger->ratio,
 					'currentRatio'                    => $this->vault->collateralRatio,
 					'nextRatio'                       => $this->vault->nextCollateralRatio,
+					'ratioActiveInMin'                => $this->ratioRepository->minutesToNextTick(),
+					'ratioActiveInBlocks'             => $this->ratioRepository->diffToNextTick(),
 					'loanSchemeMinCollaterationRatio' => $this->vault->loanScheme->minCollaterationRatio,
 					'collateralAmount'                => $this->formatNumberForTrigger($notificationTrigger,
 						$this->vault->collateralValue, 2),

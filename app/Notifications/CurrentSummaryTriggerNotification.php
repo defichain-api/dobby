@@ -21,7 +21,7 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
-			->messageTriggerUsed(NotificationTriggerType::DAILY);
+			->messageTriggerUsed(NotificationTriggerType::SUMMARY);
 
 		$message = __('notifications/telegram/current_summary.intro') . "\r\n\r\n###############################\r\n\r\n";
 		foreach ($this->vaultsData($user) as $vault) {
@@ -38,7 +38,7 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
-			->messageTriggerUsed(NotificationTriggerType::DAILY);
+			->messageTriggerUsed(NotificationTriggerType::SUMMARY);
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/current_summary.subject'), config('app.name')))
@@ -54,13 +54,14 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
-			->messageTriggerUsed(NotificationTriggerType::DAILY);
+			->messageTriggerUsed(NotificationTriggerType::SUMMARY);
 
 		return WebhookCall::create()
 			->url($user->routeNotificationForWebhook())
 			->payload([
-				'type' => NotificationTriggerType::DAILY,
-				'data' => [
+				'type'    => NotificationTriggerType::SUMMARY,
+				'message' => 'vault/s summary',
+				'data'    => [
 					'vaults' => $this->vaultsData($user),
 				],
 			])->useSecret($user->id);

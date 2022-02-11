@@ -79,12 +79,12 @@ jobs:
         env:
           DB_PORT: ${{ job.services.mysql.ports['3306'] }}
           REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
-      - name: CodeCov Check
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unittests
-          file: ./coverage.xml
-          name: codecov-umbrella
-          fail_ci_if_error: false
-          verbose: true
+#      - name: CodeCov Check
+#        uses: codecov/codecov-action@v2
+#        with:
+#          token: ${{ secrets.CODECOV_TOKEN }}
+#          flags: unittests
+#          file: ./coverage.xml
+#          name: codecov-umbrella
+#          fail_ci_if_error: false
+#          verbose: true

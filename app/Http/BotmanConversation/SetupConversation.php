@@ -33,6 +33,7 @@ class SetupConversation extends Conversation
 
 		$alreadyRegisteredTelegramId = NotificationGateway::whereType(NotificationGatewayType::TELEGRAM)
 			->whereValue($this->bot->getUser()->getId())
+			->where('userId', $userId)
 			->count();
 
 		if ($alreadyRegisteredTelegramId > 0) {
@@ -47,9 +48,9 @@ class SetupConversation extends Conversation
 			$this->telegramMessageService->send(__('bot/setup.not_registered', ['url' => config('app.url')]),
 				$senderId);
 		} elseif ($this->gatewayService->hasGatewayWithValue($senderId, NotificationGatewayType::TELEGRAM)) {
-			// already connected
+			// reconnect telegram to new user key
 			$this->gatewayService->createOrUpdateTelegramGateway($userId, $senderId);
-			$this->telegramMessageService->send(__('bot/setup.already_registered'), $senderId);
+			$this->telegramMessageService->send(__('bot/setup.telegram_reconnect'), $senderId);
 		} else {
 			// start registering the user
 			$this->telegramMessageService->send(__('bot/setup.registering.collect_data'), $senderId);
