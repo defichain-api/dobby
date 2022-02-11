@@ -23,8 +23,10 @@ class VaultRepository
 						'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
 						'min_col_ratio'     => $vault->loanScheme->minCollaterationRatio,
 						'current_ratio'     => $vault->collateralRatio === -1 ? 'n/a' : $vault->collateralRatio,
-						'collateral_amount' => number_format_for_language($vault->collateralValue, 2, $user->language),
-						'loan_value'        => number_format_for_language($vault->loanValue, 2, $user->language),
+						'collateral_amount' => number_format_for_language($vault->collateralValue, 2,
+							$user->setting->language),
+						'loan_value'        => number_format_for_language($vault->loanValue, 2,
+							$user->setting->language),
 					];
 				});
 

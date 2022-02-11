@@ -53,6 +53,6 @@ class NotificationTrigger extends Model
 
 	public function preferredLocale(): string
 	{
-		return $this->user()->language ?? config('app.locale');
+		return $this->user()->setting->language ?? config('app.locale');
 	}
 }
