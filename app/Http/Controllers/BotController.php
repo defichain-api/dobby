@@ -7,6 +7,7 @@ use App\Http\BotmanConversation\DisableGatewayConversation;
 use App\Http\BotmanConversation\SetupConversation;
 use App\Http\BotmanConversation\SnoozeConversation;
 use App\Http\BotmanConversation\StateConversation;
+use App\Http\BotmanConversation\UserKeyConversation;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Exceptions\Base\BotManException;
 use Exception;
@@ -30,6 +31,9 @@ class BotController
 		});
 		$botMan->hears('/vault_state', function (BotMan $botMan){
 			$botMan->startConversation(new StateConversation());
+		});
+		$botMan->hears('/user_key', function (BotMan $botMan){
+			$botMan->startConversation(new UserKeyConversation());
 		});
 		$botMan->hears('/disable_telegram', function (BotMan $botMan){
 			$botMan->startConversation(new DisableGatewayConversation(app(NotificationGatewayService::class)));
