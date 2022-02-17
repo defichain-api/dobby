@@ -2,16 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Enum\NotificationTriggerType;
 use App\Enum\QueueName;
 use App\Enum\VaultStates;
 use App\Events\VaultUpdatingNextRatioEvent;
-use App\Events\VaultUpdatingRatioEvent;
 use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\User;
-use App\Notifications\VaultInfoTriggerNotification;
 use App\Notifications\VaultNextRatioNotification;
-use App\Notifications\VaultWarningTriggerNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class VaultUpdatingNextRatioListener implements ShouldQueue
