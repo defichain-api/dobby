@@ -15,8 +15,8 @@ class OceanApiClient implements BaseApiClient
 	{
 		$this->client = new Client([
 			'base_uri'        => config('defichain_ocean.base_uri'),
-			'timeout'         => 5,
-			'connect_timeout' => 5,
+			'timeout'         => 45,
+			'connect_timeout' => 20,
 		]);
 	}
 
