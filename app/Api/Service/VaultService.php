@@ -108,7 +108,13 @@ class VaultService
 
 		$nextAmount = 0;
 		foreach ($colAmounts as $colAmount) {
-			$nextAmount += (float) $colAmount['amount'] * (float) $colAmount['activePrice']['next']['amount'];
+			// dUSD has no active price
+			if (!isset($colAmount['activePrice'])) {
+				$nextPrice = 0.99;
+			} else {
+				$nextPrice = (float) $colAmount['activePrice']['next']['amount'];
+			}
+			$nextAmount += (float) $colAmount['amount'] * $nextPrice;
 		}
 
 		$nextLoan = 0;
