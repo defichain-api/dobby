@@ -12,6 +12,7 @@ class UpdateUserRequest extends ApiRequest
 	#[ArrayShape([
 		'language'                              => "array",
 		'uiTheme'                               => "array",
+		'depositAddress'                        => "array",
 		'summaryInterval'                       => "array",
 		'currentRatioEnabled'                   => "string[]",
 		'uiPrivacyEnabled'                      => "string[]",
@@ -34,6 +35,7 @@ class UpdateUserRequest extends ApiRequest
 				'string',
 				Rule::in(config('app.available_themes')),
 			],
+			'depositAddress'                        => ['sometimes', 'string', 'max:34', 'min:34'],
 			'summaryInterval'                       => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
 			'currentRatioEnabled'                   => ['sometimes', 'boolean'],
 			'uiPrivacyEnabled'                      => ['sometimes', 'boolean'],
@@ -46,20 +48,24 @@ class UpdateUserRequest extends ApiRequest
 	}
 
 	#[ArrayShape([
-		'language.in'                   => "string",
-		'uiTheme.in'                    => "string",
-		'summaryInterval.in'            => "string",
+		'language.in'        => "string",
+		'uiTheme.in'         => "string",
+		'summaryInterval.in' => "string",
+		'timezone.in'        => "string",
+		'depositAddress.min' => "string",
+		'depositAddress.max' => "string",
 		'uiDashboardCardsAsCarousel.in' => "string",
 		'timezone.in'                   => "string",
 	])]
 	public function messages(): array
 	{
 		return [
-			'language.in'                   => sprintf('possible values are: %s',
-				implode(', ', config('app.available_locales'))),
-			'uiTheme.in'                    => sprintf('possible values are: %s',
-				implode(', ', config('app.available_themes'))),
-			'summaryInterval.in'            => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
+			'language.in'        => sprintf('possible values are: %s', implode(', ', config('app.available_locales'))),
+			'uiTheme.in'         => sprintf('possible values are: %s', implode(', ', config('app.available_themes'))),
+			'summaryInterval.in' => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
+			'timezone.in'        => sprintf('possible values are visible at: %s', route('web_app.list.timezones')),
+			'depositAddress.min' => 'Deposit address (defichain) must have 34 chars',
+			'depositAddress.max' => 'Deposit address (defichain) must have 34 chars',
 			'uiDashboardCardsAsCarousel.in' => sprintf('possible values are: %s',
 				implode(', ', CardVisualization::ALL)),
 			'timezone.in'                   => sprintf('possible values are visible at: %s',
@@ -75,6 +81,11 @@ class UpdateUserRequest extends ApiRequest
 	public function hasTheme(): bool
 	{
 		return $this->has('uiTheme');
+	}
+
+	public function hasDepositAddress(): bool
+	{
+		return $this->has('depositAddress');
 	}
 
 	public function hasSummaryInterval(): bool
@@ -125,6 +136,11 @@ class UpdateUserRequest extends ApiRequest
 	public function theme(): string
 	{
 		return $this->input('uiTheme');
+	}
+
+	public function depositAddress(): string
+	{
+		return $this->input('depositAddress');
 	}
 
 	public function currentRatioEnabled(): string

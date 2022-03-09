@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string language
  * @property string ui_theme
  * @property string summary_interval
+ * @property string depositFromAddress
+ * @property float  credit
  * @property bool   current_ratio_enabled
  * @property bool   ui_privacy_enabled
  * @property bool   ui_dashboard_healthSummary_enabled
@@ -27,6 +29,8 @@ class UserSetting extends Model
 		'userId',
 		'language',
 		'summary_interval',
+		'credit',
+		'depositFromAddress',
 		'current_ratio_enabled',
 		'timezone',
 		'ui_theme',

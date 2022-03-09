@@ -20,6 +20,8 @@ use Kurozora\Cooldown\HasCooldowns;
  * @property string      id
  * @property Collection  vaults
  * @property Collection  notificationGateways
+ * @property Collection  payments
+ * @property Collection  deposits
  * @property UserSetting setting
  */
 class User extends Model
@@ -37,7 +39,7 @@ class User extends Model
 	{
 		parent::boot();
 
-		static::created(function(User $model) {
+		static::created(function (User $model) {
 			UserSetting::create([
 				'userId' => $model->id,
 			]);
@@ -88,6 +90,21 @@ class User extends Model
 	{
 		return $this->hasMany(NotificationGateway::class, 'userId', 'id')
 			->with('triggers');
+	}
+
+	public function payments(): HasMany
+	{
+		return $this->hasMany(Payment::class, 'userId', 'id');
+	}
+
+	public function deposits(): HasMany
+	{
+		return $this->hasMany(Deposit::class, 'userId', 'id');
+	}
+
+	public function canPayAmount(float $amount): bool
+	{
+		return $this->credit >= $amount;
 	}
 
 	public function preferredLocale(): string
