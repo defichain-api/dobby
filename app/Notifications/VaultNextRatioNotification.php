@@ -29,6 +29,8 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
+			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
+				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
 		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM . '_next', now()->addMinutes(30));
 
@@ -60,6 +62,8 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
+			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
+				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
 		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL . '_next', now()->addHour());
 
@@ -81,6 +85,8 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
+			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
+				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
 		$this->snooze($notificationTrigger, NotificationGatewayType::WEBHOOK . '_next', now()->addMinutes(15));
 
