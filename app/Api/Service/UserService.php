@@ -2,7 +2,6 @@
 
 namespace App\Api\Service;
 
-use App\Api\Requests\SetupRequest;
 use App\Api\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Models\UserSetting;
@@ -39,6 +38,7 @@ class UserService
 	public function delete(User $user): bool
 	{
 		$user->gateways()->delete();
+		$user->setting()->delete();
 		$user->vaults()->each(function (Vault $vault) use ($user) {
 			app(NotificationTriggerService::class)->deleteTriggerForUserVault($user, $vault->vaultId);
 		});
