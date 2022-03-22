@@ -39,7 +39,8 @@ return [
 	|
 	*/
 
-	'debug' => (bool) env('APP_DEBUG', false),
+	'debug'         => (bool) env('APP_DEBUG', false),
+	'admin_user_id' => env('ADMIN_USER_ID', ''),
 
 	/*
 	|--------------------------------------------------------------------------
