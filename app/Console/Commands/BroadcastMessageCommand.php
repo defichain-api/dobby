@@ -32,9 +32,11 @@ class BroadcastMessageCommand extends Command
 		}
 		$telegramMessageService = $this->telegramMessageService = new TelegramMessageService(app('botman'));
 
-		$this->info('Sending out this message now:');
-		$this->info($message);
-
+		$this->line('');
+		$this->line('');
+		$this->line('########################################');
+		$this->line('start sending out messages...');
+		$this->line('########################################');
 		$this->withProgressBar($gateways,
 			function (NotificationGateway $gateway) use ($telegramMessageService, $message) {
 				$message = implode("\n", explode('\n', $message));
