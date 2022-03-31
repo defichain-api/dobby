@@ -17,6 +17,10 @@ class TwilioWebhookRequestValidatorMiddleware
 	 */
 	public function handle(Request $request, Closure $next)
 	{
+		if (app()->environment('local')) {
+			return $next($request);
+		}
+
 		$validator = new RequestValidator(config('twilio.auth_token'));
 		$requestData = $request->toArray();
 
