@@ -10,16 +10,11 @@ class CreateDepositsTable extends Migration
 	{
 		Schema::create('deposits', function (Blueprint $table) {
 			$table->id();
-			$table->string('userId')->index();
 			$table->string('txid')->unique();
 			$table->string('senderAddress')->index();
 			$table->bigInteger('block');
-			$table->float('amountDfi')->default(0);
-			$table->timestamps();
-
-			$table->foreign('userId')
-				->references('id')
-				->on('users');
+			$table->float('amountDfi', 15, 8)->default(0);
+			$table->timestamp('received_at');
 		});
 	}
 
