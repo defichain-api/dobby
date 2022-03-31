@@ -97,9 +97,9 @@ class User extends Model
 		return $this->hasMany(Payment::class, 'userId', 'id');
 	}
 
-	public function deposits(): HasMany
+	public function deposits(): Collection
 	{
-		return $this->hasMany(Deposit::class, 'userId', 'id');
+		return Deposit::where('senderAddress', $this->setting->depositFromAddress)->get();
 	}
 
 	public function canPayAmount(float $amount): bool
