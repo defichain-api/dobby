@@ -9,6 +9,7 @@ use App\Http\Middleware\PaginateApiMiddleware;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\TwilioWebhookRequestValidatorMiddleware;
 use App\Http\Middleware\UneditableDemoMiddleware;
 use App\Http\Middleware\VerifyCsrfToken;
 use App\Http\Middleware\WebAppAuthMiddleware;
@@ -58,5 +59,6 @@ class Kernel extends HttpKernel
 		'webapp_auth'      => WebAppAuthMiddleware::class,
 		'uneditable_demo'  => UneditableDemoMiddleware::class,
 		'horizonBasicAuth' => HorizonBasicAuthMiddleware::class,
+		'twilio_webhook'   => TwilioWebhookRequestValidatorMiddleware::class,
 	];
 }
