@@ -138,9 +138,5 @@ Route::middleware(['webapp_auth'])->group(function () {
 			Route::get('transactions', 'getTransactions')
 				->middleware('uneditable_demo')
 				->name('transactions');
-
-			Route::post('update_info', 'updateDetails')
-				->middleware('uneditable_demo')
-				->name('updateDetails');
 		});
 });

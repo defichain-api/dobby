@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Deposit;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -16,24 +15,22 @@ class DepositFactory extends Factory
 		'senderAddress' => "string",
 		'block'         => "int",
 		'amountDfi'     => "float",
-		'userId'        => "\Illuminate\Database\Eloquent\Factories\Factory",
-	])]
-	public function definition(): array
+		'received_at'   => "\Illuminate\Support\Carbon",
+	])] public function definition(): array
 	{
 		return [
 			'txid'          => $this->faker->uuid(),
 			'senderAddress' => $this->faker->uuid(),
 			'block'         => $this->faker->randomNumber(6),
-			'amountDfi'     => $this->faker->randomFloat(8, 0.1, 33),
-
-			'userId' => User::factory(),
+			'amountDfi'     => $this->faker->randomFloat(8, 0.1, 5),
+			'received_at'   => now(),
 		];
 	}
 
-	public function forUser(User $user): self
+	public function withSenderAddress(string $senderAddress): self
 	{
 		return $this->state([
-			'userId' => $user->id,
+			'senderAddress' => $senderAddress,
 		]);
 	}
 

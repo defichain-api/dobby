@@ -2,7 +2,6 @@
 
 namespace App\Api\Controller;
 
-use App\Api\Requests\UpdatePaymentDetailsRequest;
 use App\Enum\NotificationGatewayType;
 use App\Http\Resources\DepositResource;
 use App\Http\Resources\PaymentResource;
@@ -13,11 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController
 {
-	public function updateDetails(UpdatePaymentDetailsRequest $request)
-	{
-
-	}
-
 	public function getState(Request $request, UserBalanceService $userBalanceService): JsonResponse
 	{
 		/** @var \App\Models\User $user */
@@ -37,12 +31,13 @@ class PaymentController
 	{
 		/** @var \App\Models\User $user */
 		$user = $request->get('user');
-		$user->load('deposits', 'payments');
+		$user->load('payments');
+		ray([$user, $user->deposits(), $user->payments]);
 
 		return response()->json([
 			'balanceDfi' => $userBalanceService->forUser($user)->accountBalance(),
 			'payments'   => PaymentResource::collection($user->payments),
-			'deposits'   => DepositResource::collection($user->deposits),
+			'deposits'   => DepositResource::collection($user->deposits()),
 		], Response::HTTP_OK);
 	}
 }

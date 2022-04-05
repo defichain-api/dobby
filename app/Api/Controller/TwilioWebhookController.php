@@ -2,7 +2,7 @@
 
 namespace App\Api\Controller;
 
-use App\Enum\TwilioWebhookState;
+use App\Enum\PhoneCallState;
 use App\Http\Requests\TwilioWebhookRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Twilio\Rest\Client;
@@ -24,16 +24,16 @@ class TwilioWebhookController
 	{
 		$this->request = $request;
 		switch ($request->status()) {
-			case TwilioWebhookState::SUCCESS:
+			case PhoneCallState::SUCCESS->value:
 				$this->succeeded();
 				break;
-			case TwilioWebhookState::RETRY:
+			case PhoneCallState::RETRY->value:
 				$this->retryCall();
 				break;
-			case TwilioWebhookState::FAILED:
+			case PhoneCallState::FAILED->value:
 				$this->callFailed();
 				break;
-			case TwilioWebhookState::NO_ANSWER:
+			case PhoneCallState::NO_ANSWER->value:
 				$this->callNoAnswer();
 				break;
 			default:

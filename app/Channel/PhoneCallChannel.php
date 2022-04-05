@@ -2,6 +2,7 @@
 
 namespace App\Channel;
 
+use App\Models\PhoneCall;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client;
 
@@ -17,44 +18,45 @@ class PhoneCallChannel
 		$this->twilioClient = new Client(config('twilio.account_sid'), config('twilio.auth_token'));
 	}
 
-	public function validatePhoneNumber(string $phoneNumber, string $countryIso): array
+	public function validatePhoneNumber(string $phoneNumber, string $countryIso = 'de_DE'): array
 	{
-		try {
-			$result = $this->twilioClient->lookups->v1->phoneNumbers($phoneNumber)
-				->fetch(['countryCode' => $countryIso])->toArray();
-		} catch (TwilioException $e) {
-			return [
-				'isValid' => false,
-				'message' => $e->getMessage(),
-			];
-		}
+		return cache()->remember(
+			sprintf('phone_number.%s', $phoneNumber),
+			now()->addMinutes(5),
+			function () use ($phoneNumber, $countryIso) {
+				try {
+					$result = $this->twilioClient->lookups->v1->phoneNumbers($phoneNumber)
+						->fetch(['countryCode' => $countryIso])->toArray();
+				} catch (TwilioException $e) {
+					return [
+						'isValid' => false,
+						'message' => $e->getMessage(),
+					];
+				}
 
-		return [
-			'isValid'                   => true,
-			'countryCode'               => $result['countryCode'],
-			'nationalPhoneNumberFormat' => $result['nationalFormat'],
-			'phoneNumber'               => $result['phoneNumber'],
-			'carrier'                   => [
-				'type' => $result['carrier']['type'] ?? 'n/a',
-				'name' => $result['carrier']['name'] ?? 'n/a',
-			],
-		];
+				return [
+					'isValid'                   => true,
+					'countryCode'               => $result['countryCode'],
+					'nationalPhoneNumberFormat' => $result['nationalFormat'],
+					'phoneNumber'               => $result['phoneNumber'],
+				];
+			});
 	}
 
-	public function initiateCall(): bool
+	public function initiateCall(PhoneCall $phoneCall, int $retryCount = 0): bool
 	{
 		try {
 			$this->twilioClient->studio->v2->flows(config('twilio.main_flow_sid'))
 				->executions
-				->create('+4991239988404', config('twilio.phone_number'), [
+				->create($phoneCall->recipientNumber, config('twilio.phone_number'), [
 					'parameters' => json_encode([
-						'retry_count'   => 0, // set to 0 as it's the initial call
-						'current_ratio' => 214,
-						'next_ratio'    => 180,
-						'dobby_key'     => '3280e083-5f56-49d8-80b9-a96933002120',
-						'vault_id'      => '00307d6cd3bb2b888304f22cce7c93ae64a7c4f30487d92648f2155a13e293ee',
-						'vault_name'    => 'Mein Vault',
-						'language'      => 'de',
+						'retry_count'   => $retryCount, // should start with 0 for the first call
+						'current_ratio' => $phoneCall->currentCollateralRatio,
+						'next_ratio'    => $phoneCall->nextCollateralRatio,
+						'dobby_key'     => $phoneCall->userId,
+						'vault_id'      => $phoneCall->vaultId,
+						'vault_name'    => $phoneCall->vault->pivot->name ?? '',
+						'language'      => $phoneCall->user?->setting?->language ?? config('app.locale'),
 						'webhook_url'   => route('webhook-twilio'),
 					]),
 				]);

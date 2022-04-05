@@ -11,6 +11,7 @@ class AddCreditAttributeToUsersTable extends Migration
 		Schema::table('user_settings', function (Blueprint $table) {
 			$table->float('credit', 15, 8)->default(0)->after('language');
 			$table->string('depositFromAddress', 100)->nullable()->after('language');
+			$table->string('depositInfoMail', 100)->nullable()->after('depositFromAddress');
 		});
 	}
 

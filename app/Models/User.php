@@ -99,7 +99,7 @@ class User extends Model
 
 	public function deposits(): Collection
 	{
-		return Deposit::where('senderAddress', $this->setting->depositFromAddress)->get();
+		return Deposit::where('senderAddress', $this->setting?->depositFromAddress)->get();
 	}
 
 	public function canPayAmount(float $amount): bool

@@ -13,6 +13,7 @@ class UpdateUserRequest extends ApiRequest
 		'language'                              => "array",
 		'uiTheme'                               => "array",
 		'depositAddress'                        => "array",
+		'depositInfoMail'                       => "array",
 		'summaryInterval'                       => "array",
 		'currentRatioEnabled'                   => "string[]",
 		'uiPrivacyEnabled'                      => "string[]",
@@ -36,6 +37,7 @@ class UpdateUserRequest extends ApiRequest
 				Rule::in(config('app.available_themes')),
 			],
 			'depositAddress'                        => ['sometimes', 'string', 'max:34', 'min:34'],
+			'depositInfoMail'                       => ['sometimes', 'string'],
 			'summaryInterval'                       => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
 			'currentRatioEnabled'                   => ['sometimes', 'boolean'],
 			'uiPrivacyEnabled'                      => ['sometimes', 'boolean'],
@@ -86,6 +88,11 @@ class UpdateUserRequest extends ApiRequest
 	public function hasDepositAddress(): bool
 	{
 		return $this->has('depositAddress');
+	}
+
+	public function hasDepositInfoMail(): bool
+	{
+		return $this->has('depositInfoMail');
 	}
 
 	public function hasSummaryInterval(): bool
@@ -141,6 +148,11 @@ class UpdateUserRequest extends ApiRequest
 	public function depositAddress(): string
 	{
 		return $this->input('depositAddress');
+	}
+
+	public function depositInfoMail(): string
+	{
+		return $this->input('depositInfoMail');
 	}
 
 	public function currentRatioEnabled(): string

@@ -14,7 +14,7 @@ class DepositResource extends JsonResource
 			'senderAddress' => $this->senderAddress,
 			'block'         => $this->block,
 			'amountDfi'     => $this->amountDfi,
-			'booked_at'     => $this->created_at,
+			'received_at'   => $this->received_at,
 		];
 	}
 }
