@@ -17,6 +17,7 @@ class UpdateUserRequest extends ApiRequest
 		'uiDashboardHealthSummaryEnabled'       => "string[]",
 		'uiDashboardCollateralInfoEnabled'      => "string[]",
 		'uiDashboardCollateralWaypointsEnabled' => "string[]",
+		'uiDashboardCardsAsCarouselEnabled'     => "string[]",
 		'timezone'                              => "array",
 	])]
 	public function rules(): array
@@ -38,6 +39,7 @@ class UpdateUserRequest extends ApiRequest
 			'uiDashboardHealthSummaryEnabled'       => ['sometimes', 'boolean'],
 			'uiDashboardCollateralInfoEnabled'      => ['sometimes', 'boolean'],
 			'uiDashboardCollateralWaypointsEnabled' => ['sometimes', 'boolean'],
+			'uiDashboardCardsAsCarouselEnabled'     => ['sometimes', 'boolean'],
 			'timezone'                              => ['sometimes', 'string', Rule::in(array_keys(__('timezones')))],
 		];
 	}
@@ -98,6 +100,11 @@ class UpdateUserRequest extends ApiRequest
 		return $this->has('uiDashboardCollateralWaypointsEnabled');
 	}
 
+	public function hasUiDashboardCardsAsCarouselEnabled(): bool
+	{
+		return $this->has('uiDashboardCardsAsCarouselEnabled');
+	}
+
 	public function hasTimezone(): bool
 	{
 		return $this->has('timezone');
@@ -136,6 +143,11 @@ class UpdateUserRequest extends ApiRequest
 	public function uiDashboardCollateralWaypointsEnabled(): bool
 	{
 		return $this->input('uiDashboardCollateralWaypointsEnabled');
+	}
+
+	public function uiDashboardCardsAsCarouselEnabled(): bool
+	{
+		return $this->input('uiDashboardCardsAsCarouselEnabled');
 	}
 
 	public function timezone(): string
