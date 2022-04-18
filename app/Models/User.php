@@ -102,13 +102,18 @@ class User extends Model
 		return Deposit::where('senderAddress', $this->setting?->depositFromAddress)->get();
 	}
 
-	public function canPayAmount(float $amount): bool
+	public function credits(): float
 	{
-		return $this->credit >= $amount;
+		return $this->deposits()->sum('amountDfi') - $this->payments()->sum('amountDfi');
 	}
 
 	public function preferredLocale(): string
 	{
 		return $this->setting->language ?? config('app.locale');
+	}
+
+	public function preferredTimezone(): string
+	{
+		return $this->setting->timezone ?? config('app.timezone');
 	}
 }

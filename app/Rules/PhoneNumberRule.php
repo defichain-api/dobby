@@ -2,12 +2,12 @@
 
 namespace App\Rules;
 
-use App\Channel\PhoneCallChannel;
+use App\ApiClient\PhoneCallService;
 use Illuminate\Contracts\Validation\Rule;
 
 class PhoneNumberRule implements Rule
 {
-	public function __construct(protected PhoneCallChannel $phoneCallService)
+	public function __construct(protected PhoneCallService $phoneCallService)
 	{
 	}
 

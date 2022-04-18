@@ -2,7 +2,7 @@
 
 namespace App\Api\Requests;
 
-use App\Channel\PhoneCallChannel;
+use App\ApiClient\PhoneCallService;
 use App\Enum\NotificationGatewayType;
 use App\Rules\PhoneNumberRule;
 use Illuminate\Validation\Rule;
@@ -20,7 +20,7 @@ class CreateNotificationGatewayRequest extends ApiRequest
 		} elseif ($type === NotificationGatewayType::WEBHOOK) {
 			$valueRules = 'active_url';
 		} elseif ($type === NotificationGatewayType::PHONE) {
-			$valueRules = new PhoneNumberRule(app(PhoneCallChannel::class));
+			$valueRules = new PhoneNumberRule(app(PhoneCallService::class));
 		}
 
 		return [

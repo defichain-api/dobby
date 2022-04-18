@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property integer    batchCount
  * @property integer    liquidationPenalty
  * @property array      batches
+ * @method static whereState(string $ACTIVE)
  */
 class Vault extends Model
 {

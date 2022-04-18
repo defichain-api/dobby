@@ -6,6 +6,7 @@ use App\Api\Service\CollateralRatioRepository;
 use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
+use App\Jobs\PhoneCallJob;
 use App\Models\NotificationTrigger;
 use App\Models\Vault;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -73,6 +74,13 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 				'vaultName'           => $this->vaultName,
 				'ratioRepository'     => $this->ratioRepository,
 			]);
+	}
+
+	public function toPhone(NotificationTrigger $notificationTrigger): PhoneCallJob
+	{
+		ray('called to phone method', [$notificationTrigger->user(), $notificationTrigger->vault, 0]);
+
+		return new PhoneCallJob($notificationTrigger->user(), $notificationTrigger->vault, 0);
 	}
 
 	/**

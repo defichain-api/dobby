@@ -44,6 +44,11 @@ class UserBalanceService
 		}
 	}
 
+	public function canPayAmount(float $amount): bool
+	{
+		return $this->accountBalance() >= $amount;
+	}
+
 	public function canNotPayAmount(float $amount): bool
 	{
 		return $this->accountBalance() < $amount;
@@ -51,21 +56,6 @@ class UserBalanceService
 
 	public function accountBalance(): float
 	{
-		return $this->depositSum() - $this->paymentSum();
-	}
-
-	public function depositSum(): float
-	{
-		return $this->user->deposits()->sum('amountDfi');
-	}
-
-	public function paymentSum(): float
-	{
-		return $this->user->payments()->sum('amountDfi');
-	}
-
-	public function canPayAmount(float $amount): bool
-	{
-		return $this->accountBalance() >= $amount;
+		return $this->user->credits();
 	}
 }

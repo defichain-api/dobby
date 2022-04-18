@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Channel\WebhookChannel;
 use App\Enum\CooldownTypes;
 use App\Enum\NotificationGatewayType;
 use App\Models\NotificationTrigger;
@@ -30,8 +29,23 @@ class BaseTriggerNotification extends BaseNotification
 			&& $trigger->cooldown(CooldownTypes::MAIL_NOTIFICATION)->passed()) {
 			$methods[] = NotificationGatewayType::MAIL;
 		}
+		if ($trigger->hasGateway(NotificationGatewayType::PHONE)
+			&& $trigger->cooldown(CooldownTypes::PHONE_NOTIFICATION)->passed()) {
+			ray('triggering phone');
+			$methods[] = NotificationGatewayType::PHONE;
+		}
 
 		return $methods;
+	}
+
+	/**
+	 * @return null
+	 */
+	public function toPhone(NotificationTrigger $notificationTrigger)
+	{
+		ray('called base tophone method');
+
+		return null;
 	}
 
 	public function formatNumberForTrigger(NotificationTrigger $trigger, float|int $number, int $decimals = 2): string
