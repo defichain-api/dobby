@@ -32,6 +32,9 @@ class UserService
 			'ui_dashboard_collateralWaypoints_enabled' => $request->hasUiDashboardCollateralWaypointsEnabled()
 				? $request->uiDashboardCollateralWaypointsEnabled()
 				: $userSetting->ui_dashboard_collateralWaypoints_enabled,
+			'ui_dashboard_cards_carousel_enabled'      => $request->hasUiDashboardCardsAsCarouselEnabled()
+				? $request->uiDashboardCardsAsCarouselEnabled()
+				: $userSetting->ui_dashboard_cards_carousel_enabled,
 		]);
 	}
 
