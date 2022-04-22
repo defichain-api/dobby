@@ -78,9 +78,10 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 
 	public function toPhone(NotificationTrigger $notificationTrigger): PhoneCallJob
 	{
-		ray('called to phone method', [$notificationTrigger->user(), $notificationTrigger->vault, 0]);
+		$phoneCallJob = new PhoneCallJob($notificationTrigger->user(), $notificationTrigger->vault, 0);
+		ray($phoneCallJob);
 
-		return new PhoneCallJob($notificationTrigger->user(), $notificationTrigger->vault, 0);
+		return $phoneCallJob;
 	}
 
 	/**

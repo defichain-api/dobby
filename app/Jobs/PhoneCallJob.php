@@ -9,16 +9,21 @@ use App\Exceptions\NotificationGatewayException;
 use App\Models\PhoneCall;
 use App\Models\User;
 use App\Models\Vault;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
-class PhoneCallJob implements ShouldQueue
+class PhoneCallJob
 {
-	use Dispatchable, Queueable;
+	use Dispatchable, SerializesModels;
 
-	public function __construct(protected User $user, protected Vault $vault, protected int $retry = 0)
+	public function __construct(public User $user, public Vault $vault, protected int $retry = 0)
 	{
+		ray([
+			'location' => 'inside job',
+			$this->user,
+			$this->vault,
+			$this->retry,
+		]);
 	}
 
 	/**

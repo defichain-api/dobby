@@ -14,6 +14,6 @@ class PhoneChannel extends Notification
 		if (is_null($phoneCallJob)) {
 			return;
 		}
-		$phoneCallJob->dispatchSync();
+		dispatch_sync($phoneCallJob);
 	}
 }
