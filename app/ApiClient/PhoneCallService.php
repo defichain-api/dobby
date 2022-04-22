@@ -49,9 +49,6 @@ class PhoneCallService
 
 	public function initiateCall(PhoneCall $phoneCall, int $retryCount = 0): bool
 	{
-		ray('init call now');
-
-		return true;
 		try {
 			$this->twilioClient->studio->v2->flows(config('twilio.main_flow_sid'))
 				->executions

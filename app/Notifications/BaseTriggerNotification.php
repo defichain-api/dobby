@@ -43,8 +43,6 @@ class BaseTriggerNotification extends BaseNotification
 	 */
 	public function toPhone(NotificationTrigger $notificationTrigger)
 	{
-		ray('called base tophone method');
-
 		return null;
 	}
 

@@ -18,12 +18,6 @@ class PhoneCallJob
 
 	public function __construct(public User $user, public Vault $vault, protected int $retry = 0)
 	{
-		ray([
-			'location' => 'inside job',
-			$this->user,
-			$this->vault,
-			$this->retry,
-		]);
 	}
 
 	/**
@@ -32,7 +26,7 @@ class PhoneCallJob
 	public function handle(PhoneCallService $service)
 	{
 		$phoneNumber = $this->user->gateways()->where('type', NotificationGatewayType::PHONE)->first()?->value;
-		ray(sprintf('phone number: %s', $phoneNumber));
+
 		throw_if(is_null($phoneNumber), NotificationGatewayException::message(NotificationGatewayType::PHONE, sprintf
 		('not available for user %s', $this->user->id)));
 
@@ -44,7 +38,7 @@ class PhoneCallJob
 			'nextCollateralRatio'    => $this->vault->nextCollateralRatio,
 			'state'                  => PhoneCallState::INITIATED,
 		]);
-		ray($phoneCall);
+
 		$service->initiateCall($phoneCall, $this->retry);
 	}
 }
