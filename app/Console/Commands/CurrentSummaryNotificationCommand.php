@@ -18,6 +18,7 @@ class CurrentSummaryNotificationCommand extends Command
 		->having('gateways_count', '>', 0)
 			->withCount('vaults') // select only active users with a vault
 			->having('vaults_count', '>', 0)
+			->with('setting')
 			->whereHas('setting', function ($query) { // select only users receiving the summary
 				return $query->whereIn('summary_interval', [
 					SummaryInterval::DAILY_ONCE,
