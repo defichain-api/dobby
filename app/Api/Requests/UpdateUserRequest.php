@@ -2,6 +2,7 @@
 
 namespace App\Api\Requests;
 
+use App\Enum\CardVisualization;
 use App\Enum\SummaryInterval;
 use Illuminate\Validation\Rule;
 use JetBrains\PhpStorm\ArrayShape;
@@ -17,7 +18,7 @@ class UpdateUserRequest extends ApiRequest
 		'uiDashboardHealthSummaryEnabled'       => "string[]",
 		'uiDashboardCollateralInfoEnabled'      => "string[]",
 		'uiDashboardCollateralWaypointsEnabled' => "string[]",
-		'uiDashboardCardsAsCarouselEnabled'     => "string[]",
+		'uiDashboardCardsAsCarousel'            => "string[]",
 		'timezone'                              => "array",
 	])]
 	public function rules(): array
@@ -39,24 +40,30 @@ class UpdateUserRequest extends ApiRequest
 			'uiDashboardHealthSummaryEnabled'       => ['sometimes', 'boolean'],
 			'uiDashboardCollateralInfoEnabled'      => ['sometimes', 'boolean'],
 			'uiDashboardCollateralWaypointsEnabled' => ['sometimes', 'boolean'],
-			'uiDashboardCardsAsCarouselEnabled'     => ['sometimes', 'boolean'],
+			'uiDashboardCardsAsCarousel'            => ['sometimes', 'string', Rule::in(CardVisualization::ALL)],
 			'timezone'                              => ['sometimes', 'string', Rule::in(array_keys(__('timezones')))],
 		];
 	}
 
 	#[ArrayShape([
-		'language.in'        => "string",
-		'uiTheme.in'         => "string",
-		'summaryInterval.in' => "string",
-		'timezone.in'        => "string",
+		'language.in'                   => "string",
+		'uiTheme.in'                    => "string",
+		'summaryInterval.in'            => "string",
+		'uiDashboardCardsAsCarousel.in' => "string",
+		'timezone.in'                   => "string",
 	])]
 	public function messages(): array
 	{
 		return [
-			'language.in'        => sprintf('possible values are: %s', implode(', ', config('app.available_locales'))),
-			'uiTheme.in'         => sprintf('possible values are: %s', implode(', ', config('app.available_themes'))),
-			'summaryInterval.in' => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
-			'timezone.in'        => sprintf('possible values are visible at: %s', route('web_app.list.timezones')),
+			'language.in'                   => sprintf('possible values are: %s',
+				implode(', ', config('app.available_locales'))),
+			'uiTheme.in'                    => sprintf('possible values are: %s',
+				implode(', ', config('app.available_themes'))),
+			'summaryInterval.in'            => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
+			'uiDashboardCardsAsCarousel.in' => sprintf('possible values are: %s',
+				implode(', ', CardVisualization::ALL)),
+			'timezone.in'                   => sprintf('possible values are visible at: %s',
+				route('web_app.list.timezones')),
 		];
 	}
 
@@ -100,9 +107,9 @@ class UpdateUserRequest extends ApiRequest
 		return $this->has('uiDashboardCollateralWaypointsEnabled');
 	}
 
-	public function hasUiDashboardCardsAsCarouselEnabled(): bool
+	public function hasUiDashboardCardsAsCarousel(): bool
 	{
-		return $this->has('uiDashboardCardsAsCarouselEnabled');
+		return $this->has('uiDashboardCardsAsCarousel');
 	}
 
 	public function hasTimezone(): bool
@@ -145,9 +152,9 @@ class UpdateUserRequest extends ApiRequest
 		return $this->input('uiDashboardCollateralWaypointsEnabled');
 	}
 
-	public function uiDashboardCardsAsCarouselEnabled(): bool
+	public function uiDashboardCardsAsCarousel(): string
 	{
-		return $this->input('uiDashboardCardsAsCarouselEnabled');
+		return $this->input('uiDashboardCardsAsCarousel');
 	}
 
 	public function timezone(): string
