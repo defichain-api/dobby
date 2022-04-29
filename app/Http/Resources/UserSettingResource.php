@@ -18,7 +18,7 @@ class UserSettingResource extends JsonResource
 			'uiDashboardHealthSummaryEnabled'       => (bool) $this->ui_dashboard_healthSummary_enabled,
 			'uiDashboardCollateralInfoEnabled'      => (bool) $this->ui_dashboard_collateralInfo_enabled,
 			'uiDashboardCollateralWaypointsEnabled' => (bool) $this->ui_dashboard_collateralWaypoints_enabled,
-			'uiDashboardCardsAsCarouselEnabled'     => (bool) $this->ui_dashboard_cards_carousel_enabled,
+			'uiDashboardCardsAsCarousel'            => $this->ui_dashboard_cards_carousel,
 			'uiTheme'                               => $this->ui_theme,
 			'user'                                  => new UserResource($this->whenLoaded('user')),
 		];
