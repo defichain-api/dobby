@@ -22,7 +22,7 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::SUMMARY);
 
-		$message = __('notifications/telegram/current_summary.intro') . "\r\n\r\n###############################\r\n\r\n";
+		$message = '';
 		foreach ($this->vaultsData($user) as $vault) {
 			$message .= __('notifications/telegram/current_summary.vault_details',
 					$vault) . "\r\n\r\n###############################\r\n\r\n";
