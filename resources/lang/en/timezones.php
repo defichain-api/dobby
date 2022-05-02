@@ -32,6 +32,7 @@ return [
 	'Atlantic/Stanley'     => '(GMT-02:00) Stanley',
 	'Atlantic/Azores'      => '(GMT-01:00) Azores',
 	'Atlantic/Cape_Verde'  => '(GMT-01:00) Cape Verde Is.',
+	'UTC'                  => 'UTC',
 	'Africa/Casablanca'    => '(GMT) Casablanca',
 	'Europe/Dublin'        => '(GMT) Dublin',
 	'Europe/Lisbon'        => '(GMT) Lisbon',

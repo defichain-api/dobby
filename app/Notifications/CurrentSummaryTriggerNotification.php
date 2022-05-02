@@ -6,7 +6,6 @@ use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
 use App\Models\User;
-use App\Models\Vault;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
