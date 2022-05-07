@@ -5,7 +5,9 @@ namespace App\Notifications;
 use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
+use App\Http\BotmanConversation\TelegramMessageService;
 use App\Models\User;
+use App\Models\Vault;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,20 +18,53 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 {
 	use Queueable;
 
+	/**
+	 * @throws \BotMan\BotMan\Exceptions\Base\BotManException
+	 * @throws \App\Exceptions\NotificationGatewayException
+	 */
 	public function toTelegram(User $user): TelegramMessage
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::SUMMARY);
+		$routeNotificationForTelegram = $user->routeNotificationForTelegram();
+		$telegramMessageService = app(TelegramMessageService::class);
 
-		$message = __('notifications/telegram/current_summary.intro') . "\r\n\r\n###############################\r\n\r\n";
-		foreach ($this->vaultsData($user) as $vault) {
-			$message .= __('notifications/telegram/current_summary.vault_details',
-					$vault) . "\r\n\r\n###############################\r\n\r\n";
+		$summary = '';
+		$message = __('notifications/telegram/current_summary.intro');
+		foreach ($this->vaultsData($user) as $index => $vault) {
+			/** @var Vault $vault */
+			$summary .= sprintf("%s: %s %% | ",
+				$vault['vault_name'] ?? str_truncate_middle($vault['vault_id'], 8), $vault['next_ratio']
+			);
+			$message .= __('notifications/telegram/current_summary.vault_details', [
+					'vault_id'          => str_truncate_middle($vault['vault_id'], 15),
+					'vault_name'        => $vault['vault_name'],
+					'vault_deeplink'    => $vault['vault_deeplink'],
+					'min_col_ratio'     => $vault['min_col_ratio'],
+					'current_ratio'     => $vault['current_ratio'],
+					'next_ratio'        => $vault['next_ratio'],
+					'collateral_amount' => $vault['collateral_amount'],
+					'loan_value'        => $vault['loan_value'],
+				]) . "\r\n\r\n###############################\r\n\r\n";
+			if (($index + 1) % 10 == 0) {
+				$telegramMessageService->send(
+					$message,
+					$routeNotificationForTelegram
+				);
+				$message = '';
+			}
+		}
+
+		if (strlen($message) > 0) {
+			$telegramMessageService->send(
+				$message,
+				$routeNotificationForTelegram
+			);
 		}
 
 		return TelegramMessage::create()
-			->content($message)
+			->content(substr_replace($summary, "", -3))
 			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
 	}
 

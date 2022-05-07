@@ -15,7 +15,7 @@ class SnoozeConversation extends Conversation
 
 	public function __construct(string $message)
 	{
-		$this->telegramMessageService = new TelegramMessageService(app('botman'));
+		$this->telegramMessageService = app(TelegramMessageService::class);
 
 		/**
 		 * message has the format:

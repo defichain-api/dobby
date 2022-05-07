@@ -21,7 +21,9 @@ class StateConversation extends Conversation
 			return;
 		}
 
-		$message = __('notifications/telegram/current_summary.intro') . "\r\n\r\n###############################\r\n\r\n";
+		$this->say(__('notifications/telegram/current_summary.intro') . "\r\n\r\n###############################\r\n\r\n",
+			['parse_mode' => 'Markdown']);
+		$message = '';
 		foreach (app(VaultRepository::class)->vaultsDataForUser($user) as $vault) {
 			$message .= __('notifications/telegram/current_summary.vault_details',
 					$vault) . "\r\n\r\n###############################\r\n\r\n";

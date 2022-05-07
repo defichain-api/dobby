@@ -30,7 +30,7 @@ class BroadcastMessageCommand extends Command
 		} else {
 			$gateways = NotificationGateway::where('type', NotificationGatewayType::TELEGRAM)->get();
 		}
-		$telegramMessageService = $this->telegramMessageService = new TelegramMessageService(app('botman'));
+		$telegramMessageService = $this->telegramMessageService = app(TelegramMessageService::class);
 
 		$this->line('');
 		$this->line('');
