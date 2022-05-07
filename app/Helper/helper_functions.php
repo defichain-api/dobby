@@ -7,7 +7,8 @@ if (!function_exists('str_truncate_middle')) {
 		$fillerLength = strlen($filler);
 
 		return ($length > $maxChars)
-			? substr_replace($text, $filler, ($maxChars - $fillerLength) / 2, $length - $maxChars + $fillerLength)
+			? substr_replace($text, $filler, round(($maxChars - $fillerLength) / 2),
+				$length - $maxChars + $fillerLength)
 			: $text;
 	}
 }
