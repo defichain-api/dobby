@@ -18,6 +18,10 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 {
 	use Queueable;
 
+	/**
+	 * @throws \BotMan\BotMan\Exceptions\Base\BotManException
+	 * @throws \App\Exceptions\NotificationGatewayException
+	 */
 	public function toTelegram(User $user): TelegramMessage
 	{
 		$this->statisticService
@@ -30,27 +34,34 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 		$message = __('notifications/telegram/current_summary.intro');
 		foreach ($this->vaultsData($user) as $vault) {
 			/** @var Vault $vault */
-			$summary .= sprintf("%s: %s % | ",
-				$vault->name ?? str_truncate_middle($vault->vaultId, 6),
-				$vault->nextCollateralRatio
+			ray($vault);
+			$summary .= sprintf("%s: %s %% | ",
+				$vault['vault_name'] ?? str_truncate_middle($vault['vault_id'], 8), $vault['next_ratio']
 			);
-			$message .= __('notifications/telegram/current_summary.vault_details',
-					$vault) . "\r\n\r\n###############################\r\n\r\n";
+			$message .= __('notifications/telegram/current_summary.vault_details', [
+					'vault_id'          => $vault['vault_id'],
+					'vault_deeplink'    => $vault['vault_deeplink'],
+					'min_col_ratio'     => $vault['min_col_ratio'],
+					'current_ratio'     => $vault['current_ratio'],
+					'collateral_amount' => $vault['collateral_amount'],
+					'loan_value'        => $vault['loan_value'],
+				]) . "\r\n\r\n###############################\r\n\r\n";
 		}
 
-		$telegramMessageService->say(
+		$telegramMessageService->send(
 			substr_replace($summary, "", -3),
 			$routeNotificationForTelegram
 		);
 
-		$messageSplitted = str_split($message, 4000);
-		if (count($messageSplitted) > 1) {
+		if (strlen($message) > 4000) {
+			$messageSplitted = str_split($message, 4000);
 			for ($i = 0; $i < count($messageSplitted) - 1; $i++) {
-				$telegramMessageService->say(
+				$telegramMessageService->send(
 					$messageSplitted[$i],
 					$routeNotificationForTelegram
 				);
 			}
+			ray($messageSplitted);
 
 			return TelegramMessage::create()
 				->content($messageSplitted[count($messageSplitted) - 1])

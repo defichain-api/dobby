@@ -9,9 +9,9 @@ class TelegramMessageService
 {
 	protected BotMan $botman;
 
-	public function __construct(BotMan $bot)
+	public function __construct()
 	{
-		$this->botman = $bot;
+		$this->botman = app('botman');
 	}
 
 	/**

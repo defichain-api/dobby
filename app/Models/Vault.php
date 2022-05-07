@@ -4,13 +4,12 @@ namespace App\Models;
 
 use App\Enum\VaultStates;
 use App\Events\VaultUpdatingNextRatioEvent;
-use App\Events\VaultUpdatingRatioEvent;
 use App\Events\VaultUpdatingStateEvent;
 use Envant\Fireable\FireableAttributes;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use \Illuminate\Database\Eloquent\Collection;
 
 /**
  * @mixin \Eloquent
@@ -74,7 +73,6 @@ class Vault extends Model
 			VaultStates::FROZEN        => VaultUpdatingStateEvent::class,
 			VaultStates::ACTIVE        => VaultUpdatingStateEvent::class,
 		],
-		'collateralRatio'     => VaultUpdatingRatioEvent::class,
 		'nextCollateralRatio' => VaultUpdatingNextRatioEvent::class,
 	];
 

@@ -16,7 +16,7 @@ class SetupConversation extends Conversation
 
 	public function __construct()
 	{
-		$this->telegramMessageService = new TelegramMessageService(app('botman'));
+		$this->telegramMessageService = app(TelegramMessageService::class);
 		$this->gatewayService = app(NotificationGatewayService::class);
 	}
 
