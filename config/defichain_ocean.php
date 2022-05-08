@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'base_uri'              => 'https://ocean.defichain.com/v0/mainnet/',
+	'base_uri'              => env('OCEAN_BASE_URL', 'https://ocean.defichain.com/v0/mainnet/'),
 	'vaults'                => [
 		'id'  => 'loans/vaults/%s',
 		'get' => 'loans/vaults?size=30',
