@@ -15,6 +15,7 @@ class UpdateVaultDataCommand extends Command
 
 	public function handle(VaultService $vaultService): void
 	{
+		$this->info(sprintf('Used Ocean-Datasource: %s', config('defichain_ocean.base_uri')));
 		if ($this->option('queued')) {
 			$this->info(sprintf('%s: starting the updating job with the queue', now()->toDateTimeString()));
 
