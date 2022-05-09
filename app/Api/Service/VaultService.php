@@ -106,10 +106,7 @@ class VaultService
 			return -1;
 		}
 
-		$nextAmount = $this->nextCollateralValue($colAmounts);
-		$nextLoan = $this->nextLoanValue($loanAmounts);
-
-		return round($nextAmount / $nextLoan * 100, 2, PHP_ROUND_HALF_UP);
+		return round($this->nextCollateralValue($colAmounts) / $this->nextLoanValue($loanAmounts) * 100, 2);
 	}
 
 	protected function nextCollateralValue(array $colAmounts): float
@@ -134,11 +131,10 @@ class VaultService
 		foreach ($loanAmounts as $loanAmount) {
 			if (isset($loanAmount['activePrice'])) {
 				$nextLoan += $loanAmount['amount'] * $loanAmount['activePrice']['next']['amount'] ?? 1;
-//				continue;
-			} else {
-				// for dUSD
-				$nextLoan += $loanAmount['amount'];
+				continue;
 			}
+			// for dUSD
+			$nextLoan += $loanAmount['amount'];
 		}
 
 		return $nextLoan;
