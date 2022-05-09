@@ -106,27 +106,37 @@ class VaultService
 			return -1;
 		}
 
-		$nextAmount = 0;
+		return round($this->nextCollateralValue($colAmounts) / $this->nextLoanValue($loanAmounts) * 100, 2);
+	}
+
+	protected function nextCollateralValue(array $colAmounts): float
+	{
+		$nextAmount = 0.00;
 		foreach ($colAmounts as $colAmount) {
 			// dUSD has no active price
-			if (!isset($colAmount['activePrice'])) {
+			if ($colAmount['symbol'] == 'DUSD') {
 				$nextPrice = 0.99;
 			} else {
-				$nextPrice = (float) $colAmount['activePrice']['next']['amount'];
+				$nextPrice = $colAmount['activePrice']['next']['amount'] ?? 0;
 			}
-			$nextAmount += (float) $colAmount['amount'] * $nextPrice;
+			$nextAmount += $colAmount['amount'] * $nextPrice;
 		}
 
-		$nextLoan = 0;
+		return $nextAmount;
+	}
+
+	protected function nextLoanValue(array $loanAmounts): float
+	{
+		$nextLoan = 0.00;
 		foreach ($loanAmounts as $loanAmount) {
 			if (isset($loanAmount['activePrice'])) {
-				$nextLoan += (float) $loanAmount['amount'] * (float) $loanAmount['activePrice']['next']['amount'];
+				$nextLoan += $loanAmount['amount'] * $loanAmount['activePrice']['next']['amount'] ?? 1;
 				continue;
 			}
 			// for dUSD
-			$nextLoan += (float) $loanAmount['amount'];
+			$nextLoan += $loanAmount['amount'];
 		}
 
-		return round($nextAmount / $nextLoan * 100, 2);
+		return $nextLoan;
 	}
 }
