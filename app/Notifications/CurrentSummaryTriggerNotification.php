@@ -35,7 +35,8 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 		foreach ($this->vaultsData($user) as $index => $vault) {
 			/** @var Vault $vault */
 			$summary .= sprintf("%s: %s %% | ",
-				$vault['vault_name'] ?? str_truncate_middle($vault['vault_id'], 8), $vault['next_ratio']
+				isset($vault['vault_name']) && strlen($vault['vault_name']) > 0
+					? $vault['vault_name'] : str_truncate_middle($vault['vault_id'], 10), $vault['next_ratio']
 			);
 			$message .= __('notifications/telegram/current_summary.vault_details', [
 					'vault_id'          => str_truncate_middle($vault['vault_id'], 15),
