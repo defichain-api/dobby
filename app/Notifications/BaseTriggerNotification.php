@@ -31,7 +31,6 @@ class BaseTriggerNotification extends BaseNotification
 		}
 		if ($trigger->hasGateway(NotificationGatewayType::PHONE)
 			&& $trigger->cooldown(CooldownTypes::PHONE_NOTIFICATION)->passed()) {
-			ray('triggering phone');
 			$methods[] = NotificationGatewayType::PHONE;
 		}
 
