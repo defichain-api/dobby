@@ -32,7 +32,6 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
 				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM . '_next', now()->addMinutes(30));
 
 		return TelegramFile::create()
 			->content(
@@ -65,7 +64,6 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
 				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL . '_next', now()->addHour());
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/next_ratio.subject'), config('app.name')))
@@ -88,7 +86,6 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
 				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
 			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::WEBHOOK . '_next', now()->addMinutes(15));
 
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())

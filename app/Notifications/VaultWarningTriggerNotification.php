@@ -21,7 +21,6 @@ class VaultWarningTriggerNotification extends BaseTriggerNotification implements
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::WARNING);
-		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM, now()->addMinutes(15));
 
 		return TelegramFile::create()
 			->content(

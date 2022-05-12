@@ -6,9 +6,9 @@ use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use NotificationChannels\Telegram\TelegramFile;
 use Spatie\WebhookServer\WebhookCall;
 
@@ -21,7 +21,6 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
 			->messageTriggerUsed(NotificationTriggerType::INFO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::TELEGRAM, now()->addMinutes(15));
 
 		return TelegramFile::create()
 			->content(
@@ -56,7 +55,6 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
 			->messageTriggerUsed(NotificationTriggerType::INFO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::MAIL, now()->addHour());
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/warning.subject'), config('app.name')))
@@ -75,7 +73,6 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
 			->messageTriggerUsed(NotificationTriggerType::INFO);
-		$this->snooze($notificationTrigger, NotificationGatewayType::WEBHOOK, now()->addMinutes(15));
 
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
