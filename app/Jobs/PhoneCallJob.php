@@ -9,15 +9,22 @@ use App\Exceptions\NotificationGatewayException;
 use App\Models\PhoneCall;
 use App\Models\User;
 use App\Models\Vault;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class PhoneCallJob
+class PhoneCallJob implements ShouldQueue
 {
-	use Dispatchable, SerializesModels;
+	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-	public function __construct(public User $user, public Vault $vault, protected int $retry = 0)
-	{
+	public function __construct(
+		public User          $user,
+		public Vault         $vault,
+		protected int        $retry = 0,
+		protected ?PhoneCall $phoneCall = null
+	) {
 	}
 
 	/**
@@ -30,15 +37,15 @@ class PhoneCallJob
 		throw_if(is_null($phoneNumber), NotificationGatewayException::message(NotificationGatewayType::PHONE, sprintf
 		('not available for user %s', $this->user->id)));
 
-		$phoneCall = PhoneCall::create([
-			'userId'                 => $this->user->id,
-			'vaultId'                => $this->vault->vaultId,
-			'recipientNumber'        => $phoneNumber,
-			'currentCollateralRatio' => $this->vault->collateralRatio,
-			'nextCollateralRatio'    => $this->vault->nextCollateralRatio,
-			'state'                  => PhoneCallState::INITIATED,
-		]);
+		$this->phoneCall = $this->phoneCall ?? PhoneCall::create([
+				'userId'                 => $this->user->id,
+				'vaultId'                => $this->vault->vaultId,
+				'recipientNumber'        => $phoneNumber,
+				'currentCollateralRatio' => $this->vault->collateralRatio,
+				'nextCollateralRatio'    => $this->vault->nextCollateralRatio,
+				'state'                  => PhoneCallState::INITIATED,
+			]);
 
-		$service->initiateCall($phoneCall, $this->retry);
+		$service->initiateCall($this->phoneCall, $this->retry);
 	}
 }

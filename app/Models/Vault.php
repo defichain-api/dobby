@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property float      interestValue
  * @property float      informativeRatio
  * @property integer    collateralRatio
- * @property integer    nextCollateralRatio
+ * @property float      nextCollateralRatio
  * @property integer    liquidationHeight
  * @property integer    batchCount
  * @property integer    liquidationPenalty

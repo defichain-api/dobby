@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @mixin \Eloquent
+ * @property int    phone_call_id
  * @property string state
  * @property string payload
  */

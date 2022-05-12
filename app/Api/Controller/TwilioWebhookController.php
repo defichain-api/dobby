@@ -3,7 +3,11 @@
 namespace App\Api\Controller;
 
 use App\Enum\PhoneCallState;
+use App\Enum\QueueName;
 use App\Http\Requests\TwilioWebhookRequest;
+use App\Jobs\PhoneCallJob;
+use App\Models\PhoneCall;
+use App\Models\PhoneWebhook;
 use Symfony\Component\HttpFoundation\Response;
 use Twilio\Rest\Client;
 
@@ -11,6 +15,7 @@ class TwilioWebhookController
 {
 	protected Client $twilioClient;
 	protected TwilioWebhookRequest $request;
+	protected PhoneCall $phoneCall;
 
 	/**
 	 * @throws \Twilio\Exceptions\ConfigurationException
@@ -23,12 +28,15 @@ class TwilioWebhookController
 	public function __invoke(TwilioWebhookRequest $request): Response
 	{
 		$this->request = $request;
+		$this->phoneCall = $this->getLatestCall($request);
+		$this->storeWebhook($request);
+
 		switch ($request->status()) {
 			case PhoneCallState::SUCCESS->value:
 				$this->succeeded();
 				break;
 			case PhoneCallState::RETRY->value:
-				$this->retryCall();
+				$this->retryCall($request->retryCount() + 1);
 				break;
 			case PhoneCallState::FAILED->value:
 				$this->callFailed();
@@ -45,23 +53,55 @@ class TwilioWebhookController
 		], Response::HTTP_OK);
 	}
 
-	protected function succeeded()
+	/**
+	 * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+	 */
+	protected function getLatestCall(TwilioWebhookRequest $request): PhoneCall
 	{
-
+		return PhoneCall::where('userId', $request->dobbyKey())
+			->where('vaultId', $request->vaultId())
+			->latest()
+			->firstOrFail();
 	}
 
-	protected function retryCall()
+	protected function succeeded()
 	{
+		$this->setPhoneCallState(PhoneCallState::SUCCESS);
+	}
 
+	protected function retryCall(int $retryCount)
+	{
+		$this->setPhoneCallState(PhoneCallState::RETRY);
+		PhoneCallJob::dispatch($this->request->dobbyUser(), $this->request->vault(), $retryCount, $this->phoneCall)
+			->onQueue(QueueName::NOTIFICATION_PHONE_QUEUE)
+			->delay(now()->addMinutes(2));
 	}
 
 	protected function callFailed()
 	{
-
+		$this->setPhoneCallState(PhoneCallState::FAILED);
+		// send mail!
 	}
 
 	protected function callNoAnswer()
 	{
+		$this->setPhoneCallState(PhoneCallState::NO_ANSWER);
+		// send mail!
+	}
 
+	protected function setPhoneCallState(PhoneCallState $state): bool
+	{
+		return $this->phoneCall->update([
+			'state' => $state->value,
+		]);
+	}
+
+	protected function storeWebhook(TwilioWebhookRequest $request): void
+	{
+		PhoneWebhook::create([
+			'phone_call_id' => $this->phoneCall->id,
+			'state'         => $request->status(),
+			'payload'       => $request->validated(),
+		]);
 	}
 }
