@@ -77,6 +77,12 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 
 	public function toPhone(NotificationTrigger $notificationTrigger): array
 	{
+		$this->statisticService
+			->messageGatewayUsed(NotificationGatewayType::PHONE)
+			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
+				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
+			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+
 		return [
 			'user'       => $notificationTrigger->user(),
 			'vault'      => $notificationTrigger->vault,

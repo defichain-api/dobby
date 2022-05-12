@@ -127,6 +127,7 @@ class StatisticService
 			NotificationGatewayType::TELEGRAM => 'sum_telegram_messages',
 			NotificationGatewayType::MAIL => 'sum_mail_messages',
 			NotificationGatewayType::WEBHOOK => 'sum_webhook_messages',
+			NotificationGatewayType::PHONE => 'sum_phone_messages',
 			default => null,
 		};
 		if (is_null($selectedGateway)) {
