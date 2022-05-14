@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool   ui_dashboard_collateralInfo_enabled
  * @property bool   ui_dashboard_collateralWaypoints_enabled
  * @property bool   ui_dashboard_cards_carousel
+ * @property bool   free_testcall_available
  * @property string timezone
  */
 class UserSetting extends Model
@@ -38,6 +39,7 @@ class UserSetting extends Model
 		'ui_dashboard_healthSummary_enabled',
 		'ui_dashboard_collateralInfo_enabled',
 		'ui_dashboard_collateralWaypoints_enabled',
+		'free_testcall_available',
 		'ui_dashboard_cards_carousel',
 	];
 	protected $hidden = [

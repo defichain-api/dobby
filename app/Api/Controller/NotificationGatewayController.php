@@ -6,8 +6,11 @@ use App\Api\Requests\CreateNotificationGatewayRequest;
 use App\Api\Requests\DeleteNotificationGatewayRequest;
 use App\Api\Requests\TestNotificationGatewayRequest;
 use App\Api\Service\NotificationGatewayService;
+use App\ApiClient\PhoneCallService;
+use App\Enum\NotificationGatewayType;
 use App\Http\Resources\NotificationGatewayCollection;
 use App\Http\Resources\NotificationGatewayResource;
+use App\Models\Service\UserBalanceService;
 use App\Notifications\DemoNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -45,12 +48,37 @@ class NotificationGatewayController
 		}
 	}
 
+	/**
+	 * @throws \App\Exceptions\PaymentException
+	 * @throws \Throwable
+	 */
 	public function testGateway(
 		TestNotificationGatewayRequest $request,
 	): JsonResponse {
 		/** @var \App\Models\User $user */
 		$user = $request->get('user');
-		$user->notify(new DemoNotification($request->type()));
+
+		if ($request->type() == NotificationGatewayType::PHONE) {
+			$balanceService = app(UserBalanceService::class)->forUser($user);
+
+			if ($balanceService->canNotPayAmount(config('twilio.phone_test_call_cost')) &&
+				!$user->setting->free_testcall_available) {
+				return response()->json([
+					'state'   => 'error',
+					'message' => sprintf('account balance is %s DFI - not enough credits for test phone call',
+						$balanceService->accountBalance()),
+				], Response::HTTP_BAD_REQUEST);
+			}
+
+			if (!app(PhoneCallService::class)->initiateTestCall($user)) {
+				return response()->json([
+					'state'   => 'error',
+					'message' => 'no phone number set for test call',
+				], Response::HTTP_BAD_REQUEST);
+			}
+		} else {
+			$user->notify(new DemoNotification($request->type()));
+		}
 
 		return response()->json([
 			'state'   => 'ok',

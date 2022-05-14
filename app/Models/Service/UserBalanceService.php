@@ -4,6 +4,7 @@ namespace App\Models\Service;
 
 use App\Exceptions\PaymentException;
 use App\Models\Payment;
+use App\Models\PhoneCall;
 use App\Models\User;
 
 class UserBalanceService
@@ -27,15 +28,16 @@ class UserBalanceService
 	/**
 	 * @throws PaymentException|\Throwable
 	 */
-	public function payAmount(float $amount, ?string $reason): bool
+	public function payAmount(float $amount, ?string $reason, ?PhoneCall $phoneCall = null): bool
 	{
 		throw_if($this->canNotPayAmount($amount), PaymentException::message(amount: $amount, user: $this->user));
 
 		try {
 			Payment::create([
-				'userId'    => $this->user->id,
-				'amountDfi' => $amount,
-				'reason'    => $reason,
+				'userId'        => $this->user->id,
+				'amountDfi'     => $amount,
+				'reason'        => $reason,
+				'phone_call_id' => $phoneCall?->id,
 			]);
 
 			return true;
@@ -51,7 +53,13 @@ class UserBalanceService
 
 	public function canNotPayAmount(float $amount): bool
 	{
-		return $this->accountBalance() < $amount;
+		ray([
+			$this->accountBalance(),
+			$amount,
+			!$this->canPayAmount($amount),
+		]);
+
+		return !$this->canPayAmount($amount);
 	}
 
 	public function accountBalance(): float

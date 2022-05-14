@@ -2,7 +2,11 @@
 
 namespace App\ApiClient;
 
+use App\Enum\NotificationGatewayType;
+use App\Exceptions\PaymentException;
 use App\Models\PhoneCall;
+use App\Models\Service\UserBalanceService;
+use App\Models\User;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client;
 use function cache;
@@ -67,6 +71,33 @@ class PhoneCallService
 
 			return true;
 		} catch (TwilioException $e) {
+			ray($e);
+
+			return false;
+		}
+	}
+
+	public function initiateTestCall(User $user): bool
+	{
+		$phoneNumber = $user->gateways()->where('type', NotificationGatewayType::PHONE)->first()?->value;
+
+		try {
+//			$this->twilioClient->studio->v2->flows(config('twilio.testcall_flow_sid'))
+//				->executions
+//				->create($phoneNumber, config('twilio.phone_number'));
+
+			if (!$user->setting->free_testcall_available) {
+				app(UserBalanceService::class)
+					->forUser($user)
+					->payAmount(config('twilio.phone_test_call_cost'), 'Test call');
+			} else {
+				$user->setting->update([
+					'free_testcall_available' => false,
+				]);
+			}
+
+			return true;
+		} catch (TwilioException|PaymentException|\Throwable $e) {
 			ray($e);
 
 			return false;

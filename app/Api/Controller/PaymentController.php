@@ -24,6 +24,11 @@ class PaymentController
 			'phoneNumber'    => $phoneNumber ?? 'not set',
 			'canReceiveCall' => $userBalanceService->forUser($user)->canPayAmount(config('twilio.phone_call_cost'))
 				&& isset($phoneNumber),
+			'testCall'       => [
+				'freeCallAvailable'  => (bool) $user->setting->free_testcall_available,
+				'canReceiveTestCall' => $userBalanceService->canPayAmount(config('twilio.phone_test_call_cost')) ||
+					$user->setting->free_testcall_available,
+			],
 		], Response::HTTP_OK);
 	}
 
