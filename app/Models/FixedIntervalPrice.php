@@ -5,17 +5,6 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @mixin \Eloquent
- * @property int    id
- * @property string priceFeedId
- * @property string priceBase
- * @property float  activePrice
- * @property float  nextPrice
- * @property Carbon timestamp
- * @property int    blockHeight
- * @property string validFromTimeString
- */
 class FixedIntervalPrice extends Model
 {
 	protected $primaryKey = 'priceFeedId';

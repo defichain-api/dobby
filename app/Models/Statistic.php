@@ -2,28 +2,8 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @mixin \Eloquent
- * @property Carbon  date
- * @property integer user_count
- * @property integer vault_count
- * @property integer sum_telegram_messages
- * @property integer sum_mail_messages
- * @property integer sum_webhook_messages
- * @property integer sum_phone_messages
- * @property integer sum_info_notifications
- * @property integer sum_warning_notifications
- * @property integer sum_daily_messages
- * @property integer sum_may_liquidate_notifications
- * @property integer sum_in_liquidation_notifications
- * @property float   sum_collateral
- * @property float   sum_loan
- * @property float   avg_ratio
- * @property int     median_ratio
- */
 class Statistic extends Model
 {
 	public $timestamps = false;

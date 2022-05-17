@@ -7,18 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 use Kurozora\Cooldown\HasCooldowns;
 
-/**
- * @mixin \Eloquent
- * @property int        id
- * @property Vault      vault
- * @property string     vaultId
- * @property Collection gateways
- * @property int        ratio
- * @property string     type
- */
 class NotificationTrigger extends Model
 {
 	use Notifiable, HasCooldowns, UseNotificationConfig;

@@ -8,6 +8,7 @@ use App\Http\Requests\TwilioWebhookRequest;
 use App\Jobs\PhoneCallJob;
 use App\Models\PhoneCall;
 use App\Models\PhoneWebhook;
+use App\Models\Service\UserBalanceService;
 use Symfony\Component\HttpFoundation\Response;
 use Twilio\Rest\Client;
 
@@ -81,12 +82,15 @@ class TwilioWebhookController
 	{
 		$this->setPhoneCallState(PhoneCallState::FAILED);
 		// send mail!
+		$this->refundCallCosts(0.6);
 	}
 
 	protected function callNoAnswer()
 	{
 		$this->setPhoneCallState(PhoneCallState::NO_ANSWER);
 		// send mail!
+
+		$this->refundCallCosts(0.5);
 	}
 
 	protected function setPhoneCallState(PhoneCallState $state): bool
@@ -94,6 +98,16 @@ class TwilioWebhookController
 		return $this->phoneCall->update([
 			'state' => $state->value,
 		]);
+	}
+
+	protected function refundCallCosts(float $refundFactor = 0.5): void
+	{
+		app(UserBalanceService::class)
+			->forUser($this->phoneCall->user)
+			->refundAmount(
+				config('twilio.phone_call_cost') * $refundFactor,
+				'Call was not answered'
+			);
 	}
 
 	protected function storeWebhook(TwilioWebhookRequest $request): void

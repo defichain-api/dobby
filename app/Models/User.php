@@ -15,15 +15,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
 use Kurozora\Cooldown\HasCooldowns;
 
-/**
- * @mixin \Eloquent
- * @property string      id
- * @property Collection  vaults
- * @property Collection  notificationGateways
- * @property Collection  payments
- * @property Collection  deposits
- * @property UserSetting setting
- */
 class User extends Model
 {
 	use HasFactory, UsesUuidPrimary, Notifiable, UseNotificationConfig, HasCooldowns;

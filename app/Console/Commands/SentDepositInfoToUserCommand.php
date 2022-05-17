@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enum\QueueName;
 use App\Mail\DepositInfoMail;
 use App\Models\Deposit;
 use Illuminate\Console\Command;
@@ -16,12 +17,13 @@ class SentDepositInfoToUserCommand extends Command
 	{
 		$this->withProgressBar(Deposit::where('sentInfoToUser', false)->get(),
 			function (Deposit $deposit) {
-				if (is_null($deposit->user) || is_null($deposit->user->setting->depositInfoMail)) {
+				$depositInfoMail = $deposit->user()->setting->depositInfoMail;
+				if (is_null($deposit->user()) || is_null($depositInfoMail)) {
 					return true;
 				}
 
-				Mail::to($deposit->user->setting->depositInfoMail)
-					->send(new DepositInfoMail($deposit));
+				Mail::to($depositInfoMail)
+					->queue((new DepositInfoMail($deposit))->onQueue(QueueName::NOTIFICATION_EMAIL_QUEUE));
 				$deposit->update([
 					'sentInfoToUser' => true,
 				]);

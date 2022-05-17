@@ -82,9 +82,15 @@ class PhoneCallService
 		$phoneNumber = $user->gateways()->where('type', NotificationGatewayType::PHONE)->first()?->value;
 
 		try {
-//			$this->twilioClient->studio->v2->flows(config('twilio.testcall_flow_sid'))
-//				->executions
-//				->create($phoneNumber, config('twilio.phone_number'));
+			$this->twilioClient->studio->v2->flows(config('twilio.testcall_flow_sid'))
+				->executions
+				->create($phoneNumber, config('twilio.phone_number'), [
+					'parameters' => json_encode([
+						'language'    => $user->setting?->language ?? config('app.locale'),
+						'dobby_key'   => $user->id,
+						'webhook_url' => route('webhook-testcall-twilio'),
+					]),
+				]);
 
 			if (!$user->setting->free_testcall_available) {
 				app(UserBalanceService::class)

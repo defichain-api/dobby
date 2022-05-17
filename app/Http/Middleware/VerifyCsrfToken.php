@@ -10,5 +10,6 @@ class VerifyCsrfToken extends Middleware
 		'telegram-bot',
 		'telegram-bot/*',
 		'twilio/webhook',
+		'twilio/testcall_webhook',
 	];
 }

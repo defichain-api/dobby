@@ -53,13 +53,18 @@ class UserBalanceService
 
 	public function canNotPayAmount(float $amount): bool
 	{
-		ray([
-			$this->accountBalance(),
-			$amount,
-			!$this->canPayAmount($amount),
+		return !$this->canPayAmount($amount);
+	}
+
+	public function refundAmount(float $amount, ?string $reason): bool
+	{
+		$refund = Payment::create([
+			'userId'    => $this->user->id,
+			'amountDfi' => -$amount,
+			'reason'    => $reason,
 		]);
 
-		return !$this->canPayAmount($amount);
+		return isset($refund);
 	}
 
 	public function accountBalance(): float

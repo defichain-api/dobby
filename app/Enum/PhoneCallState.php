@@ -9,6 +9,7 @@ enum PhoneCallState: string
 	// internal & webhook states
 	case SUCCESS = 'success';
 	case FAILED = 'failed';
+	case BUSY = 'busy';
 	case NO_ANSWER = 'no_answer';
 	case RETRY = 'retry'; // used for busy or not answering
 }

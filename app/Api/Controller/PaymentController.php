@@ -37,7 +37,6 @@ class PaymentController
 		/** @var \App\Models\User $user */
 		$user = $request->get('user');
 		$user->load('payments');
-		ray([$user, $user->deposits(), $user->payments]);
 
 		return response()->json([
 			'balanceDfi' => $userBalanceService->forUser($user)->accountBalance(),

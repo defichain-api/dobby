@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Payment;
 use App\Models\Service\UserBalanceService;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -24,11 +23,7 @@ class AddPhoneCreditsCommand extends Command
 			return;
 		}
 
-		Payment::create([
-			'userId'    => $user->id,
-			'amountDfi' => -$amount,
-			'reason'    => $reason,
-		]);
+		$balanceService->forUser($user)->refundAmount($amount, $reason);
 		$this->info(sprintf('Credit over %s DFI successful', $amount));
 		$this->info(sprintf('current total balance: %s DFI', $balanceService->forUser($user)->accountBalance()));
 	}

@@ -8,17 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @mixin \Eloquent
- * @property string userId
- * @property User   user
- * @property string vaultId
- * @property Vault  vault
- * @property string recipientNumber
- * @property float  currentCollateralRatio
- * @property float  nextCollateralRatio
- * @property string state
- */
 class PhoneCall extends Model
 {
 	use HasFactory;

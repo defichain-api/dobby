@@ -6,35 +6,10 @@ use App\Enum\VaultStates;
 use App\Events\VaultUpdatingNextRatioEvent;
 use App\Events\VaultUpdatingStateEvent;
 use Envant\Fireable\FireableAttributes;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/**
- * @mixin \Eloquent
- * @property string     vaultId
- * @property Collection users
- * @property Collection usersWithCurrentRatioNotification
- * @property LoanScheme loanScheme
- * @property string     loanSchemeId
- * @property string     ownerAddress
- * @property string     state
- * @property array      collateralAmounts
- * @property array      loanAmounts
- * @property array      interestAmounts
- * @property float      collateralValue
- * @property float      loanValue
- * @property float      interestValue
- * @property float      informativeRatio
- * @property integer    collateralRatio
- * @property float      nextCollateralRatio
- * @property integer    liquidationHeight
- * @property integer    batchCount
- * @property integer    liquidationPenalty
- * @property array      batches
- * @method static whereState(string $ACTIVE)
- */
 class Vault extends Model
 {
 	use FireableAttributes;

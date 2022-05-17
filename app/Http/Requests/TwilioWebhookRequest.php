@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Api\Requests\ApiRequest;
 use App\Models\User;
 use App\Models\Vault;
-use Illuminate\Foundation\Http\FormRequest;
 use JetBrains\PhpStorm\ArrayShape;
 
-class TwilioWebhookRequest extends FormRequest
+class TwilioWebhookRequest extends ApiRequest
 {
 	#[ArrayShape([
 		'status'      => "string[]",

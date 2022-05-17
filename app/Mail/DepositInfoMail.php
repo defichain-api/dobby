@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
-use App\Enum\QueueName;
 use App\Models\Deposit;
+use App\Models\Service\UserBalanceService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,18 +13,16 @@ class DepositInfoMail extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 
-	public $queue = QueueName::NOTIFICATION_EMAIL_QUEUE;
-
 	public function __construct(public Deposit $deposit)
 	{
 	}
 
-	public function build(): self
+	public function build(UserBalanceService $balanceService): self
 	{
-		return $this->with([
+		return $this->markdown('mail.deposit-info', [
 			'amount'          => $this->deposit->amountDfi,
-			'sender_address'  => $this->deposit->senderAddress,
+			'balance'         => $balanceService->forUser($this->deposit->user())->accountBalance(),
 			'phoneCallAmount' => floor($this->deposit->amountDfi / config('twilio.phone_call_cost')),
-		])->markdown('emails.deposit-info');
+		]);
 	}
 }

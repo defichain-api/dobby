@@ -7,6 +7,7 @@ use App\Enum\NotificationGatewayType;
 use App\Enum\PhoneCallState;
 use App\Exceptions\NotificationGatewayException;
 use App\Models\PhoneCall;
+use App\Models\Service\UserBalanceService;
 use App\Models\User;
 use App\Models\Vault;
 use Illuminate\Bus\Queueable;
@@ -45,6 +46,15 @@ class PhoneCallJob implements ShouldQueue
 				'nextCollateralRatio'    => $this->vault->nextCollateralRatio,
 				'state'                  => PhoneCallState::INITIATED,
 			]);
+
+		// make payment
+		app(UserBalanceService::class)
+			->forUser($this->user)
+			->payAmount(
+				config('twilio.phone_call_cost'),
+				sprintf('Trigger warning vault %s', str_truncate_middle($this->vault->vaultId, 15)),
+				$this->phoneCall
+			);
 
 		$service->initiateCall($this->phoneCall, $this->retry);
 	}
