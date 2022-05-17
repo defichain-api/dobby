@@ -31,6 +31,7 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 - vault_state - get the current states of your vault/s
 - user_key - let Dobby find your user key
 - disable_telegram - unlink your telegram from Dobby
+- remove_snooze - Delete all current set snooze / cooldown notifications
 
 ## Donations for Dobby
 
