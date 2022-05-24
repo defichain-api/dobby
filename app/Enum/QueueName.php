@@ -11,7 +11,9 @@ class QueueName
 	const API_CALLS_QUEUE = 'api_calls';
 	const UPDATE_VAULTS_QUEUE = 'update_vaults';
 	const LISTENER_QUEUE = 'listeners';
+	const DEFAULT = 'default';
 	const QUEUES_ALL = [
+		self::DEFAULT,
 		self::NOTIFICATION_TELEGRAM_QUEUE,
 		self::NOTIFICATION_EMAIL_QUEUE,
 		self::NOTIFICATION_WEBHOOK_QUEUE,

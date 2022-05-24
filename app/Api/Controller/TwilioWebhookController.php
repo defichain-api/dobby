@@ -6,32 +6,23 @@ use App\Enum\PhoneCallState;
 use App\Enum\QueueName;
 use App\Http\Requests\TwilioWebhookRequest;
 use App\Jobs\PhoneCallJob;
+use App\Mail\PhoneCallFailed;
+use App\Mail\PhoneCallNoAnswer;
 use App\Models\PhoneCall;
 use App\Models\PhoneWebhook;
 use App\Models\Service\UserBalanceService;
 use Symfony\Component\HttpFoundation\Response;
-use Twilio\Rest\Client;
 
-class TwilioWebhookController
+class TwilioWebhookController extends TwilioBaseWebhookController
 {
-	protected Client $twilioClient;
 	protected TwilioWebhookRequest $request;
 	protected PhoneCall $phoneCall;
-
-	/**
-	 * @throws \Twilio\Exceptions\ConfigurationException
-	 */
-	public function __construct()
-	{
-		$this->twilioClient = new Client(config('twilio.account_sid'), config('twilio.auth_token'));
-	}
 
 	public function __invoke(TwilioWebhookRequest $request): Response
 	{
 		$this->request = $request;
 		$this->phoneCall = $this->getLatestCall($request);
 		$this->storeWebhook($request);
-
 		switch ($request->status()) {
 			case PhoneCallState::SUCCESS->value:
 				$this->succeeded();
@@ -81,15 +72,16 @@ class TwilioWebhookController
 	protected function callFailed()
 	{
 		$this->setPhoneCallState(PhoneCallState::FAILED);
-		// send mail!
+		$dobbyUser = $this->request->dobbyUser();
+		$this->sendMail(new PhoneCallFailed($dobbyUser->vaults), $dobbyUser->setting?->depositInfoMail);
 		$this->refundCallCosts(0.6);
 	}
 
 	protected function callNoAnswer()
 	{
 		$this->setPhoneCallState(PhoneCallState::NO_ANSWER);
-		// send mail!
-
+		$dobbyUser = $this->request->dobbyUser();
+		$this->sendMail(new PhoneCallNoAnswer($dobbyUser->vaults), $dobbyUser->setting?->depositInfoMail);
 		$this->refundCallCosts(0.5);
 	}
 

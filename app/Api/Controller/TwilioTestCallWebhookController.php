@@ -11,20 +11,9 @@ use App\Models\Service\UserBalanceService;
 use Illuminate\Mail\Mailable;
 use Mail;
 use Symfony\Component\HttpFoundation\Response;
-use Twilio\Rest\Client;
 
-class TwilioTestCallWebhookController
+class TwilioTestCallWebhookController extends TwilioBaseWebhookController
 {
-	protected Client $twilioClient;
-
-	/**
-	 * @throws \Twilio\Exceptions\ConfigurationException
-	 */
-	public function __construct()
-	{
-		$this->twilioClient = new Client(config('twilio.account_sid'), config('twilio.auth_token'));
-	}
-
 	public function __invoke(TwilioTestcallWebhookRequest $request, UserBalanceService $balanceService): Response
 	{
 		$dobbyUser = $request->dobbyUser();
@@ -41,7 +30,6 @@ class TwilioTestCallWebhookController
 				$balanceService
 					->forUser($request->dobbyUser())
 					->refundAmount(config('twilio.phone_test_call_cost'), 'Test Call Failed - wrong number?');
-
 				$this->sendMail(new TestPhoneCallFailed(), $recipientMailAddress);
 				break;
 			case PhoneCallState::NO_ANSWER->value:
@@ -62,10 +50,5 @@ class TwilioTestCallWebhookController
 	protected function sendMail(Mailable $mail, string $recipientMailAddress)
 	{
 		Mail::to($recipientMailAddress)->send($mail);
-	}
-
-	protected function refundTestCallCosts(string $reason)
-	{
-
 	}
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Api\Requests\ApiRequest;
+use App\Enum\PhoneCallState;
 use App\Models\User;
 use App\Models\Vault;
+use Illuminate\Validation\Rule;
 use JetBrains\PhpStorm\ArrayShape;
 
 class TwilioWebhookRequest extends ApiRequest
@@ -17,7 +19,11 @@ class TwilioWebhookRequest extends ApiRequest
 	])] public function rules(): array
 	{
 		return [
-			'status'      => ['required', 'string'],
+			'status'      => [
+				'required',
+				'string',
+				Rule::in(array_map(fn(PhoneCallState $state) => $state->value, PhoneCallState::cases())),
+			],
 			'dobby_key'   => ['required', 'string', 'exists:users,id'],
 			'vault_id'    => ['required', 'string', 'exists:vaults,vaultId'],
 			'retry_count' => ['required', 'integer', 'min:0'],
