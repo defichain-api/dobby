@@ -73,7 +73,7 @@ class TwilioWebhookController extends TwilioBaseWebhookController
 	{
 		$this->setPhoneCallState(PhoneCallState::FAILED);
 		$dobbyUser = $this->request->dobbyUser();
-		$this->sendMail(new PhoneCallFailed($dobbyUser->vaults), $dobbyUser->setting?->depositInfoMail);
+		$this->sendMail(new PhoneCallFailed($dobbyUser), $dobbyUser->setting?->depositInfoMail);
 		$this->refundCallCosts(0.6);
 	}
 
@@ -81,7 +81,7 @@ class TwilioWebhookController extends TwilioBaseWebhookController
 	{
 		$this->setPhoneCallState(PhoneCallState::NO_ANSWER);
 		$dobbyUser = $this->request->dobbyUser();
-		$this->sendMail(new PhoneCallNoAnswer($dobbyUser->vaults), $dobbyUser->setting?->depositInfoMail);
+		$this->sendMail(new PhoneCallNoAnswer($dobbyUser), $dobbyUser->setting?->depositInfoMail);
 		$this->refundCallCosts(0.5);
 	}
 

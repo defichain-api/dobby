@@ -1,13 +1,13 @@
 @component('mail::message')
-    # {{ __('mail/testcall-failed.title') }}
+# {{ __('mail/testcall-failed.title') }}
 
-    {{ __('mail/testcall-failed.text') }}
+{{ __('mail/testcall-failed.text') }}
 
-    @component('mail::button', ['url' => config('app.url') . '/#/phone-settings'])
-        {{ __('notifications/mail/general.button_title') }}
-    @endcomponent
+@component('mail::button', ['url' => config('app.url') . '/#/phone-settings'])
+{{ __('notifications/mail/general.button_title') }}
+@endcomponent
 
-    {{ __('notifications/mail/general.regards') }}
+{{ __('notifications/mail/general.regards') }}
 
-    {{ config('app.name') }}
+{{ config('app.name') }}
 @endcomponent

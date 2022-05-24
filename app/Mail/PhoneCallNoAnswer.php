@@ -2,19 +2,18 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
 
 class PhoneCallNoAnswer extends Mailable implements ShouldQueue
 {
 	use Queueable, SerializesModels;
 
-	public function __construct(public Collection $vaults)
-	{
-	}
+	public function __construct(public User $dobbyUser)
+	{}
 
 	public function build(): self
 	{

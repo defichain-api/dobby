@@ -1,14 +1,14 @@
 @component('mail::message')
-# {{ __('mail/call-no_answer.title') }}
+# {{ __('mail/call-failed.title') }}
 
-{{ __('mail/call-no_answer.text') }}
+{{ __('mail/call-failed.text') }}
 
 @component('mail::table')
     | Vault         | Current Ratio | Next Ratio| State |
     | ------------- |:-------------:| :--------: | :--------: |
     @foreach($dobbyUser->vaults as $vault)
         @if($vault->state && $vault->collateralRatio > 0)
-            | {{ $vault->pivot->name ?? str_truncate_middle($vault->vaultId, 15) }} | {{ $vault->collateralRatio }}% |{{$vault->nextCollateralRatio }} % | {{ $vault->state }} |
+            | {{ $vault->pivot->name ?? str_truncate_middle($vault->vaultId, 15) }} | {{ $vault->collateralRatio }} % | {{ $vault->nextCollateralRatio }} % | {{ $vault->state }} |
         @endif
     @endforeach
 @endcomponent
