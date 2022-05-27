@@ -13,7 +13,7 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 
 - MariaDB/MySQL
 - Redis
-- PHP 8.0
+- PHP 8.1
 - Mailserver, if you want to receive notifications by mail
 - Telegram Bot, if you want to receive notifications on telegram. Add the bot secret in the .env after the instance 
   setup. To receive the secret, be kind to the [BotFather](https://t.me/botfather).
