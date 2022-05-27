@@ -13,7 +13,7 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 
 - MariaDB/MySQL
 - Redis
-- PHP 8.0
+- PHP 8.1
 - Mailserver, if you want to receive notifications by mail
 - Telegram Bot, if you want to receive notifications on telegram. Add the bot secret in the .env after the instance 
   setup. To receive the secret, be kind to the [BotFather](https://t.me/botfather).
@@ -32,6 +32,10 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 - user_key - let Dobby find your user key
 - disable_telegram - unlink your telegram from Dobby
 - remove_snooze - Delete all current set snooze / cooldown notifications
+
+### Webhooks
+
+Take a look at the [webhook readme](readme_webhook.md) for further details.
 
 ## Donations for Dobby
 
