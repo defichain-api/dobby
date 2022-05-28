@@ -52,7 +52,9 @@ class PhoneCallJob implements ShouldQueue
 			->forUser($this->user)
 			->payAmount(
 				config('twilio.phone_call_cost'),
-				sprintf('Trigger warning vault %s', str_truncate_middle($this->vault->vaultId, 15)),
+				sprintf('Trigger warning vault %s', $this->user->vaults->where('vaultId', $this->vault->vaultId)
+					->first()?->pivot->name
+					?? str_truncate_middle($this->vault->vaultId, 15)),
 				$this->phoneCall
 			);
 
