@@ -7,6 +7,7 @@ use App\Console\Commands\CreateBroadcastMessageCommand;
 use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\InactivateVaultsCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
+use App\Console\Commands\SentDepositInfoToUserCommand;
 use App\Console\Commands\StatisticsCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
 use App\Console\Commands\UpdateLoanSchemeCommand;
