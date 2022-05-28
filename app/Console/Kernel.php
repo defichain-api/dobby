@@ -46,6 +46,10 @@ class Kernel extends ConsoleKernel
 			->dailyAt('23:59');
 		$schedule->command(InactivateVaultsCommand::class)
 			->hourlyAt(32);
+
+		$schedule->command(SentDepositInfoToUserCommand::class)
+			->everyTwoMinutes()
+			->withoutOverlapping();
 	}
 
 	protected function commands(): void
