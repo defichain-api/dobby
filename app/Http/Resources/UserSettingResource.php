@@ -20,6 +20,8 @@ class UserSettingResource extends JsonResource
 			'uiDashboardCollateralWaypointsEnabled' => (bool) $this->ui_dashboard_collateralWaypoints_enabled,
 			'uiDashboardCardsAsCarousel'            => $this->ui_dashboard_cards_carousel,
 			'uiTheme'                               => $this->ui_theme,
+			'depositFromAddress'                    => $this->depositFromAddress,
+			'depositInfoMail'                       => $this->depositInfoMail,
 			'user'                                  => new UserResource($this->whenLoaded('user')),
 		];
 	}
