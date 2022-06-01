@@ -21,9 +21,4 @@ class BroadcastMessage extends Model
 	protected $hidden = [
 		'id',
 	];
-
-	protected function asDateTime($value): string
-	{
-		return parent::asDateTime($value)->format('Y-m-d H:i');
-	}
 }
