@@ -2,13 +2,14 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CreateBroadcastMessageCommand;
 use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\InactivateVaultsCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
 use App\Console\Commands\StatisticsCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
-use App\Console\Commands\UpdateVaultDataCommand;
 use App\Console\Commands\UpdateLoanSchemeCommand;
+use App\Console\Commands\UpdateVaultDataCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
 		CurrentSummaryNotificationCommand::class,
 		StatisticsCommand::class,
 		InactivateVaultsCommand::class,
+		CreateBroadcastMessageCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void

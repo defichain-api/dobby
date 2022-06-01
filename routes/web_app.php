@@ -1,5 +1,6 @@
 <?php
 
+use App\Api\Controller\BroadcastMessageController;
 use App\Api\Controller\LanguageController;
 use App\Api\Controller\ListController;
 use App\Api\Controller\NotificationGatewayController;
@@ -24,6 +25,14 @@ Route::name('list.')->prefix('list')->group(function () {
 	Route::get('summary_interval', [ListController::class, 'summaryInterval'])
 		->name('summary_interval');
 });
+
+Route::name('broadcast.')
+	->prefix('broadcast')
+	->controller(BroadcastMessageController::class)
+	->group(function () {
+		Route::get('list', 'currentMessages')->name('list');
+		Route::get('history', 'history')->name('history');
+	});
 
 Route::post('setup', [SetupController::class, 'setup'])
 	->name('setup');

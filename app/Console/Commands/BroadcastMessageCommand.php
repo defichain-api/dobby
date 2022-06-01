@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 class BroadcastMessageCommand extends Command
 {
-	protected $signature = 'broadcast:all-users {--testing}';
+	protected $signature = 'broadcast:telegram {--testing}';
 	protected $description = 'Send a message to all users, using the telegram gateway';
 
 	public function handle(): void
