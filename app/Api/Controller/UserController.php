@@ -24,7 +24,7 @@ class UserController
 				'message' => 'user settings updated',
 			], Response::HTTP_OK)
 			: response()->json([
-				'state'   => 'ok',
+				'state'   => 'error',
 				'message' => 'user settings not updated - deposit address already taken',
 			], Response::HTTP_BAD_REQUEST);
 	}
