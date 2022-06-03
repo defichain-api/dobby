@@ -36,23 +36,23 @@ class BetaFeatureCommand extends Command
 			'userId'  => $this->user->id,
 			'feature' => $this->ask('Feature name'),
 		]);
-		$this->info('Beta Feature set for user');
+		$this->warn('Beta Feature set for user');
 	}
 
 	protected function removeBetaFeature()
 	{
 		$currentActiveFeatures = $this->user->enabledBetaFeatures;
 		$currentFeaturesArray = $currentActiveFeatures->pluck('feature')->toArray();
-		$currentFeaturesArray[] = 'cancel';
+		$currentFeaturesArray[] = 'CANCEL!';
 		$choice = $this->choice('Which one do you want to remove?', $currentFeaturesArray);
 
-		if ($choice == 'cancel') {
-			$this->info('Cancelling. No data changed');
+		if ($choice == 'CANCEL!') {
+			$this->warn('Cancelling. No data changed');
 
 			return;
 		}
 
 		$currentActiveFeatures->where('feature', $choice)->first()->delete();
-		$this->info('removed beta feature');
+		$this->warn('removed beta feature');
 	}
 }
