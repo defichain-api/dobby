@@ -4,6 +4,7 @@ namespace App\Api\Requests;
 
 use App\Enum\CardVisualization;
 use App\Enum\SummaryInterval;
+use App\Rules\DefichainAddressLengthRule;
 use Illuminate\Validation\Rule;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -36,7 +37,7 @@ class UpdateUserRequest extends ApiRequest
 				'string',
 				Rule::in(config('app.available_themes')),
 			],
-			'depositFromAddress'                    => ['sometimes', 'alpha_num', 'min:34', 'max:42'],
+			'depositFromAddress'                    => ['sometimes', 'alpha_num', new DefichainAddressLengthRule(34,42)],
 			'depositInfoMail'                       => ['sometimes', 'email:rfc,dns'],
 			'summaryInterval'                       => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
 			'currentRatioEnabled'                   => ['sometimes', 'boolean'],
@@ -69,8 +70,6 @@ class UpdateUserRequest extends ApiRequest
 			'summaryInterval.in'            => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
 			'timezone.in'                   => sprintf('possible values are visible at: %s',
 				route('web_app.list.timezones')),
-			'depositFromAddress.min'        => 'Deposit address (defichain) must have 34 or 42 chars',
-			'depositFromAddress.max'        => 'Deposit address (defichain) must have 34 or 42 chars',
 			'uiDashboardCardsAsCarousel.in' => sprintf('possible values are: %s',
 				implode(', ', CardVisualization::ALL)),
 			'timezone.in'                   => sprintf('possible values are visible at: %s',
