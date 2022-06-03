@@ -37,7 +37,7 @@ class UpdateUserRequest extends ApiRequest
 				'string',
 				Rule::in(config('app.available_themes')),
 			],
-			'depositFromAddress'                    => ['sometimes', 'alpha_num', new DefichainAddressLengthRule(34,42)],
+			'depositFromAddress'                    => ['sometimes', 'alpha_num', new DefichainAddressLengthRule()],
 			'depositInfoMail'                       => ['sometimes', 'email:rfc,dns'],
 			'summaryInterval'                       => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
 			'currentRatioEnabled'                   => ['sometimes', 'boolean'],

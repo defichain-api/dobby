@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class DefichainAddressLengthRule implements Rule
 {
-	public function __construct(protected int $a, protected int $b)
+	public function __construct(protected int $a = 34, protected int $b = 42)
 	{
 	}
 
