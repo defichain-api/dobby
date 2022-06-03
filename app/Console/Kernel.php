@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\AddPhoneCreditsCommand;
+use App\Console\Commands\BetaFeatureCommand;
 use App\Console\Commands\CreateBroadcastMessageCommand;
 use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\InactivateVaultsCommand;
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
 		InactivateVaultsCommand::class,
 		CreateBroadcastMessageCommand::class,
 		AddPhoneCreditsCommand::class,
+		BetaFeatureCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void

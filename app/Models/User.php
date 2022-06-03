@@ -48,6 +48,11 @@ class User extends Model
 		return $this->hasOne(UserSetting::class, 'userId', 'id');
 	}
 
+	public function enabledBetaFeatures(): HasMany
+	{
+		return $this->hasMany(EnabledBetaFeature::class, 'userId', 'id');
+	}
+
 	public function notificationTrigger(): Collection
 	{
 		$gateways = $this->gateways;
