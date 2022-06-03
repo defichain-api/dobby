@@ -21,7 +21,7 @@ class UserService
 			return $userSetting->update([
 				'language'                                 => $request->hasLanguage() ? $request->language() : $userSetting->language,
 				'ui_theme'                                 => $request->hasTheme() ? $request->theme() : $userSetting->ui_theme,
-				'depositFromAddress'                       => $request->hasDepositAddress() ? $request->depositAddress() : $userSetting->depositFromAddress,
+				'depositFromAddress'                       => $request->hasDepositFromAddress() ? $request->depositFromAddress() : $userSetting->depositFromAddress,
 				'depositInfoMail'                          => $request->hasDepositInfoMail() ? $request->depositInfoMail() : $userSetting->depositInfoMail,
 				'summary_interval'                         => $request->hasSummaryInterval() ? $request->summaryInterval() : $userSetting->summary_interval,
 				'timezone'                                 => $request->hasTimezone() ? $request->timezone() : $userSetting->timezone,

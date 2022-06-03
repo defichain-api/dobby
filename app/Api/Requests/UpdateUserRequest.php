@@ -12,7 +12,7 @@ class UpdateUserRequest extends ApiRequest
 	#[ArrayShape([
 		'language'                              => "array",
 		'uiTheme'                               => "array",
-		'depositAddress'                        => "array",
+		'depositFromAddress'                    => "array",
 		'depositInfoMail'                       => "array",
 		'summaryInterval'                       => "array",
 		'currentRatioEnabled'                   => "string[]",
@@ -36,8 +36,8 @@ class UpdateUserRequest extends ApiRequest
 				'string',
 				Rule::in(config('app.available_themes')),
 			],
-			'depositAddress'                        => ['sometimes', 'string', 'max:34', 'min:34'],
-			'depositInfoMail'                       => ['sometimes', 'string'],
+			'depositFromAddress'                    => ['sometimes', 'alpha_num', 'min:34', 'max:42'],
+			'depositInfoMail'                       => ['sometimes', 'email:rfc,dns'],
 			'summaryInterval'                       => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
 			'currentRatioEnabled'                   => ['sometimes', 'boolean'],
 			'uiPrivacyEnabled'                      => ['sometimes', 'boolean'],
@@ -50,24 +50,27 @@ class UpdateUserRequest extends ApiRequest
 	}
 
 	#[ArrayShape([
-		'language.in'        => "string",
-		'uiTheme.in'         => "string",
-		'summaryInterval.in' => "string",
-		'timezone.in'        => "string",
-		'depositAddress.min' => "string",
-		'depositAddress.max' => "string",
+		'language.in'                   => "string",
+		'uiTheme.in'                    => "string",
+		'summaryInterval.in'            => "string",
+		'timezone.in'                   => "string",
+		'depositFromAddress.min'        => "string",
+		'depositFromAddress.max'        => "string",
 		'uiDashboardCardsAsCarousel.in' => "string",
 		'timezone.in'                   => "string",
 	])]
 	public function messages(): array
 	{
 		return [
-			'language.in'        => sprintf('possible values are: %s', implode(', ', config('app.available_locales'))),
-			'uiTheme.in'         => sprintf('possible values are: %s', implode(', ', config('app.available_themes'))),
-			'summaryInterval.in' => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
-			'timezone.in'        => sprintf('possible values are visible at: %s', route('web_app.list.timezones')),
-			'depositAddress.min' => 'Deposit address (defichain) must have 34 chars',
-			'depositAddress.max' => 'Deposit address (defichain) must have 34 chars',
+			'language.in'                   => sprintf('possible values are: %s',
+				implode(', ', config('app.available_locales'))),
+			'uiTheme.in'                    => sprintf('possible values are: %s',
+				implode(', ', config('app.available_themes'))),
+			'summaryInterval.in'            => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
+			'timezone.in'                   => sprintf('possible values are visible at: %s',
+				route('web_app.list.timezones')),
+			'depositFromAddress.min'        => 'Deposit address (defichain) must have 34 or 42 chars',
+			'depositFromAddress.max'        => 'Deposit address (defichain) must have 34 or 42 chars',
 			'uiDashboardCardsAsCarousel.in' => sprintf('possible values are: %s',
 				implode(', ', CardVisualization::ALL)),
 			'timezone.in'                   => sprintf('possible values are visible at: %s',
@@ -85,9 +88,9 @@ class UpdateUserRequest extends ApiRequest
 		return $this->has('uiTheme');
 	}
 
-	public function hasDepositAddress(): bool
+	public function hasDepositFromAddress(): bool
 	{
-		return $this->has('depositAddress');
+		return $this->has('depositFromAddress');
 	}
 
 	public function hasDepositInfoMail(): bool
@@ -145,9 +148,9 @@ class UpdateUserRequest extends ApiRequest
 		return $this->input('uiTheme');
 	}
 
-	public function depositAddress(): string
+	public function depositFromAddress(): string
 	{
-		return $this->input('depositAddress');
+		return $this->input('depositFromAddress');
 	}
 
 	public function depositInfoMail(): string
