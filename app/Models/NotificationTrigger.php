@@ -17,7 +17,6 @@ class NotificationTrigger extends Model
 	protected $fillable = [
 		'vaultId',
 		'ratio',
-		'type',
 	];
 	protected $hidden = [
 		'id',

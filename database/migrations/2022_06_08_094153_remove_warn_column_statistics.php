@@ -12,6 +12,10 @@ class RemoveWarnColumnStatistics extends Migration
 			$table->dropColumn('sum_warning_notifications');
 			$table->renameColumn('sum_info_notifications', 'sum_trigger_notifications');
 		});
+
+		Schema::table('notification_triggers', function (Blueprint $table) {
+			$table->dropColumn('type');
+		});
 	}
 
 	public function down()
@@ -19,6 +23,10 @@ class RemoveWarnColumnStatistics extends Migration
 		Schema::table('statistics', function (Blueprint $table) {
 			$table->renameColumn('sum_trigger_notifications', 'sum_info_notifications');
 			$table->unsignedInteger('sum_warning_notifications')->default(0);
+		});
+
+		Schema::table('notification_triggers', function (Blueprint $table) {
+			$table->string('type')->after('ratio')->default('info');
 		});
 	}
 }
