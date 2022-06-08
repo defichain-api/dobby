@@ -102,7 +102,7 @@ class StatisticService
 	{
 		$type = match ($type) {
 			NotificationTriggerType::SUMMARY => 'sum_daily_messages',
-			NotificationTriggerType::TRIGGER_NOTIFICATION => 'sum_info_notifications',
+			NotificationTriggerType::TRIGGER_NOTIFICATION => 'sum_trigger_notifications',
 			NotificationTriggerType::MAY_LIQUIDATION => 'sum_may_liquidate_notifications',
 			NotificationTriggerType::IN_LIQUIDATION => 'sum_in_liquidation_notifications',
 			default => null,

@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 /** @mixin \App\Models\Statistic */
 class StatisticResource extends JsonResource
@@ -22,9 +22,8 @@ class StatisticResource extends JsonResource
 			'messages'       => [
 				'sum_messages' => $this->sum_telegram_messages + $this->sum_mail_messages + $this->sum_webhook_messages,
 				'types'        => [
-					'info'    => $this->sum_info_notifications,
-					'warning' => $this->sum_warning_notifications,
-					'daily'   => $this->sum_daily_messages,
+					'trigger_warnings' => $this->sum_trigger_notifications,
+					'daily'            => $this->sum_daily_messages,
 				],
 				'gateways'     => [
 					'telegram' => $this->sum_telegram_messages,
