@@ -4,8 +4,7 @@ namespace App\Enum;
 
 class NotificationTriggerType
 {
-	const INFO = 'info';
-	const WARNING = 'warning';
+	const TRIGGER_NOTIFICATION = 'info';
 	const SUMMARY = 'summary';
 	const IN_LIQUIDATION = 'inLiquidation';
 	const MAY_LIQUIDATION = 'mayLiquidate';
@@ -15,8 +14,7 @@ class NotificationTriggerType
 	const NEXT_RATIO = 'next_ratio';
 	const DEMO = 'demo';
 	const ALL = [
-		self::INFO,
-		self::WARNING,
+		self::TRIGGER_NOTIFICATION,
 		self::SUMMARY,
 		self::IN_LIQUIDATION,
 		self::MAY_LIQUIDATION,
