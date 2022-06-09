@@ -17,7 +17,7 @@ class SentDepositInfoToUserCommand extends Command
 	{
 		$this->withProgressBar(Deposit::where('sentInfoToUser', false)->get(),
 			function (Deposit $deposit) {
-				$depositInfoMail = $deposit->user()->setting->depositInfoMail;
+				$depositInfoMail = $deposit->user()?->setting?->depositInfoMail;
 				if (is_null($deposit->user()) || is_null($depositInfoMail)) {
 					return true;
 				}
