@@ -30,8 +30,8 @@ class PaymentController
 					$user->setting->free_testcall_available,
 			],
 			'costs'          => [
-				'testCall' => config('twilio.phone_test_call_cost'),
-				'call'     => config('twilio.phone_call_cost'),
+				'testCall' => (float)config('twilio.phone_test_call_cost'),
+				'call'     => (float)config('twilio.phone_call_cost'),
 			],
 		], Response::HTTP_OK);
 	}
