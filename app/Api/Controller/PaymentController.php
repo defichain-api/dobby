@@ -29,7 +29,7 @@ class PaymentController
 				'canReceiveTestCall' => $userBalanceService->canPayAmount(config('twilio.phone_test_call_cost')) ||
 					$user->setting->free_testcall_available,
 			],
-			'costs'          => [
+			'cost'          => [
 				'testCall' => (float)config('twilio.phone_test_call_cost'),
 				'call'     => (float)config('twilio.phone_call_cost'),
 			],
