@@ -6,6 +6,8 @@ use App\ApiClient\PhoneCallService;
 use App\Enum\NotificationGatewayType;
 use App\Enum\PhoneCallState;
 use App\Exceptions\NotificationGatewayException;
+use App\Exceptions\PaymentException;
+use App\Mail\NoCreditsAvailableMail;
 use App\Models\PhoneCall;
 use App\Models\Service\UserBalanceService;
 use App\Models\User;
@@ -15,6 +17,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Mail;
 
 class PhoneCallJob implements ShouldQueue
 {
@@ -48,16 +51,22 @@ class PhoneCallJob implements ShouldQueue
 			]);
 
 		// make payment
-		app(UserBalanceService::class)
-			->forUser($this->user)
-			->payAmount(
-				config('twilio.phone_call_cost'),
-				sprintf('Trigger warning vault %s', $this->user->vaults->where('vaultId', $this->vault->vaultId)
-					->first()?->pivot->name
-					?? str_truncate_middle($this->vault->vaultId, 15)),
-				$this->phoneCall
-			);
-
-		$service->initiateCall($this->phoneCall, $this->retry);
+		try {
+			app(UserBalanceService::class)
+				->forUser($this->user)
+				->payAmount(
+					config('twilio.phone_call_cost'),
+					sprintf('Trigger warning vault %s', $this->user->vaults->where('vaultId', $this->vault->vaultId)
+							->first()?->pivot->name
+						?? str_truncate_middle($this->vault->vaultId, 15)),
+					$this->phoneCall
+				);
+			$service->initiateCall($this->phoneCall, $this->retry);
+		} catch (PaymentException|\Throwable) {
+			Mail::to($this->user->setting->depositInfoMail)->send(new NoCreditsAvailableMail($this->user));
+			$this->phoneCall->update([
+				'state' => PhoneCallState::FAILED_NO_CREDITS,
+			]);
+		}
 	}
 }

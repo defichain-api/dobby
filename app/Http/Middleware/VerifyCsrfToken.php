@@ -9,7 +9,6 @@ class VerifyCsrfToken extends Middleware
 	protected $except = [
 		'telegram-bot',
 		'telegram-bot/*',
-		'twilio/webhook',
-		'twilio/testcall_webhook',
+		'twilio/*',
 	];
 }
