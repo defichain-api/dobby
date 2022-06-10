@@ -64,6 +64,9 @@ class TwilioWebhookController extends TwilioBaseWebhookController
 	protected function retryCall(int $retryCount)
 	{
 		$this->setPhoneCallState(PhoneCallState::RETRY);
+		$this->phoneCall->update([
+			'retry_count' => $retryCount,
+		]);
 		PhoneCallJob::dispatch($this->request->dobbyUser(), $this->request->vault(), $retryCount, $this->phoneCall)
 			->onQueue(QueueName::NOTIFICATION_PHONE_QUEUE)
 			->delay(now()->addMinutes(2));

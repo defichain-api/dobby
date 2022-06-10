@@ -19,6 +19,7 @@ class PhoneCall extends Model
 		'currentCollateralRatio',
 		'nextCollateralRatio',
 		'state',
+		'retry_count',
 	];
 	protected $hidden = [
 		'id',
