@@ -18,12 +18,15 @@ class UserController
 
 	public function updateUserSetting(UpdateUserRequest $request, UserService $service): JsonResponse
 	{
-		$service->update($request);
-
-		return response()->json([
-			'state'   => 'ok',
-			'message' => 'user settings updated',
-		], Response::HTTP_OK);
+		return $service->update($request)
+			? response()->json([
+				'state'   => 'ok',
+				'message' => 'user settings updated',
+			], Response::HTTP_OK)
+			: response()->json([
+				'state'   => 'error',
+				'message' => 'user settings not updated - deposit address already taken',
+			], Response::HTTP_BAD_REQUEST);
 	}
 
 	public function deleteUser(Request $request, UserService $service): JsonResponse

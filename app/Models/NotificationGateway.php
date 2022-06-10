@@ -6,15 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/**
- * @mixin \Eloquent
- * @property NotificationTrigger trigger
- * @property int                 id
- * @property User                user
- * @property string              userId
- * @property string              type
- * @property string              value
- */
 class NotificationGateway extends Model
 {
 	public $timestamps = false;

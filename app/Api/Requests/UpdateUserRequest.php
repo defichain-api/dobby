@@ -4,6 +4,7 @@ namespace App\Api\Requests;
 
 use App\Enum\CardVisualization;
 use App\Enum\SummaryInterval;
+use App\Rules\DefichainAddressLengthRule;
 use Illuminate\Validation\Rule;
 use JetBrains\PhpStorm\ArrayShape;
 
@@ -12,6 +13,8 @@ class UpdateUserRequest extends ApiRequest
 	#[ArrayShape([
 		'language'                              => "array",
 		'uiTheme'                               => "array",
+		'depositFromAddress'                    => "array",
+		'depositInfoMail'                       => "array",
 		'summaryInterval'                       => "array",
 		'currentRatioEnabled'                   => "string[]",
 		'uiPrivacyEnabled'                      => "string[]",
@@ -34,6 +37,8 @@ class UpdateUserRequest extends ApiRequest
 				'string',
 				Rule::in(config('app.available_themes')),
 			],
+			'depositFromAddress'                    => ['sometimes', 'alpha_num', new DefichainAddressLengthRule()],
+			'depositInfoMail'                       => ['sometimes', 'email:rfc,dns'],
 			'summaryInterval'                       => ['sometimes', 'string', Rule::in(SummaryInterval::ALL)],
 			'currentRatioEnabled'                   => ['sometimes', 'boolean'],
 			'uiPrivacyEnabled'                      => ['sometimes', 'boolean'],
@@ -49,6 +54,9 @@ class UpdateUserRequest extends ApiRequest
 		'language.in'                   => "string",
 		'uiTheme.in'                    => "string",
 		'summaryInterval.in'            => "string",
+		'timezone.in'                   => "string",
+		'depositFromAddress.min'        => "string",
+		'depositFromAddress.max'        => "string",
 		'uiDashboardCardsAsCarousel.in' => "string",
 		'timezone.in'                   => "string",
 	])]
@@ -60,6 +68,8 @@ class UpdateUserRequest extends ApiRequest
 			'uiTheme.in'                    => sprintf('possible values are: %s',
 				implode(', ', config('app.available_themes'))),
 			'summaryInterval.in'            => sprintf('possible values are: %s', implode(', ', SummaryInterval::ALL)),
+			'timezone.in'                   => sprintf('possible values are visible at: %s',
+				route('web_app.list.timezones')),
 			'uiDashboardCardsAsCarousel.in' => sprintf('possible values are: %s',
 				implode(', ', CardVisualization::ALL)),
 			'timezone.in'                   => sprintf('possible values are visible at: %s',
@@ -75,6 +85,16 @@ class UpdateUserRequest extends ApiRequest
 	public function hasTheme(): bool
 	{
 		return $this->has('uiTheme');
+	}
+
+	public function hasDepositFromAddress(): bool
+	{
+		return $this->has('depositFromAddress');
+	}
+
+	public function hasDepositInfoMail(): bool
+	{
+		return $this->has('depositInfoMail');
 	}
 
 	public function hasSummaryInterval(): bool
@@ -125,6 +145,16 @@ class UpdateUserRequest extends ApiRequest
 	public function theme(): string
 	{
 		return $this->input('uiTheme');
+	}
+
+	public function depositFromAddress(): string
+	{
+		return $this->input('depositFromAddress');
+	}
+
+	public function depositInfoMail(): string
+	{
+		return $this->input('depositInfoMail');
 	}
 
 	public function currentRatioEnabled(): string

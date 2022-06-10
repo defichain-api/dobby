@@ -2,10 +2,13 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AddPhoneCreditsCommand;
+use App\Console\Commands\BetaFeatureCommand;
 use App\Console\Commands\CreateBroadcastMessageCommand;
 use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\InactivateVaultsCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
+use App\Console\Commands\SentDepositInfoToUserCommand;
 use App\Console\Commands\StatisticsCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
 use App\Console\Commands\UpdateLoanSchemeCommand;
@@ -24,6 +27,8 @@ class Kernel extends ConsoleKernel
 		StatisticsCommand::class,
 		InactivateVaultsCommand::class,
 		CreateBroadcastMessageCommand::class,
+		AddPhoneCreditsCommand::class,
+		BetaFeatureCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void
@@ -44,6 +49,10 @@ class Kernel extends ConsoleKernel
 			->dailyAt('23:59');
 		$schedule->command(InactivateVaultsCommand::class)
 			->hourlyAt(32);
+
+		$schedule->command(SentDepositInfoToUserCommand::class)
+			->everyTwoMinutes()
+			->withoutOverlapping();
 	}
 
 	protected function commands(): void

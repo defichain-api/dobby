@@ -25,6 +25,7 @@ class BaseNotification extends Notification
 		NotificationGatewayType::TELEGRAM => "string",
 		NotificationGatewayType::MAIL     => "string",
 		NotificationGatewayType::WEBHOOK  => "string",
+		NotificationGatewayType::PHONE    => "string",
 	])]
 	public function viaQueues(): array
 	{
@@ -32,6 +33,7 @@ class BaseNotification extends Notification
 			NotificationGatewayType::TELEGRAM => QueueName::NOTIFICATION_TELEGRAM_QUEUE,
 			NotificationGatewayType::MAIL     => QueueName::NOTIFICATION_EMAIL_QUEUE,
 			NotificationGatewayType::WEBHOOK  => QueueName::NOTIFICATION_WEBHOOK_QUEUE,
+			NotificationGatewayType::PHONE    => QueueName::NOTIFICATION_PHONE_QUEUE,
 		];
 	}
 

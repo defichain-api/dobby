@@ -15,13 +15,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\ItemNotFoundException;
 use Kurozora\Cooldown\HasCooldowns;
 
-/**
- * @mixin \Eloquent
- * @property string      id
- * @property Collection  vaults
- * @property Collection  notificationGateways
- * @property UserSetting setting
- */
 class User extends Model
 {
 	use HasFactory, UsesUuidPrimary, Notifiable, UseNotificationConfig, HasCooldowns;
@@ -37,7 +30,7 @@ class User extends Model
 	{
 		parent::boot();
 
-		static::created(function(User $model) {
+		static::created(function (User $model) {
 			UserSetting::create([
 				'userId' => $model->id,
 			]);
@@ -53,6 +46,11 @@ class User extends Model
 	public function setting(): HasOne
 	{
 		return $this->hasOne(UserSetting::class, 'userId', 'id');
+	}
+
+	public function enabledBetaFeatures(): HasMany
+	{
+		return $this->hasMany(EnabledBetaFeature::class, 'userId', 'id');
 	}
 
 	public function notificationTrigger(): Collection
@@ -90,8 +88,28 @@ class User extends Model
 			->with('triggers');
 	}
 
+	public function payments(): HasMany
+	{
+		return $this->hasMany(Payment::class, 'userId', 'id');
+	}
+
+	public function deposits(): Collection
+	{
+		return Deposit::where('senderAddress', $this->setting?->depositFromAddress)->get();
+	}
+
+	public function credits(): float
+	{
+		return $this->deposits()->sum('amountDfi') - $this->payments()->sum('amountDfi');
+	}
+
 	public function preferredLocale(): string
 	{
 		return $this->setting->language ?? config('app.locale');
+	}
+
+	public function preferredTimezone(): string
+	{
+		return $this->setting->timezone ?? config('app.timezone');
 	}
 }

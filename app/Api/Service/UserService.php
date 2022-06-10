@@ -6,6 +6,7 @@ use App\Api\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Models\UserSetting;
 use App\Models\Vault;
+use Illuminate\Database\QueryException;
 
 class UserService
 {
@@ -16,26 +17,31 @@ class UserService
 			?? UserSetting::create([
 				'userId' => $request->get('user')->id,
 			]);
-
-		return $userSetting->update([
-			'language'                                 => $request->hasLanguage() ? $request->language() : $userSetting->language,
-			'ui_theme'                                 => $request->hasTheme() ? $request->theme() : $userSetting->ui_theme,
-			'summary_interval'                         => $request->hasSummaryInterval() ? $request->summaryInterval() : $userSetting->summary_interval,
-			'timezone'                                 => $request->hasTimezone() ? $request->timezone() : $userSetting->timezone,
-			'ui_privacy_enabled'                       => $request->hasUiPrivacyEnabled() ? $request->uiPrivacyEnabled() : $userSetting->ui_privacy_enabled,
-			'ui_dashboard_healthSummary_enabled'       => $request->hasUiDashboardHealthSummaryEnabled()
-				? $request->uiDashboardHealthSummaryEnabled()
-				: $userSetting->ui_dashboard_healthSummary_enabled,
-			'ui_dashboard_collateralInfo_enabled'      => $request->hasUiDashboardCollateralInfoEnabled()
-				? $request->uiDashboardCollateralInfoEnabled()
-				: $userSetting->ui_dashboard_collateralInfo_enabled,
-			'ui_dashboard_collateralWaypoints_enabled' => $request->hasUiDashboardCollateralWaypointsEnabled()
-				? $request->uiDashboardCollateralWaypointsEnabled()
-				: $userSetting->ui_dashboard_collateralWaypoints_enabled,
-			'ui_dashboard_cards_carousel'              => $request->hasUiDashboardCardsAsCarousel()
-				? $request->uiDashboardCardsAsCarousel()
-				: $userSetting->ui_dashboard_cards_carousel,
-		]);
+		try {
+			return $userSetting->update([
+				'language'                                 => $request->hasLanguage() ? $request->language() : $userSetting->language,
+				'ui_theme'                                 => $request->hasTheme() ? $request->theme() : $userSetting->ui_theme,
+				'depositFromAddress'                       => $request->hasDepositFromAddress() ? $request->depositFromAddress() : $userSetting->depositFromAddress,
+				'depositInfoMail'                          => $request->hasDepositInfoMail() ? $request->depositInfoMail() : $userSetting->depositInfoMail,
+				'summary_interval'                         => $request->hasSummaryInterval() ? $request->summaryInterval() : $userSetting->summary_interval,
+				'timezone'                                 => $request->hasTimezone() ? $request->timezone() : $userSetting->timezone,
+				'ui_privacy_enabled'                       => $request->hasUiPrivacyEnabled() ? $request->uiPrivacyEnabled() : $userSetting->ui_privacy_enabled,
+				'ui_dashboard_healthSummary_enabled'       => $request->hasUiDashboardHealthSummaryEnabled()
+					? $request->uiDashboardHealthSummaryEnabled()
+					: $userSetting->ui_dashboard_healthSummary_enabled,
+				'ui_dashboard_collateralInfo_enabled'      => $request->hasUiDashboardCollateralInfoEnabled()
+					? $request->uiDashboardCollateralInfoEnabled()
+					: $userSetting->ui_dashboard_collateralInfo_enabled,
+				'ui_dashboard_collateralWaypoints_enabled' => $request->hasUiDashboardCollateralWaypointsEnabled()
+					? $request->uiDashboardCollateralWaypointsEnabled()
+					: $userSetting->ui_dashboard_collateralWaypoints_enabled,
+				'ui_dashboard_cards_carousel'              => $request->hasUiDashboardCardsAsCarousel()
+					? $request->uiDashboardCardsAsCarousel()
+					: $userSetting->ui_dashboard_cards_carousel,
+			]);
+		} catch (QueryException) {
+			return false;
+		}
 	}
 
 	public function delete(User $user): bool

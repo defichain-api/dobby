@@ -57,7 +57,7 @@ return [
 
 	'prefix' => env(
 		'HORIZON_PREFIX',
-		Str::slug(sprintf('%s %s', env('APP_NAME', 'dobby'), env('app_env', 'local')), '_') . '_queues:'
+		Str::slug(sprintf('%s %s', env('APP_NAME', 'dobby'), env('APP_ENV', 'local')), '_') . '_queues:'
 	),
 
 	/*
