@@ -8,22 +8,21 @@ use Illuminate\Console\Command;
 
 class InactivateVaultsCommand extends Command
 {
-	protected $signature = 'update:inactivate-vaults {--age=1}';
-	protected $description = 'Set vaults to state "inactive" if no update was received for >1h (param: --age=)';
+	protected $signature = 'update:inactivate-vaults';
+	protected $description = 'Set vaults to state "inactive"';
 
 	public function handle()
 	{
-		$maxAge = $this->option('age');
 		$this->info(sprintf('%s: starting deactivating vaults', now()->toDateTimeString()));
 		// count vaults
-		$vaultQuery = Vault::where('updated_at', '<', now()->subHours($maxAge))
-			->where('vaultId', 'NOT LIKE', '%demo%');
+		$vaultQuery = Vault::where('collateralRatio', -1)
+			->where('nextCollateralRatio', -1);
 		$count = $vaultQuery->count();
 		$vaultQuery->update([
 			'state' => VaultStates::INACTIVE,
 		]);
 
-		$this->info(sprintf('updated %s vaults without an update for %s hours.', $count, $maxAge));
+		$this->info(sprintf('inactivated %s vaults', $count));
 		$this->info(sprintf('%s: ending deactivating vaults', now()->toDateTimeString()));
 	}
 }
