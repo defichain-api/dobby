@@ -10,6 +10,7 @@ class BroadcastMessageResource extends JsonResource
 	public function toArray($request): array
 	{
 		return [
+			'identifier' => $this->id,
 			'headline'   => $this->headline,
 			'message'    => $this->message,
 			'type'       => $this->type,
