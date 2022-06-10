@@ -16,7 +16,8 @@ class InactivateVaultsCommand extends Command
 		$this->info(sprintf('%s: starting deactivating vaults', now()->toDateTimeString()));
 		// count vaults
 		$vaultQuery = Vault::where('collateralRatio', -1)
-			->where('nextCollateralRatio', -1);
+			->where('nextCollateralRatio', -1)
+			->where('state', '!=', VaultStates::INACTIVE);
 		$count = $vaultQuery->count();
 		$vaultQuery->update([
 			'state' => VaultStates::INACTIVE,
