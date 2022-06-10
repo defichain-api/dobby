@@ -66,11 +66,16 @@ class VaultService
 		return $user->vaults()->updateExistingPivot($vault->vaultId, ['name' => $name]) > 0;
 	}
 
-	protected function createOrUpdate(array $data): Vault
+	protected function createOrUpdate(array $data): void
 	{
+		// dont update inactive vaults
+		if ($data['collateralRatio'] == -1) {
+			return;
+		}
+
 		$loanSchemes = LoanScheme::all();
 
-		return Vault::updateOrCreate([
+		Vault::updateOrCreate([
 			'vaultId' => (string) $data['vaultId'],
 		], [
 			'loanSchemeId'        => $loanSchemes->where('name', '=', $data['loanScheme']['id'])->first()->id,
