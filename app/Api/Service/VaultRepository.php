@@ -2,6 +2,7 @@
 
 namespace App\Api\Service;
 
+use App\Enum\VaultStates;
 use App\Models\User;
 use App\Models\Vault;
 
@@ -14,7 +15,7 @@ class VaultRepository
 			now()->addMinutes(2),
 			function () use ($user) {
 				/** @var User $vaults */
-				$vaults = $user->vaults;
+				$vaults = $user->vaults->where('state', '!=', VaultStates::INACTIVE);
 				$vaultData = [];
 				$vaults->each(function (Vault $vault) use (&$vaultData, $user) {
 					$vaultData[] = [
