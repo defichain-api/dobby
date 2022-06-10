@@ -69,7 +69,7 @@ class VaultService
 	protected function createOrUpdate(array $data): void
 	{
 		// dont update inactive vaults
-		if ($data['collateralRatio'] == -1) {
+	if (!isset($data['collateralRatio']) || $data['collateralRatio'] == -1) {
 			return;
 		}
 
