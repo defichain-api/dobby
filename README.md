@@ -37,6 +37,10 @@ Dobby can inform you via mail, telegram message or a webhook. More notification 
 
 Take a look at the [webhook readme](readme_webhook.md) for further details.
 
+### Health Checks
+
+Take a look at the [health check readme](readme_health_check.md) for further details.
+
 ## Donations for Dobby
 
 If you want to honor the hard work that Dobby does 24/7 feel free to buy him a coffee or new socks.

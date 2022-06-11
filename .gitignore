@@ -24,3 +24,4 @@ yarn-error.log
 /public/browserconfig.xml
 /public/favicon_package_v0.16.zip
 /public/site.webmanifest
+docker/*
