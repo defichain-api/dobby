@@ -19,7 +19,8 @@ class HealthController
 		$checkOk = $vault->nextCollateralRatio > $ratio;
 
 		return response()->json([
-			'checkOk' => $checkOk,
+			'checkOk'   => $checkOk,
+			'nextRatio' => $vault->nextCollateralRatio,
 		], $checkOk ? Response::HTTP_OK : Response::HTTP_UNPROCESSABLE_ENTITY);
 	}
 }
