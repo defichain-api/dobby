@@ -1,6 +1,7 @@
 <?php
 
 use App\Api\Controller\BroadcastMessageController;
+use App\Api\Controller\HealthController;
 use App\Api\Controller\LanguageController;
 use App\Api\Controller\ListController;
 use App\Api\Controller\NotificationGatewayController;
@@ -48,6 +49,14 @@ Route::get('statistics', [StatisticController::class, 'getStatistics'])
 
 Route::get('price_ticker', [PriceTickerController::class, 'getNextTick'])
 	->name('vault.ticker');
+
+Route::name('health.')
+	->prefix('health')
+	->controller(HealthController::class)
+	->group(function() {
+		Route::get('ping', 'systemHealth')->name('system-health');
+		Route::get('vault/{vault}/{ratio}', 'vaultHealth')->name('vault-health');
+	});
 
 Route::middleware(['webapp_auth'])->group(function () {
 	/**
