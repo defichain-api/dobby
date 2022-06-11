@@ -15,6 +15,7 @@ use App\Console\Commands\UpdateLoanSchemeCommand;
 use App\Console\Commands\UpdateVaultDataCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Laravel\Horizon\Console\StatusCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
 		CreateBroadcastMessageCommand::class,
 		AddPhoneCreditsCommand::class,
 		BetaFeatureCommand::class,
+		StatusCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void

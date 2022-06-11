@@ -5,13 +5,27 @@ namespace App\Api\Controller;
 use App\Models\Vault;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use UKFast\HealthCheck\Facade\HealthCheck;
 
 class HealthController
 {
 	public function systemHealth(): JsonResponse
 	{
-//		$checkRedis =
-		return response()->json([], Response::HTTP_OK);
+		$env = HealthCheck::passes('env');
+		$redis = HealthCheck::passes('redis');
+		$database = HealthCheck::passes('database');
+		$log = HealthCheck::passes('log');
+		$queueWorker = HealthCheck::passes('queue_worker');
+
+		$checkOk = $env && $redis && $database && $log && $queueWorker;
+
+		return response()->json([
+			'envPassed'      => $env,
+			'redisPassed'    => $redis,
+			'databasePassed' => $database,
+			'logPassed'      => $log,
+			'queueWorker'    => $queueWorker,
+		], $checkOk ? Response::HTTP_OK : Response::HTTP_UNPROCESSABLE_ENTITY);
 	}
 
 	public function vaultHealth(Vault $vault, int $ratio): JsonResponse
