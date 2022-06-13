@@ -32,7 +32,7 @@ class TelegramMessageService
 		);
 	}
 
-	public function sendWithButton(string $message, string $recipient, string $question, string $url): void
+	public function sendWithUrlButton(string $message, string $recipient, string $question, string $url): void
 	{
 		$question = Question::create($message)
 			->addButton(Button::create($question)->additionalParameters(['url' => $url]));

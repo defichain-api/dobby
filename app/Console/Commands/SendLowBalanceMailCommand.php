@@ -73,7 +73,7 @@ class SendLowBalanceMailCommand extends Command
 			return;
 		}
 
-		$telegramMessageService->sendWithButton(__('mail/low-account-balance.text',
+		$telegramMessageService->sendWithUrlButton(__('mail/low-account-balance.text',
 			[
 				'balance'         => $user->accountBalance,
 				'phoneCallAmount' => floor($user->accountBalance / config('twilio.phone_call_cost')),
