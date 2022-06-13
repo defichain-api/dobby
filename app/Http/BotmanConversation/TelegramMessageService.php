@@ -36,6 +36,7 @@ class TelegramMessageService
 	{
 		$question = Question::create($message)
 			->addButton(Button::create($question)->additionalParameters(['url' => $url]));
+
 		$this->botman->ask($question, function () {
 		}, [
 			'parse_mode'               => 'Markdown',

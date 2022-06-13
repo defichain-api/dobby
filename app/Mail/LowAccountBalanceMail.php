@@ -20,11 +20,7 @@ class LowAccountBalanceMail extends Mailable implements ShouldQueue
 	{
 		$callCosts = (float)config('twilio.phone_call_cost');
 		$phoneCallAmount = floor($this->accountBalance / $callCosts);
-		ray([
-			'balance'    => $this->accountBalance,
-			'callCosts'  => $callCosts,
-			'callAmount' => $phoneCallAmount,
-		]);
+
 		$this->markdown('mail.low-account-balance', [
 			'balance'         => $this->accountBalance,
 			'phoneCallAmount' => $phoneCallAmount,
