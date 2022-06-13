@@ -57,6 +57,9 @@ class Kernel extends ConsoleKernel
 		$schedule->command(SentDepositInfoToUserCommand::class)
 			->everyTwoMinutes()
 			->withoutOverlapping();
+
+		$schedule->command(SendLowBalanceMailCommand::class)
+			->everyFourHours();
 	}
 
 	protected function commands(): void
