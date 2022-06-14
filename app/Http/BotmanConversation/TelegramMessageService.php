@@ -3,6 +3,8 @@
 namespace App\Http\BotmanConversation;
 
 use BotMan\BotMan\BotMan;
+use BotMan\BotMan\Messages\Outgoing\Actions\Button;
+use BotMan\BotMan\Messages\Outgoing\Question;
 use BotMan\Drivers\Telegram\TelegramDriver;
 
 class TelegramMessageService
@@ -28,5 +30,17 @@ class TelegramMessageService
 				'disable_web_page_preview' => true,
 			]
 		);
+	}
+
+	public function sendWithUrlButton(string $message, string $recipient, string $question, string $url): void
+	{
+		$question = Question::create($message)
+			->addButton(Button::create($question)->additionalParameters(['url' => $url]));
+
+		$this->botman->ask($question, function () {
+		}, [
+			'parse_mode'               => 'Markdown',
+			'disable_web_page_preview' => true,
+		], $recipient, TelegramDriver::class);
 	}
 }

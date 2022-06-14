@@ -61,4 +61,16 @@ class NotificationGatewayRepository
 			throw NotificationGatewayException::message(NotificationGatewayType::WEBHOOK, 'not available');
 		}
 	}
+
+	/**
+	 * @throws \App\Exceptions\NotificationGatewayException
+	 */
+	public function phone(User|NotificationTrigger $model): NotificationGateway
+	{
+		try {
+			return $model->gateways()->where('type', NotificationGatewayType::PHONE)->firstOrFail();
+		} catch (ModelNotFoundException) {
+			throw NotificationGatewayException::message(NotificationGatewayType::PHONE, 'not available');
+		}
+	}
 }

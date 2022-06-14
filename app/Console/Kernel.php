@@ -8,6 +8,7 @@ use App\Console\Commands\CreateBroadcastMessageCommand;
 use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\InactivateVaultsCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
+use App\Console\Commands\SendLowBalanceMailCommand;
 use App\Console\Commands\SentDepositInfoToUserCommand;
 use App\Console\Commands\StatisticsCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
 		AddPhoneCreditsCommand::class,
 		BetaFeatureCommand::class,
 		StatusCommand::class,
+		SendLowBalanceMailCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void
@@ -55,6 +57,9 @@ class Kernel extends ConsoleKernel
 		$schedule->command(SentDepositInfoToUserCommand::class)
 			->everyTwoMinutes()
 			->withoutOverlapping();
+
+		$schedule->command(SendLowBalanceMailCommand::class)
+			->everyFourHours();
 	}
 
 	protected function commands(): void

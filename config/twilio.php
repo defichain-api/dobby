@@ -7,6 +7,6 @@ return [
 	'main_flow_sid'     => env('TWILIO_MAIN_FLOW_SID'),
 	'testcall_flow_sid' => env('TWILIO_TEST_CALL_FLOW_SID'),
 
-	'phone_call_cost'      => env('TWILIO_CALL_COSTS', 0.5),
-	'phone_test_call_cost' => env('TWILIO_TEST_CALL_COSTS', 0.25),
+	'phone_call_cost'      => env('TWILIO_CALL_COSTS', 2),
+	'phone_test_call_cost' => env('TWILIO_TEST_CALL_COSTS', 0.5),
 ];
