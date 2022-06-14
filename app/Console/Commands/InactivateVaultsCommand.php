@@ -15,9 +15,17 @@ class InactivateVaultsCommand extends Command
 	{
 		$this->info(sprintf('%s: starting deactivating vaults', now()->toDateTimeString()));
 		// count vaults
-		$vaultQuery = Vault::where('collateralRatio', -1)
-			->where('nextCollateralRatio', -1)
-			->where('state', '!=', VaultStates::INACTIVE);
+		$vaultQuery = Vault::where(function ($query) {
+			$query->where('collateralRatio', -1)
+				->where('nextCollateralRatio', -1)
+				->where('vaultId', 'NOT LIKE', '%demo%')
+				->where('state', '!=', VaultStates::INACTIVE);
+		})->orWhere(function ($query) {
+			$query->where('updated_at', '<', now()->subHours(2))
+				->where('vaultId', 'NOT LIKE', '%demo%')
+				->where('state', '!=', VaultStates::INACTIVE);
+		});
+
 		$count = $vaultQuery->count();
 		$vaultQuery->update([
 			'state' => VaultStates::INACTIVE,
