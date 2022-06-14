@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enum\VaultStates;
 use App\Events\VaultUpdatingNextRatioEvent;
 use App\Events\VaultUpdatingStateEvent;
+use App\Notifications\VaultActiveNotification;
 use Envant\Fireable\FireableAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -67,7 +68,10 @@ class Vault extends Model
 			$dirtyState = $vault->original['state'];
 			$possibleStates = [VaultStates::FROZEN, VaultStates::MAYLIQUIDATE];
 			if ((in_array($dirtyState, $possibleStates) && $vault->state === VaultStates::ACTIVE)) {
-				cache([sprintf('dirty_%s_state', $vault->vaultId) => $dirtyState], now()->addMinutes(5));
+				// direct send out notifications
+				$vault->users->each(function (User $user) use ($vault, $dirtyState) {
+					$user->notify(new VaultActiveNotification($vault, $dirtyState, $user->pivot->name));
+				});
 			}
 		});
 	}

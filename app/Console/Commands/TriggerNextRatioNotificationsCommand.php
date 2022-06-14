@@ -49,9 +49,8 @@ class TriggerNextRatioNotificationsCommand extends Command
 
 	protected function triggerNotifications(NotificationTrigger $trigger): void
 	{
-		$userOrig = $trigger->gateways()->first()->user;
 		$vault = $trigger->vault;
-		$user = $vault->users()->where('id', $userOrig->id)->first();
+		$user = $vault->users()->where('id', $trigger->gateways()->first()->user->id)->first();
 
 		$trigger->notify(new VaultNextRatioNotification($vault, $user->pivot->name));
 	}
