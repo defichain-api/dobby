@@ -3,18 +3,13 @@
 namespace App\Models;
 
 use App\Enum\VaultStates;
-use App\Events\VaultUpdatingNextRatioEvent;
-use App\Events\VaultUpdatingStateEvent;
 use App\Notifications\VaultActiveNotification;
-use Envant\Fireable\FireableAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Vault extends Model
 {
-	use FireableAttributes;
-
 	protected $primaryKey = 'vaultId';
 	public $incrementing = false;
 	protected $fillable = [
