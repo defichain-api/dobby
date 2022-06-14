@@ -8,8 +8,6 @@ use App\Notifications\VaultNextRatioNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 
-//use Illuminate\Database\Eloquent\Collection;
-
 class TriggerNextRatioNotificationsCommand extends Command
 {
 	protected $signature = 'notification:next-ratio';
