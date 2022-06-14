@@ -64,6 +64,18 @@ class Kernel extends ConsoleKernel
 
 		$schedule->command(SendLowBalanceMailCommand::class)
 			->everyFourHours();
+			->withoutOverlapping()
+			->name('send-deposit-to-user');
+
+		// send out notification commands
+		$schedule->command(TriggerNextRatioNotificationsCommand::class)
+			->everyFiveMinutes()
+			->withoutOverlapping()
+			->name('trigger-next-ratio-notifications');
+		$schedule->command(TriggerStateNotificationCommand::class)
+			->everyFiveMinutes()
+			->withoutOverlapping()
+			->name('trigger-vault-state-notifications');
 	}
 
 	protected function commands(): void
