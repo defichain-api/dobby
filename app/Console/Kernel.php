@@ -12,6 +12,7 @@ use App\Console\Commands\SendLowBalanceMailCommand;
 use App\Console\Commands\SentDepositInfoToUserCommand;
 use App\Console\Commands\StatisticsCommand;
 use App\Console\Commands\TriggerNextRatioNotificationsCommand;
+use App\Console\Commands\TriggerStateNotificationCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
 use App\Console\Commands\UpdateLoanSchemeCommand;
 use App\Console\Commands\UpdateVaultDataCommand;
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
 		StatusCommand::class,
 		SendLowBalanceMailCommand::class,
 		TriggerNextRatioNotificationsCommand::class,
+		TriggerStateNotificationCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void
