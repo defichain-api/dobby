@@ -15,7 +15,7 @@ use Mail;
 
 class SendLowBalanceMailCommand extends Command
 {
-	protected $signature = 'credits:inform-low-balance {numCalls=3 : Below this call value, users will get informed about their balance}';
+	protected $signature = 'credits:inform-low-balance {numCalls=2 : Below this call value, users will get informed about their balance}';
 	protected $description = 'Send mailing to users with low balance';
 
 	public function handle(
