@@ -18,4 +18,9 @@ class VaultStates
         self::MAYLIQUIDATE,
         self::UNKNOWN,
     ];
+	const ACTIVE_SEND_NOTIFICATIONS=[
+		self::ACTIVE,
+		self::INLIQUIDATION,
+		self::MAYLIQUIDATE,
+	];
 }
