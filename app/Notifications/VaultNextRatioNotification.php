@@ -29,8 +29,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
-			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return TelegramMessage::create()
 			->content(
@@ -59,8 +58,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
-			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/next_ratio.subject'), config('app.name')))
@@ -76,9 +74,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::PHONE)
-			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
-				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return [
 			'user'       => $notificationTrigger->user(),
@@ -95,8 +91,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
-			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())

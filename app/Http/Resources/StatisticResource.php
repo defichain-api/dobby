@@ -20,7 +20,8 @@ class StatisticResource extends JsonResource
 			'user_count'     => $this->user_count,
 			'vault_count'    => $this->vault_count,
 			'messages'       => [
-				'sum_messages' => $this->sum_telegram_messages + $this->sum_mail_messages + $this->sum_webhook_messages,
+				'sum_messages' => $this->sum_telegram_messages + $this->sum_mail_messages +
+					$this->sum_webhook_messages + $this->sum_phone_messages,
 				'types'        => [
 					'trigger_warnings' => $this->sum_trigger_notifications,
 					'summary'          => $this->sum_daily_messages,
@@ -31,6 +32,7 @@ class StatisticResource extends JsonResource
 					'telegram' => $this->sum_telegram_messages,
 					'mail'     => $this->sum_mail_messages,
 					'webhook'  => $this->sum_webhook_messages,
+					'phone'    => $this->sum_phone_messages,
 				],
 			],
 			'sum_collateral' => $this->sum_collateral,
