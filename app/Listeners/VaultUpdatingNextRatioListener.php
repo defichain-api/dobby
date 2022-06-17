@@ -31,7 +31,7 @@ class VaultUpdatingNextRatioListener implements ShouldQueue
 
 		$users->each(function (User $user) use ($vault) {
 			// cancel reporting if vault is not filled or not active
-			if ($vault->nextCollateralRatio < 0 || !in_array($vault->state, [VaultStates::ACTIVE_SEND_NOTIFICATIONS])) {
+			if ($vault->nextCollateralRatio < 0 || !in_array($vault->state, VaultStates::ACTIVE_SEND_NOTIFICATIONS)) {
 				return true;
 			}
 			try {
