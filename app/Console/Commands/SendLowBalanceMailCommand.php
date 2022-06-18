@@ -17,23 +17,30 @@ class SendLowBalanceMailCommand extends Command
 {
 	protected $signature = 'credits:inform-low-balance {numCalls=2 : Below this call value, users will get informed about their balance}';
 	protected $description = 'Send mailing to users with low balance';
+	protected int $recommendedMinCallAmount;
+	protected float $informBelowBalance;
 
 	public function handle(
 		NotificationGatewayRepository $gatewayRepository,
 		TelegramMessageService        $telegramMessageService
 	) {
-		$callAmount = $this->argument('numCalls');
-		$informBelowBalance = $callAmount * config('twilio.phone_call_cost');
+		$this->recommendedMinCallAmount = $this->argument('numCalls');
+		$this->informBelowBalance = $this->recommendedMinCallAmount * config('twilio.phone_call_cost');
 
-		$this->info(sprintf('Selecting users with a balance below %s DFI (%s calls)', $informBelowBalance,
-			$callAmount));
+		$this->info(sprintf('Selecting users with a balance below %s DFI (%s calls)', $this->informBelowBalance,
+			$this->recommendedMinCallAmount));
 
 		$phoneUsers = $this->loadUsersWithPhoneGateway();
-		$lowBalanceUsers = $this->filterUsersWithLowBalance($phoneUsers, $informBelowBalance);
+		$lowBalanceUsers = $this->filterUsersWithLowBalance($phoneUsers);
 		$this->withProgressBar($lowBalanceUsers,
 			function (User $user) use ($gatewayRepository, $telegramMessageService) {
-				Mail::to($user->setting->depositInfoMail)->send(new LowAccountBalanceMail($user,
-					$user->accountBalance));
+				if (isset($user->setting->depositInfoMail)) {
+					Mail::to($user->setting->depositInfoMail)->send(new LowAccountBalanceMail($user,
+						$user->accountBalance, $this->recommendedMinCallAmount));
+				} else {
+					\Log::info(sprintf('No deposit info mail set for user #%s, low balance mail sending failed',
+						$user->id));
+				}
 
 				$this->sendTelegramIfAvailable($user, $gatewayRepository, $telegramMessageService);
 			});
@@ -48,12 +55,12 @@ class SendLowBalanceMailCommand extends Command
 		})->with('gateways')->get();
 	}
 
-	protected function filterUsersWithLowBalance(EloquentCollection $users, float $informBelowBalance): Collection
+	protected function filterUsersWithLowBalance(EloquentCollection $users): Collection
 	{
 		$result = new Collection();
-		$users->each(function (User $user) use (&$result, $informBelowBalance) {
+		$users->each(function (User $user) use (&$result) {
 			$credits = $user->credits();
-			if ($credits <= $informBelowBalance) {
+			if ($credits < $this->informBelowBalance) {
 				$user->accountBalance = $credits;
 				$result->add($user);
 			}
@@ -73,10 +80,18 @@ class SendLowBalanceMailCommand extends Command
 			return;
 		}
 
+		$phoneCallAmount = $this->getPhoneCallAmount($user);
 		$telegramMessageService->sendWithUrlButton(__('mail/low-account-balance.text',
 			[
-				'balance'         => $user->accountBalance,
-				'phoneCallAmount' => floor($user->accountBalance / config('twilio.phone_call_cost')),
+				'balance'                 => $user->accountBalance,
+				'phoneCallAmount'         => $phoneCallAmount,
+				'more_dfi'                => $this->informBelowBalance - $user->accountBalance,
+				'recommended_call_amount' => $this->recommendedMinCallAmount,
 			]), $telegramGateway->value, 'Deposit DFI now', config('app.url') . '/#/manage-phone-calls');
+	}
+
+	protected function getPhoneCallAmount(User $user): float
+	{
+		return floor($user->accountBalance / config('twilio.phone_call_cost'));
 	}
 }
