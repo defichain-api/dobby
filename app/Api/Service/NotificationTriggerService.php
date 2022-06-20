@@ -16,7 +16,6 @@ class NotificationTriggerService
 		$trigger = NotificationTrigger::create([
 			'vaultId' => $request->vaultId(),
 			'ratio'   => $request->ratio(),
-			'type'    => $request->type(),
 		]);
 		$trigger->gateways()->attach($request->gateways());
 
@@ -32,7 +31,6 @@ class NotificationTriggerService
 			->first();
 		$trigger->update([
 			'ratio' => $request->ratio(),
-			'type'  => $request->type(),
 		]);
 		$trigger->gateways()->sync($request->gateways());
 

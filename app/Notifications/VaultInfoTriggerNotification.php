@@ -9,20 +9,20 @@ use App\Models\NotificationTrigger;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use NotificationChannels\Telegram\TelegramFile;
+use NotificationChannels\Telegram\TelegramMessage;
 use Spatie\WebhookServer\WebhookCall;
 
 class VaultInfoTriggerNotification extends BaseTriggerNotification implements ShouldQueue
 {
 	use Queueable;
 
-	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramFile
+	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramMessage
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
-			->messageTriggerUsed(NotificationTriggerType::INFO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
-		return TelegramFile::create()
+		return TelegramMessage::create()
 			->content(
 				__('notifications/telegram/info.message', [
 					'vault_id'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
@@ -38,7 +38,6 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 						$notificationTrigger->ratio),
 				])
 			)
-			->file(storage_path('app/img/notification/telegram_info.png'), 'photo')
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.30'),
 				sprintf('snooze_%s_30', $notificationTrigger->id))
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.60'),
@@ -54,7 +53,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
-			->messageTriggerUsed(NotificationTriggerType::INFO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/warning.subject'), config('app.name')))
@@ -72,12 +71,12 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
-			->messageTriggerUsed(NotificationTriggerType::INFO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
 			->payload([
-				'type'    => NotificationTriggerType::INFO,
+				'type'    => NotificationTriggerType::TRIGGER_NOTIFICATION,
 				'message' => 'vaults ratio triggered this info notification',
 				'data'    => [
 					'vaultId'          => $this->vault->vaultId,

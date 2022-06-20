@@ -9,7 +9,7 @@ use App\Enum\NotificationTriggerType;
 use App\Models\NotificationTrigger;
 use App\Models\Vault;
 use Illuminate\Notifications\Messages\MailMessage;
-use NotificationChannels\Telegram\TelegramFile;
+use NotificationChannels\Telegram\TelegramMessage;
 use Spatie\WebhookServer\WebhookCall;
 
 class VaultNextRatioNotification extends BaseTriggerNotification
@@ -25,15 +25,13 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	/**
 	 * @throws \App\Api\Exceptions\OceanApiException
 	 */
-	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramFile
+	public function toTelegram(NotificationTrigger $notificationTrigger): TelegramMessage
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::TELEGRAM)
-			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
-				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
-		return TelegramFile::create()
+		return TelegramMessage::create()
 			->content(
 				__('notifications/telegram/next_ratio.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
@@ -45,7 +43,6 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 					'trigger_ratio'  => $notificationTrigger->ratio,
 				])
 			)
-			->file(storage_path('app/img/notification/telegram_next_ratio.png'), 'photo')
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.30'),
 				sprintf('snooze_%s_30', $notificationTrigger->id))
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.60'),
@@ -61,9 +58,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::MAIL)
-			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
-				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/next_ratio.subject'), config('app.name')))
@@ -79,9 +74,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::PHONE)
-			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
-				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return [
 			'user'       => $notificationTrigger->user(),
@@ -98,9 +91,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 	{
 		$this->statisticService
 			->messageGatewayUsed(NotificationGatewayType::WEBHOOK)
-			->messageTriggerUsed($notificationTrigger->type == NotificationTriggerType::INFO ?
-				NotificationTriggerType::INFO : NotificationTriggerType::WARNING)
-			->messageTriggerUsed(NotificationTriggerType::NEXT_RATIO);
+			->messageTriggerUsed(NotificationTriggerType::TRIGGER_NOTIFICATION);
 
 		return WebhookCall::create()
 			->url($notificationTrigger->routeNotificationForWebhook())
