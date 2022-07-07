@@ -122,6 +122,8 @@ class OceanApiClient implements BaseApiClient
 			throw OceanApiException::message('dusd_interest_rate', $e);
 		}
 
-		return (float)json_decode($response->getBody()->getContents(), true)['data']['interest'];
+		$interestRate = (float) json_decode($response->getBody()->getContents(), true)['data']['interest'];
+
+		return $interestRate * 100;
 	}
 }

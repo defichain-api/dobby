@@ -36,7 +36,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 				__('notifications/telegram/next_ratio.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_name'     => $this->vaultName ?? '',
-					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vault_deeplink' => $this->vault->deeplink(),
 					'next_ratio'     => $this->vault->nextCollateralRatio,
 					'block_diff'     => $this->ratioRepository->diffToNextTick(),
 					'diff_min'       => $this->ratioRepository->minutesToNextTick(),
@@ -103,8 +103,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 				'data'    => [
 					'vaultId'                         => $this->vault->vaultId,
 					'vaultName'                       => $this->vaultName,
-					'vaultDeeplink'                   => sprintf(config('links.vault_info_deeplink'),
-						$this->vault->vaultId),
+					'vaultDeeplink'                   => $this->vault->deeplink(),
 					'ratioTriggered'                  => $notificationTrigger->ratio,
 					'currentRatio'                    => $this->vault->collateralRatio,
 					'nextRatio'                       => $this->vault->nextCollateralRatio,

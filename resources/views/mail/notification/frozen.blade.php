@@ -3,11 +3,11 @@
 {{ __('notifications/mail/frozen.message', [
 	'vault_id'          => str_truncate_middle($vault->vaultId, 15, '...'),
 	'vault_name'        => $vaultName ?? '',
-    'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
+    'vault_deeplink'    => $vault->deeplink(),
     'channel_url'       => config('links.defichain_announcement_channel'),
 ]) }}
 
-@component('mail::button', ['url' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId)])
+@component('mail::button', ['url' => config('links.dobby_dashboard')])
 {{ __('notifications/mail/general.button_title') }}
 @endcomponent
 

@@ -7,6 +7,7 @@ use App\ApiClient\OceanApiClient;
 use App\Enum\NotificationGatewayType;
 use App\Http\BotmanConversation\TelegramMessageService;
 use App\Models\User;
+use App\Models\Vault;
 use Illuminate\Console\Command;
 
 class NotificationInterestRateCommand extends Command
@@ -33,9 +34,27 @@ class NotificationInterestRateCommand extends Command
 				return true;
 			}
 
+			$vaultsWithDusdLoan = [];
+			$user->vaults->each(function (Vault $vault) use (&$vaultsWithDusdLoan, $currentDusdInterestRate) {
+				if (!$vault->hasTokenLoan('DUSD')) {
+					return true;
+				}
+
+				$vaultsWithDusdLoan[] = __('notifications/telegram/dusd_interest_rate.single_vault_message', [
+					'vault_name'         => $vault->pivot->name,
+					'vault_id'           => str_truncate_middle($vault->vaultId, 10),
+					'vault_deeplink'     => $vault->deeplink(),
+					'dusd_loan_interest' => max($vault->loanScheme->interestRate + $currentDusdInterestRate, 0),
+				]);
+			});
+			// cancel notification for user as he as no vaults with dUSD loan
+			if (count($vaultsWithDusdLoan) === 0) {
+				return true;
+			}
+
 			$messageService->sendWithUrlButton(
 				__('notifications/telegram/dusd_interest_rate.message',
-					['interest_rate' => $currentDusdInterestRate * 100]),
+					['interest_rate' => $currentDusdInterestRate]) . "\r\n" . implode("\r\n", $vaultsWithDusdLoan),
 				$user->routeNotificationForTelegram(),
 				'Visit Dobby Dashboard',
 				config('app.url')

@@ -80,4 +80,20 @@ class Vault extends Model
 				$query->where('current_ratio_enabled', true);
 			});
 	}
+
+	public function deeplink(): string
+	{
+		return sprintf(config('links.vault_info_deeplink'), $this->vaultId);
+	}
+
+	public function hasTokenLoan(string $tokenSymbolKey): bool
+	{
+		foreach ($this->loanAmounts as $loan) {
+			if ($loan['symbol'] == $tokenSymbolKey) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

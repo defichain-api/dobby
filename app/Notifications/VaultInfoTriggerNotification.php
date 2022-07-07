@@ -27,7 +27,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 				__('notifications/telegram/info.message', [
 					'vault_id'          => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_name'        => $this->vaultName ?? '',
-					'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vault_deeplink'    => $this->vault->deeplink(),
 					'ratio'             => $notificationTrigger->ratio,
 					'current_ratio'     => $this->vault->collateralRatio,
 					'collateral_amount' => $this->formatNumberForTrigger($notificationTrigger,
@@ -83,7 +83,7 @@ class VaultInfoTriggerNotification extends BaseTriggerNotification implements Sh
 				'data'    => [
 					'vaultId'          => $this->vault->vaultId,
 					'vaultName'        => $this->vaultName,
-					'vaultDeeplink'    => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vaultDeeplink'    => $this->vault->deeplink(),
 					'ratioTrigger'     => $notificationTrigger->ratio,
 					'currentRatio'     => $this->vault->collateralRatio,
 					'collateralAmount' => $this->formatNumberForTrigger($notificationTrigger,

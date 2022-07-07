@@ -2,7 +2,7 @@
 # {{ __('notifications/mail/may_liquidate.greeting') }}
 {{ __('notifications/mail/may_liquidate.message', [
 	'vault_id'       => str_truncate_middle($vault->vaultId, 15, '...'),
-    'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
+    'vault_deeplink' => $vault->deeplink(),
     'ratio' => $vault->collateralRatio,
 ]) }}
 
@@ -17,7 +17,7 @@
 	'difference' => app(\App\Api\Service\VaultRepository::class)->calculateCollateralDifference($vault, 300),
 ]) }}
 
-@component('mail::button', ['url' => sprintf(config('links.vault_info_deeplink'), $vault->vaultId)])
+@component('mail::button', ['url' => config('links.dobby_dashboard')])
 {{ __('notifications/mail/general.button_title') }}
 @endcomponent
 

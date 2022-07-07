@@ -27,7 +27,7 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 				__('notifications/telegram/may_liquidation.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_name'     => $this->vaultName ?? '',
-					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vault_deeplink' => $this->vault->deeplink(),
 					'difference'     => app(VaultRepository::class)->calculateCollateralDifference($this->vault, 300),
 				])
 			)
@@ -65,7 +65,7 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 				'data'    => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,
-					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vaultDeeplink' => $this->vault->deeplink(),
 					'difference'    => app(VaultRepository::class)->calculateCollateralDifference($this->vault, 300),
 				],
 			])->useSecret($user->id);
