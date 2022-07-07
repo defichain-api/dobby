@@ -110,4 +110,18 @@ class OceanApiClient implements BaseApiClient
 			return $stats['count']['blocks'];
 		});
 	}
+
+	/**
+	 * @throws \App\Api\Exceptions\OceanApiException
+	 */
+	public function loadDusdInterestRate(): float
+	{
+		try {
+			$response = $this->client->get(config('defichain_ocean.vaults.dusd_loan'));
+		} catch (GuzzleException $e) {
+			throw OceanApiException::message('dusd_interest_rate', $e);
+		}
+
+		return (float)json_decode($response->getBody()->getContents(), true)['data']['interest'];
+	}
 }

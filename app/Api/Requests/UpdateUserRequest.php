@@ -22,6 +22,7 @@ class UpdateUserRequest extends ApiRequest
 		'uiDashboardCollateralInfoEnabled'      => "string[]",
 		'uiDashboardCollateralWaypointsEnabled' => "string[]",
 		'uiDashboardCardsAsCarousel'            => "string[]",
+		'informDusdInterestRate'                => "string[]",
 		'timezone'                              => "array",
 	])]
 	public function rules(): array
@@ -46,6 +47,7 @@ class UpdateUserRequest extends ApiRequest
 			'uiDashboardCollateralInfoEnabled'      => ['sometimes', 'boolean'],
 			'uiDashboardCollateralWaypointsEnabled' => ['sometimes', 'boolean'],
 			'uiDashboardCardsAsCarousel'            => ['sometimes', 'string', Rule::in(CardVisualization::ALL)],
+			'informDusdInterestRate'                => ['sometimes', 'numeric', 'min:0'],
 			'timezone'                              => ['sometimes', 'string', Rule::in(array_keys(__('timezones')))],
 		];
 	}
@@ -58,7 +60,6 @@ class UpdateUserRequest extends ApiRequest
 		'depositFromAddress.min'        => "string",
 		'depositFromAddress.max'        => "string",
 		'uiDashboardCardsAsCarousel.in' => "string",
-		'timezone.in'                   => "string",
 	])]
 	public function messages(): array
 	{
@@ -72,8 +73,6 @@ class UpdateUserRequest extends ApiRequest
 				route('web_app.list.timezones')),
 			'uiDashboardCardsAsCarousel.in' => sprintf('possible values are: %s',
 				implode(', ', CardVisualization::ALL)),
-			'timezone.in'                   => sprintf('possible values are visible at: %s',
-				route('web_app.list.timezones')),
 		];
 	}
 
@@ -137,6 +136,11 @@ class UpdateUserRequest extends ApiRequest
 		return $this->has('timezone');
 	}
 
+	public function hasDusdInterestRate(): bool
+	{
+		return $this->has('informDusdInterestRate');
+	}
+
 	public function language(): string
 	{
 		return $this->input('language');
@@ -195,5 +199,10 @@ class UpdateUserRequest extends ApiRequest
 	public function summaryInterval(): string
 	{
 		return $this->input('summaryInterval');
+	}
+
+	public function dusdInterestRate(): float
+	{
+		return $this->input('informDusdInterestRate');
 	}
 }

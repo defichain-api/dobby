@@ -100,7 +100,7 @@ class PhoneCallService
 			}
 
 			return true;
-		} catch (TwilioException|PaymentException|\Throwable $e) {
+		} catch (TwilioException|PaymentException|\Throwable) {
 			return false;
 		}
 	}
