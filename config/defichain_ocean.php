@@ -3,8 +3,9 @@
 return [
 	'base_uri'              => env('OCEAN_BASE_URL', 'https://ocean.defichain.com/v0/mainnet/'),
 	'vaults'                => [
-		'id'  => 'loans/vaults/%s',
-		'get' => 'loans/vaults?size=30',
+		'id'        => 'loans/vaults/%s',
+		'get'       => 'loans/vaults?size=30',
+		'dusd_loan' => 'loans/tokens/15',
 	],
 	'loan_schemes'          => [
 		'get' => 'loans/schemes',

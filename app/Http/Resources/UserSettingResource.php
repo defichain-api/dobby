@@ -22,6 +22,7 @@ class UserSettingResource extends JsonResource
 			'uiTheme'                               => $this->ui_theme,
 			'depositFromAddress'                    => $this->depositFromAddress,
 			'depositInfoMail'                       => $this->depositInfoMail,
+			'informDusdInterestRate'                => $this->inform_dusd_interest_rate,
 			'user'                                  => new UserResource($this->whenLoaded('user')),
 		];
 	}
