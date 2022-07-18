@@ -63,9 +63,9 @@ class Kernel extends ConsoleKernel
 			->withoutOverlapping();
 
 		$schedule->command(SendLowBalanceMailCommand::class)
-			->everyFourHours();
+			->everyFourHours()
 			->withoutOverlapping()
-			->name('send-deposit-to-user');
+			->name('send-low-balance-mail');
 
 		// send out notification commands
 		$schedule->command(TriggerNextRatioNotificationsCommand::class)
