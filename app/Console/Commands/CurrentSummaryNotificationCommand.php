@@ -6,6 +6,7 @@ use App\Enum\SummaryInterval;
 use App\Models\User;
 use App\Notifications\CurrentSummaryTriggerNotification;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
 
 class CurrentSummaryNotificationCommand extends Command
 {
@@ -16,11 +17,11 @@ class CurrentSummaryNotificationCommand extends Command
 	{
 		User::withCount('gateways') // select only users with active gateways
 		->having('gateways_count', '>', 0)
-			->withCount('vaults') // select only active users with a vault
-			->having('vaults_count', '>', 0)
+			->withCount('activeVaults') // select only active users with a vault
+			->having('active_vaults_count', '>', 0)
 			->with('setting')
-			->whereHas('setting', function ($query) { // select only users receiving the summary
-				return $query->whereIn('summary_interval', [
+			->whereHas('setting', function (Builder $query) { // select only users receiving the summary
+				$query->whereIn('summary_interval', [
 					SummaryInterval::DAILY_ONCE,
 					SummaryInterval::DAILY_TWICE,
 					SummaryInterval::DAILY_THRICE,
