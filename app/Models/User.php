@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\VaultStates;
 use App\Exceptions\NotificationTriggerNotAvailableException;
 use App\Models\Concerns\UseNotificationConfig;
 use App\Models\Concerns\UsesUuidPrimary;
@@ -41,6 +42,11 @@ class User extends Model
 	{
 		return $this->belongsToMany(Vault::class, 'user_vault', 'userId', 'vaultId')
 			->withPivot('name');
+	}
+
+	public function activeVaults(): BelongsToMany
+	{
+		return $this->vaults()->where('state', '!=', VaultStates::INACTIVE);
 	}
 
 	public function setting(): HasOne
