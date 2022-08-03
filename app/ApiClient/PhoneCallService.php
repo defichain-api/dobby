@@ -12,7 +12,6 @@ use Twilio\Rest\Client;
 use function cache;
 use function config;
 use function now;
-use function ray;
 
 class PhoneCallService
 {
@@ -71,8 +70,6 @@ class PhoneCallService
 
 			return true;
 		} catch (TwilioException $e) {
-			ray($e);
-
 			return false;
 		}
 	}
@@ -104,8 +101,6 @@ class PhoneCallService
 
 			return true;
 		} catch (TwilioException|PaymentException|\Throwable $e) {
-			ray($e);
-
 			return false;
 		}
 	}
