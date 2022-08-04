@@ -8,5 +8,6 @@ return [
 		'60'  => 'snooze 1 hour',
 		'180' => 'snooze 3 hours',
 		'360' => 'snooze 6 hours',
+		'720' => 'snooze 12 hours',
 	],
 ];
