@@ -7,8 +7,8 @@ class VaultStates
     const ACTIVE = 'active';
     const INACTIVE = 'inactive';
     const FROZEN = 'frozen';
-    const INLIQUIDATION = 'inLiquidation';
-    const MAYLIQUIDATE = 'mayLiquidate';
+    const INLIQUIDATION = 'in_liquidation';
+    const MAYLIQUIDATE = 'may_liquidate';
     const UNKNOWN = 'unknown';
     const ALL = [
         self::ACTIVE,
@@ -18,9 +18,4 @@ class VaultStates
         self::MAYLIQUIDATE,
         self::UNKNOWN,
     ];
-	const ACTIVE_SEND_NOTIFICATIONS=[
-		self::ACTIVE,
-		self::INLIQUIDATION,
-		self::MAYLIQUIDATE,
-	];
 }

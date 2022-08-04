@@ -38,15 +38,6 @@ class Vault extends Model
 		'interestAmounts'   => 'array',
 		'batches'           => 'array',
 	];
-	protected array $fireableAttributes = [
-		'state'               => [
-			VaultStates::INLIQUIDATION => VaultUpdatingStateEvent::class,
-			VaultStates::MAYLIQUIDATE  => VaultUpdatingStateEvent::class,
-			VaultStates::FROZEN        => VaultUpdatingStateEvent::class,
-			VaultStates::ACTIVE        => VaultUpdatingStateEvent::class,
-		],
-		'nextCollateralRatio' => VaultUpdatingNextRatioEvent::class,
-	];
 
 	public function getVaultIdAttribute(): string
 	{
@@ -61,7 +52,7 @@ class Vault extends Model
 				return;
 			}
 			$dirtyState = $vault->original['state'];
-			$possibleStates = [VaultStates::FROZEN, VaultStates::MAYLIQUIDATE];
+			$possibleStates = [VaultStates::FROZEN, VaultStates::MAYLIQUIDATE, VaultStates::INACTIVE];
 			if ((in_array($dirtyState, $possibleStates) && $vault->state === VaultStates::ACTIVE)) {
 				// direct send out notifications
 				$vault->users->each(function (User $user) use ($vault, $dirtyState) {

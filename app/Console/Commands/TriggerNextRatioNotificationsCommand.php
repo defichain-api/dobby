@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enum\CooldownTypes;
+use App\Enum\NotificationGatewayType;
 use App\Enum\VaultStates;
 use App\Models\NotificationTrigger;
 use App\Notifications\VaultNextRatioNotification;
@@ -11,12 +12,12 @@ use Illuminate\Support\Collection;
 
 class TriggerNextRatioNotificationsCommand extends Command
 {
-	protected $signature = 'notification:next-ratio';
+	protected $signature = 'notification:vault-ratio';
 	protected $description = 'Trigger Notifications based on the next ratio';
 
 	public function handle()
 	{
-		$this->components->info(sprintf('%s: Start of sending out notifications', now()->toDayDateTimeString()));
+		$this->components->info(sprintf('%s: Start of sending out ratio notifications', now()->toDayDateTimeString()));
 		$uniqueUserCollection = new Collection();
 		$sendableTriggers = new Collection();
 
@@ -43,16 +44,12 @@ class TriggerNextRatioNotificationsCommand extends Command
 				});
 			});
 		$sendableTriggers->each(function (NotificationTrigger $trigger) {
-			if ($trigger->ratio != 0 && $trigger->ratio >= $trigger->vault->nextCollateralRatio) {
-				$this->components->info(sprintf('skip vault %s caused of ratio', $trigger->vault->vaultId));
-
-				return;
-			}
 			$gatewayType = $trigger->gateways()->first()->type;
 
-			if ($trigger->cooldown(CooldownTypes::getType($gatewayType))->notPassed()) {
+			if ($gatewayType != NotificationGatewayType::WEBHOOK
+				&& $trigger->cooldown(CooldownTypes::getType($gatewayType))->notPassed()) {
 				$this->components->info(sprintf(
-					'skip vault %s caused of cooldown (%s rest time)',
+					'skip vault %s caused of cooldown (%s min rest time)',
 					$trigger->vault->vaultId,
 					$trigger->cooldown(CooldownTypes::getType($gatewayType))->expiresAt()->diffInMinutes()
 				));
@@ -65,7 +62,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 			$this->triggerNotifications($trigger, $gatewayType);
 		});
 
-		$this->components->info(sprintf('%s: End of sending out notifications', now()->toDayDateTimeString()));
+		$this->components->info(sprintf('%s: End of sending out ratio notifications', now()->toDayDateTimeString()));
 	}
 
 	protected function triggerNotifications(NotificationTrigger $trigger, string $gatewayType): void

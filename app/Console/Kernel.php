@@ -71,11 +71,14 @@ class Kernel extends ConsoleKernel
 		$schedule->command(TriggerNextRatioNotificationsCommand::class)
 			->everyFiveMinutes()
 			->withoutOverlapping()
-			->name('trigger-next-ratio-notifications');
+			->name('trigger-next-ratio-notifications')
+			->appendOutputTo(storage_path('logs/notification_trigger.log'));
+
 		$schedule->command(TriggerStateNotificationCommand::class)
 			->everyFiveMinutes()
 			->withoutOverlapping()
-			->name('trigger-vault-state-notifications');
+			->name('trigger-vault-state-notifications')
+			->appendOutputTo(storage_path('logs/notification_state.log'));
 	}
 
 	protected function commands(): void
