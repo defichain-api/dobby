@@ -21,13 +21,13 @@ class TriggerNextRatioNotificationsCommand extends Command
 		$uniqueUserCollection = new Collection();
 		$sendableTriggers = new Collection();
 
-		NotificationTrigger::join('vaults', function ($query) {
-			$query->on('notification_triggers.vaultId', '=', 'vaults.vaultId')
-				->where('notification_triggers.ratio', '>=', 'vaults.nextCollateralRatio');
+		NotificationTrigger::join('vaults', function ($join) {
+			$join->on('notification_triggers.vaultId', '=', 'vaults.vaultId')
+				->whereRaw('notification_triggers.ratio >= vaults.nextCollateralRatio');
 		})
 			->with(['gateways.user'])
 			->with('vault')
-			->where('vaults.state', VaultStates::ACTIVE)
+			->whereNotIn('vaults.state', [VaultStates::INACTIVE, VaultStates::FROZEN])
 			->where('vaults.nextCollateralRatio', '>', 0)
 			->orderByDesc('ratio')
 			->select('notification_triggers.*')
