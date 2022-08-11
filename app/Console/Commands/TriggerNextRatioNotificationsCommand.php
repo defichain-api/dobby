@@ -29,7 +29,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 			->with('vault')
 			->whereNotIn('vaults.state', [VaultStates::INACTIVE, VaultStates::FROZEN])
 			->where('vaults.nextCollateralRatio', '>', 0)
-			->orderByDesc('ratio')
+			->orderBy('ratio')
 			->select('notification_triggers.*')
 			->chunk(100, function (Collection $notificationTriggers) use (&$uniqueUserCollection, &$sendableTriggers) {
 				$notificationTriggers->each(function (NotificationTrigger $trigger) use (
