@@ -124,6 +124,6 @@ class OceanApiClient implements BaseApiClient
 
 		$interestRate = (float) json_decode($response->getBody()->getContents(), true)['data']['interest'];
 
-		return $interestRate * 100;
+		return $interestRate;
 	}
 }

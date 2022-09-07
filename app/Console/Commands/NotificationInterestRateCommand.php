@@ -48,16 +48,22 @@ class NotificationInterestRateCommand extends Command
 				]);
 			});
 			// cancel notification for user as he as no vaults with dUSD loan
-			if (count($vaultsWithDusdLoan) === 0) {
-				return true;
+			$message = __('notifications/telegram/dusd_interest_rate.message', [
+				'interest_rate' => $currentDusdInterestRate,
+			]);
+			if (count($vaultsWithDusdLoan) > 0) {
+				$message .= sprintf(
+					"\r\n\r\n%s\r\n%s",
+					__('notifications/telegram/dusd_interest_rate.vault_intro'),
+					implode("\r\n", $vaultsWithDusdLoan)
+				);
 			}
 
 			$messageService->sendWithUrlButton(
-				__('notifications/telegram/dusd_interest_rate.message',
-					['interest_rate' => $currentDusdInterestRate]) . "\r\n" . implode("\r\n", $vaultsWithDusdLoan),
+				$message,
 				$user->routeNotificationForTelegram(),
 				'Visit Dobby Dashboard',
-				config('app.url')
+				config('app.frontend_url')
 			);
 		});
 	}
