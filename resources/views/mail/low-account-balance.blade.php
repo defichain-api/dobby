@@ -8,7 +8,7 @@
 	'recommended_call_amount' => $recommended_call_amount,
 ]) }}
 
-@component('mail::button', ['url' => config('app.url') . '/#/manage-phone-calls'])
+@component('mail::button', ['url' => config('app.app.frontend_url') . '/#/manage-phone-calls'])
 {{ __('mail/low-account-balance.btn_text') }}
 @endcomponent
 

@@ -51,7 +51,7 @@ class VaultNextRatioNotification extends BaseTriggerNotification
 				sprintf('snooze_%s_180', $notificationTrigger->id))
 			->buttonWithCallback(__('notifications/telegram/buttons.cooldown_times.360'),
 				sprintf('snooze_%s_360', $notificationTrigger->id))
-			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
+			->button(__('notifications/telegram/buttons.visit_website'), config('app.frontend_url'));
 	}
 
 	public function toMail(NotificationTrigger $notificationTrigger): MailMessage

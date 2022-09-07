@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
-use App\Models\NotificationTrigger;
 use App\Models\User;
 use App\Models\Vault;
 use Illuminate\Bus\Queueable;
@@ -37,7 +36,7 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 					'original_state' => __(sprintf('vault/states.%s', $this->vaultOriginalState)),
 				])
 			)
-			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
+			->button(__('notifications/telegram/buttons.visit_website'), config('app.frontend_url'));
 	}
 
 	public function toMail(User $user): MailMessage

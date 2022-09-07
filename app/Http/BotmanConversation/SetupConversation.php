@@ -40,12 +40,12 @@ class SetupConversation extends Conversation
 			$this->telegramMessageService->send(__('bot/setup.already_registered'), $senderId);
 		} elseif ($userId === '') {
 			// default state: clicking on /start
-			$this->telegramMessageService->send(__('bot/setup.enter_user_key', ['url' => config('app.url')]),
+			$this->telegramMessageService->send(__('bot/setup.enter_user_key', ['url' => config('app.frontend_url')]),
 				$senderId);
 		} elseif (!Str::isUuid($userId)
 			|| User::where('id', $userId)->count() === 0) {
 			// not registered yet
-			$this->telegramMessageService->send(__('bot/setup.not_registered', ['url' => config('app.url')]),
+			$this->telegramMessageService->send(__('bot/setup.not_registered', ['url' => config('app.frontend_url')]),
 				$senderId);
 		} elseif ($this->gatewayService->hasGatewayWithValue($senderId, NotificationGatewayType::TELEGRAM)) {
 			// reconnect telegram to new user key
@@ -57,7 +57,7 @@ class SetupConversation extends Conversation
 			$this->gatewayService->createOrUpdateTelegramGateway($userId, $senderId);
 			$this->bot->typesAndWaits(2);
 			$this->telegramMessageService->send(__('bot/setup.registering.setup_finished',
-				['url' => config('app.url')]), $senderId);
+				['url' => config('app.frontend_url')]), $senderId);
 		}
 	}
 }

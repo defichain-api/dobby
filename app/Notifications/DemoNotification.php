@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Channel\WebhookChannel;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
 use App\Models\User;
@@ -42,7 +41,7 @@ class DemoNotification extends BaseNotification implements ShouldQueue
 		return TelegramMessage::create()
 			->content(__('notifications/telegram/demo.message'))
 			->button(__('notifications/telegram/demo.button'),
-				sprintf('%s/#/manage-notifications', config('app.url')));
+				sprintf('%s/#/manage-notifications', config('app.frontend_url')));
 	}
 
 	public function toMail(User $user): MailMessage
@@ -54,7 +53,7 @@ class DemoNotification extends BaseNotification implements ShouldQueue
 		return (new MailMessage)
 			->subject(sprintf('%s - %s', __('notifications/mail/demo.subject'), config('app.name')))
 			->markdown('mail.notification.demo', [
-				'url' => sprintf('%s/#/manage-notifications', config('app.url')),
+				'url' => sprintf('%s/#/manage-notifications', config('app.frontend_url')),
 			]);
 	}
 
