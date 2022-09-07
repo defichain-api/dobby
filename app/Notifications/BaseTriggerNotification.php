@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Enum\CooldownTypes;
 use App\Enum\NotificationGatewayType;
 use App\Models\NotificationTrigger;
 use App\Models\Vault;
@@ -18,19 +17,16 @@ class BaseTriggerNotification extends BaseNotification
 	{
 		$this->notifiable = $trigger;
 		$methods = [];
-		if ($trigger->hasGateway(NotificationGatewayType::TELEGRAM)
-			&& $trigger->cooldown(CooldownTypes::TELEGRAM_NOTIFICATION)->passed()) {
+		if ($trigger->hasGateway(NotificationGatewayType::TELEGRAM)) {
 			$methods[] = NotificationGatewayType::TELEGRAM;
 		}
 		if ($trigger->hasGateway(NotificationGatewayType::WEBHOOK)) {
 			$methods[] = NotificationGatewayType::WEBHOOK;
 		}
-		if ($trigger->hasGateway(NotificationGatewayType::MAIL)
-			&& $trigger->cooldown(CooldownTypes::MAIL_NOTIFICATION)->passed()) {
+		if ($trigger->hasGateway(NotificationGatewayType::MAIL)) {
 			$methods[] = NotificationGatewayType::MAIL;
 		}
-		if ($trigger->hasGateway(NotificationGatewayType::PHONE)
-			&& $trigger->cooldown(CooldownTypes::PHONE_NOTIFICATION)->passed()) {
+		if ($trigger->hasGateway(NotificationGatewayType::PHONE)) {
 			$methods[] = NotificationGatewayType::PHONE;
 		}
 

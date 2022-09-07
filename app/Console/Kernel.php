@@ -11,6 +11,8 @@ use App\Console\Commands\PruneInactiveUsersCommand;
 use App\Console\Commands\SendLowBalanceMailCommand;
 use App\Console\Commands\SentDepositInfoToUserCommand;
 use App\Console\Commands\StatisticsCommand;
+use App\Console\Commands\TriggerNextRatioNotificationsCommand;
+use App\Console\Commands\TriggerStateNotificationCommand;
 use App\Console\Commands\UpdateFixedIntervalPriceCommand;
 use App\Console\Commands\UpdateLoanSchemeCommand;
 use App\Console\Commands\UpdateVaultDataCommand;
@@ -33,6 +35,8 @@ class Kernel extends ConsoleKernel
 		BetaFeatureCommand::class,
 		StatusCommand::class,
 		SendLowBalanceMailCommand::class,
+		TriggerNextRatioNotificationsCommand::class,
+		TriggerStateNotificationCommand::class,
 	];
 
 	protected function schedule(Schedule $schedule): void
@@ -59,7 +63,22 @@ class Kernel extends ConsoleKernel
 			->withoutOverlapping();
 
 		$schedule->command(SendLowBalanceMailCommand::class)
-			->everyFourHours();
+			->everyFourHours()
+			->withoutOverlapping()
+			->name('send-low-balance-mail');
+
+		// send out notification commands
+		$schedule->command(TriggerNextRatioNotificationsCommand::class)
+			->everyFiveMinutes()
+			->withoutOverlapping()
+			->name('trigger-next-ratio-notifications')
+			->appendOutputTo(storage_path('logs/notification_trigger.log'));
+
+		$schedule->command(TriggerStateNotificationCommand::class)
+			->everyFiveMinutes()
+			->withoutOverlapping()
+			->name('trigger-vault-state-notifications')
+			->appendOutputTo(storage_path('logs/notification_state.log'));
 	}
 
 	protected function commands(): void

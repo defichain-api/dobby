@@ -14,16 +14,14 @@ class HealthController
 		$env = HealthCheck::passes('env');
 		$redis = HealthCheck::passes('redis');
 		$database = HealthCheck::passes('database');
-		$log = HealthCheck::passes('log');
 		$queueWorker = HealthCheck::passes('queue_worker');
 
-		$checkOk = $env && $redis && $database && $log && $queueWorker;
+		$checkOk = $env && $redis && $database && $queueWorker;
 
 		return response()->json([
 			'envPassed'      => $env,
 			'redisPassed'    => $redis,
 			'databasePassed' => $database,
-			'logPassed'      => $log,
 			'queueWorker'    => $queueWorker,
 		], $checkOk ? Response::HTTP_OK : Response::HTTP_UNPROCESSABLE_ENTITY);
 	}

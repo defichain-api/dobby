@@ -10,19 +10,12 @@ use Illuminate\Console\Command;
 
 class UpdateVaultDataCommand extends Command
 {
-	protected $signature = 'update:vault_data {--queued}';
+	protected $signature = 'update:vault_data';
 	protected $description = 'Update the vault data from ocean data source';
 
 	public function handle(VaultService $vaultService): void
 	{
 		$this->info(sprintf('Used Ocean-Datasource: %s', config('defichain_ocean.base_uri')));
-		if ($this->option('queued')) {
-			$this->info(sprintf('%s: starting the updating job with the queue', now()->toDateTimeString()));
-
-//			dispatch(new UpdateVaultJob())->onQueue(QueueName::UPDATE_VAULTS_QUEUE);
-
-			return;
-		}
 		$startTime = now();
 		$this->info(sprintf('%s: vault update started', $startTime->toDateTimeString()));
 		try {
