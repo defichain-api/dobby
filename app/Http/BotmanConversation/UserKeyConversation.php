@@ -15,7 +15,7 @@ class UserKeyConversation extends Conversation
 			->first()?->user;
 
 		if (is_null($user)) {
-			$this->say(__('bot/setup.unknown_user', ['url' => config('app.url')]), ['parse_mode' => 'Markdown']);
+			$this->say(__('bot/setup.unknown_user', ['url' => config('app.frontend_url')]), ['parse_mode' => 'Markdown']);
 
 			return;
 		}

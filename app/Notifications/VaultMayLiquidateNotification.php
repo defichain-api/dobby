@@ -6,9 +6,9 @@ use App\Api\Service\VaultRepository;
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
 use App\Models\User;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use NotificationChannels\Telegram\TelegramMessage;
 use Spatie\WebhookServer\WebhookCall;
 
@@ -31,7 +31,7 @@ class VaultMayLiquidateNotification extends BaseUserNotification implements Shou
 					'difference'     => app(VaultRepository::class)->calculateCollateralDifference($this->vault, 300),
 				])
 			)
-			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
+			->button(__('notifications/telegram/buttons.visit_website'), config('app.frontend_url'));
 	}
 
 	public function toMail(User $user): MailMessage

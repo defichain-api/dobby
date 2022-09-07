@@ -4,9 +4,7 @@ namespace App\Notifications;
 
 use App\Enum\NotificationGatewayType;
 use App\Enum\NotificationTriggerType;
-use App\Models\NotificationTrigger;
 use App\Models\User;
-use App\Models\Vault;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -32,7 +30,7 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 					'channel_url'    => config('links.defichain_announcement_channel'),
 				])
 			)
-			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
+			->button(__('notifications/telegram/buttons.visit_website'), config('app.frontend_url'));
 	}
 
 	public function toMail(User $user): MailMessage

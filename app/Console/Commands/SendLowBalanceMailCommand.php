@@ -87,7 +87,7 @@ class SendLowBalanceMailCommand extends Command
 				'phoneCallAmount'         => $phoneCallAmount,
 				'more_dfi'                => $this->informBelowBalance - $user->accountBalance,
 				'recommended_call_amount' => $this->recommendedMinCallAmount,
-			]), $telegramGateway->value, 'Deposit DFI now', config('app.url') . '/#/manage-phone-calls');
+			]), $telegramGateway->value, 'Deposit DFI now', config('app.frontend_url') . '/#/manage-phone-calls');
 	}
 
 	protected function getPhoneCallAmount(User $user): float

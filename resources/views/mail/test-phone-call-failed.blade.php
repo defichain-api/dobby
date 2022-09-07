@@ -3,7 +3,7 @@
 
 {{ __('mail/testcall-failed.text') }}
 
-@component('mail::button', ['url' => config('app.url') . '/#/phone-settings'])
+@component('mail::button', ['url' => config('app.app.frontend_url') . '/#/phone-settings'])
 {{ __('notifications/mail/general.button_title') }}
 @endcomponent
 

@@ -53,7 +53,8 @@ return [
 	|
 	*/
 
-	'url' => env('APP_URL', 'defichain-dobby.test'),
+	'url'          => env('APP_URL', 'api.defichain-dobby.test'),
+	'frontend_url' => env('FRONTEND_URL', 'defichain-dobby.test'),
 
 	'asset_url' => env('ASSET_URL', null),
 

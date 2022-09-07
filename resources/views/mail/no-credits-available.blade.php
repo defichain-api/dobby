@@ -3,7 +3,7 @@
 
 {{ __('mail/no-credits-available.text') }}
 
-@component('mail::button', ['url' => config('app.url') . '/#/manage-phone-calls'])
+@component('mail::button', ['url' => config('app.app.frontend_url') . '/#/manage-phone-calls'])
 {{ __('mail/no-credits-available.btn_text') }}
 @endcomponent
 

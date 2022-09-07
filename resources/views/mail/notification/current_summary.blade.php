@@ -10,7 +10,7 @@
     @endforeach
 @endcomponent
 
-@component('mail::button', ['url' => config('app.url')])
+@component('mail::button', ['url' => config('app.app.frontend_url')])
 {{ __('notifications/mail/general.button_title') }}
 @endcomponent
 

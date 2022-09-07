@@ -66,7 +66,7 @@ class CurrentSummaryTriggerNotification extends BaseUserNotification implements 
 
 		return TelegramMessage::create()
 			->content(substr_replace($summary, "", -3))
-			->button(__('notifications/telegram/buttons.visit_website'), config('app.url'));
+			->button(__('notifications/telegram/buttons.visit_website'), config('app.frontend_url'));
 	}
 
 	public function toMail(User $user): MailMessage
