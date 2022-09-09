@@ -9,6 +9,7 @@ return new class extends Migration {
 	{
 		Schema::table('user_settings', function (Blueprint $table) {
 			$table->float('inform_dusd_interest_rate', 6, 2)->default(0);
+			$table->boolean('inform_dusd_interest_above')->default(false);
 		});
 	}
 
@@ -16,6 +17,7 @@ return new class extends Migration {
 	{
 		Schema::table('user_settings', function (Blueprint $table) {
 			$table->dropColumn('inform_dusd_interest_rate');
+			$table->dropColumn('inform_dusd_interest_above');
 		});
 	}
 };
