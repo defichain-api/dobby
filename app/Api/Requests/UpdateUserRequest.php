@@ -220,12 +220,12 @@ class UpdateUserRequest extends ApiRequest
 		return $this->input('informDusdInterestRate');
 	}
 
-	public function informDusdInterestRateAbove(): float
+	public function informDusdInterestRateAbove(): ?float
 	{
 		return $this->input('informDusdInterestRateAbove');
 	}
 
-	public function informDusdInterestRateBelow(): float
+	public function informDusdInterestRateBelow(): ?float
 	{
 		return $this->input('informDusdInterestRateBelow');
 	}
