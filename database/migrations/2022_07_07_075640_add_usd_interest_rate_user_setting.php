@@ -8,16 +8,18 @@ return new class extends Migration {
 	public function up()
 	{
 		Schema::table('user_settings', function (Blueprint $table) {
-			$table->float('inform_dusd_interest_rate', 6, 2)->default(0);
-			$table->boolean('inform_dusd_interest_above')->default(false);
+			$table->float('inform_dusd_interest_rate_above', 6, 2)->default(null)->nullable();
+			$table->float('inform_dusd_interest_rate_below', 6, 2)->default(null)->nullable();
+			$table->boolean('inform_dusd_interest_rate')->default(false);
 		});
 	}
 
 	public function down()
 	{
 		Schema::table('user_settings', function (Blueprint $table) {
+			$table->dropColumn('inform_dusd_interest_rate_above');
+			$table->dropColumn('inform_dusd_interest_rate_below');
 			$table->dropColumn('inform_dusd_interest_rate');
-			$table->dropColumn('inform_dusd_interest_above');
 		});
 	}
 };

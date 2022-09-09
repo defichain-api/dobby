@@ -22,6 +22,8 @@ class UpdateUserRequest extends ApiRequest
 		'uiDashboardCollateralInfoEnabled'      => "string[]",
 		'uiDashboardCollateralWaypointsEnabled' => "string[]",
 		'uiDashboardCardsAsCarousel'            => "string[]",
+		'informDusdInterestRateAbove'           => "string[]",
+		'informDusdInterestRateBelow'           => "string[]",
 		'informDusdInterestRate'                => "string[]",
 		'timezone'                              => "array",
 	])]
@@ -47,7 +49,9 @@ class UpdateUserRequest extends ApiRequest
 			'uiDashboardCollateralInfoEnabled'      => ['sometimes', 'boolean'],
 			'uiDashboardCollateralWaypointsEnabled' => ['sometimes', 'boolean'],
 			'uiDashboardCardsAsCarousel'            => ['sometimes', 'string', Rule::in(CardVisualization::ALL)],
-			'informDusdInterestRate'                => ['sometimes', 'numeric', 'min:-100', 'max:50'],
+			'informDusdInterestRateBelow'           => ['sometimes', 'nullable', 'numeric', 'min:-100', 'max:50'],
+			'informDusdInterestRateAbove'           => ['sometimes', 'nullable', 'numeric', 'min:-100', 'max:50'],
+			'informDusdInterestRate'                => ['sometimes', 'boolean'],
 			'timezone'                              => ['sometimes', 'string', Rule::in(array_keys(__('timezones')))],
 		];
 	}
@@ -141,6 +145,16 @@ class UpdateUserRequest extends ApiRequest
 		return $this->has('informDusdInterestRate');
 	}
 
+	public function hasInformDusdInterestRateAbove(): bool
+	{
+		return $this->has('informDusdInterestRateAbove');
+	}
+
+	public function hasInformDusdInterestRateBelow(): bool
+	{
+		return $this->has('informDusdInterestRateBelow');
+	}
+
 	public function language(): string
 	{
 		return $this->input('language');
@@ -201,8 +215,18 @@ class UpdateUserRequest extends ApiRequest
 		return $this->input('summaryInterval');
 	}
 
-	public function dusdInterestRate(): float
+	public function dusdInterestRate(): bool
 	{
-		return (float)$this->input('informDusdInterestRate');
+		return $this->input('informDusdInterestRate');
+	}
+
+	public function informDusdInterestRateAbove(): float
+	{
+		return $this->input('informDusdInterestRateAbove');
+	}
+
+	public function informDusdInterestRateBelow(): float
+	{
+		return $this->input('informDusdInterestRateBelow');
 	}
 }
