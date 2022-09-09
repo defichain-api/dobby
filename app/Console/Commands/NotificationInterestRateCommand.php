@@ -28,13 +28,9 @@ class NotificationInterestRateCommand extends Command
 		}
 
 		User::whereHas('setting', function ($query) use ($currentDusdInterestRate) {
-			$query->where(function ($q) use ($currentDusdInterestRate) {
-				$q->where('inform_dusd_interest_rate', '>', $currentDusdInterestRate)
-					->where('inform_dusd_interest_above', true);
-			})->orWhere(function ($q) use ($currentDusdInterestRate) {
-				$q->where('inform_dusd_interest_rate', '<', $currentDusdInterestRate)
-					->where('inform_dusd_interest_above', false);
-			});
+			$query->where('inform_dusd_interest_rate_above', '<', $currentDusdInterestRate)
+				->orWhere('inform_dusd_interest_rate_below', '>', $currentDusdInterestRate)
+				->orWhere('inform_dusd_interest_rate', true);
 		})->with('gateways')->each(function (User $user) use ($messageService, $currentDusdInterestRate) {
 			if (!$user->hasGateway(NotificationGatewayType::TELEGRAM)) {
 				return true;
