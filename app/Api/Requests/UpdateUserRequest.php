@@ -47,7 +47,7 @@ class UpdateUserRequest extends ApiRequest
 			'uiDashboardCollateralInfoEnabled'      => ['sometimes', 'boolean'],
 			'uiDashboardCollateralWaypointsEnabled' => ['sometimes', 'boolean'],
 			'uiDashboardCardsAsCarousel'            => ['sometimes', 'string', Rule::in(CardVisualization::ALL)],
-			'informDusdInterestRate'                => ['sometimes', 'numeric', 'min:0'],
+			'informDusdInterestRate'                => ['sometimes', 'numeric', 'min:-100', 'max:50'],
 			'timezone'                              => ['sometimes', 'string', Rule::in(array_keys(__('timezones')))],
 		];
 	}
@@ -203,6 +203,6 @@ class UpdateUserRequest extends ApiRequest
 
 	public function dusdInterestRate(): float
 	{
-		return $this->input('informDusdInterestRate');
+		return (float)$this->input('informDusdInterestRate');
 	}
 }
