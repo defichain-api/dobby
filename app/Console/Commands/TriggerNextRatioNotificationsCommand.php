@@ -81,7 +81,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 		} catch (\Exception|\Throwable $e) {
 			\Log::error('notification not sent', [
 				'vault'     => $vault->vault_id,
-				'user'      => $user->id,
+				'user'      => $user?->id,
 				'exception' => [
 					'message' => $e->getMessage(),
 					'code'    => $e->getCode(),
