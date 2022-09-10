@@ -36,6 +36,9 @@ class TriggerNextRatioNotificationsCommand extends Command
 					&$uniqueUserCollection,
 					&$sendableTriggers
 				) {
+					if ($trigger->gateways()->count() == 0) {
+						return;
+					}
 					$elem = sprintf('%s_%s', $trigger->vaultId, $trigger->gateways()->first()->user->id);
 					if (!$uniqueUserCollection->contains($elem)) {
 						$uniqueUserCollection->add($elem);
@@ -70,7 +73,18 @@ class TriggerNextRatioNotificationsCommand extends Command
 		$vault = $trigger->vault;
 		$user = $vault->users()->where('id', $trigger->gateways()->first()->user->id)->first();
 
-		$trigger->notify(new VaultNextRatioNotification($vault, $user->pivot->name));
+		try {
+			$trigger->notify(new VaultNextRatioNotification($vault, $user->pivot->name));
+		} catch (\Exception|\Throwable $e) {
+			\Log::error('notification not sent', [
+				'vault'     => $vault->vault_id,
+				'user'      => $user->id,
+				'exception' => [
+					'message' => $e->getMessage(),
+					'code'    => $e->getCode(),
+				],
+			]);
+		}
 
 		$this->components->task(sprintf(
 				'notification (%s) - vault %s, next/trigger ratio %s/%s',
