@@ -70,10 +70,10 @@ class TriggerNextRatioNotificationsCommand extends Command
 
 	protected function triggerNotifications(NotificationTrigger $trigger, string $gatewayType): void
 	{
-		if ($trigger->gateways()->first()->count() == 0) {
+		$vault = $trigger->vault;
+		if ($trigger->gateways()->first()->count() == 0 || $vault->users()->count() == 0) {
 			return;
 		}
-		$vault = $trigger->vault;
 		$user = $vault->users()->where('id', $trigger->gateways()->first()->user->id)->first();
 
 		try {
