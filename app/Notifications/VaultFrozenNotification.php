@@ -26,7 +26,7 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 				__('notifications/telegram/frozen.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_name'     => $this->vaultName ?? '',
-					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vault_deeplink' => $this->vault->deeplink(),
 					'channel_url'    => config('links.defichain_announcement_channel'),
 				])
 			)
@@ -64,7 +64,7 @@ class VaultFrozenNotification extends BaseUserNotification implements ShouldQueu
 				'data'    => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,
-					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vaultDeeplink' => $this->vault->deeplink(),
 				],
 			])->useSecret($user->id);
 	}

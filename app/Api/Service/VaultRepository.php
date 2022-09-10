@@ -21,7 +21,7 @@ class VaultRepository
 					$vaultData[] = [
 						'vault_id'          => $vault->vaultId,
 						'vault_name'        => $vault->pivot->name ?? '',
-						'vault_deeplink'    => sprintf(config('links.vault_info_deeplink'), $vault->vaultId),
+						'vault_deeplink'    => $vault->deeplink(),
 						'min_col_ratio'     => $vault->loanScheme->minCollaterationRatio,
 						'current_ratio'     => $vault->collateralRatio === -1 ? 'n/a' : $vault->collateralRatio,
 						'next_ratio'        => $vault->nextCollateralRatio === -1 ? 'n/a' : $vault->nextCollateralRatio,

@@ -7,6 +7,7 @@ use App\Console\Commands\BetaFeatureCommand;
 use App\Console\Commands\CreateBroadcastMessageCommand;
 use App\Console\Commands\CurrentSummaryNotificationCommand;
 use App\Console\Commands\InactivateVaultsCommand;
+use App\Console\Commands\NotificationInterestRateCommand;
 use App\Console\Commands\PruneInactiveUsersCommand;
 use App\Console\Commands\SendLowBalanceMailCommand;
 use App\Console\Commands\SentDepositInfoToUserCommand;
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
 		BetaFeatureCommand::class,
 		StatusCommand::class,
 		SendLowBalanceMailCommand::class,
+		NotificationInterestRateCommand::class,
 		TriggerNextRatioNotificationsCommand::class,
 		TriggerStateNotificationCommand::class,
 	];
@@ -61,6 +63,9 @@ class Kernel extends ConsoleKernel
 		$schedule->command(SentDepositInfoToUserCommand::class)
 			->everyTwoMinutes()
 			->withoutOverlapping();
+
+		$schedule->command(NotificationInterestRateCommand::class)
+			->dailyAt('06:00');
 
 		$schedule->command(SendLowBalanceMailCommand::class)
 			->everyFourHours()

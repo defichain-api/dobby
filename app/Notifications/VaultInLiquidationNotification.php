@@ -26,7 +26,7 @@ class VaultInLiquidationNotification extends BaseUserNotification implements Sho
 				__('notifications/telegram/in_liquidation.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_name'     => $this->vaultName ?? '',
-					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vault_deeplink' => $this->vault->deeplink(),
 					'block_height'   => $this->vault->liquidationHeight,
 				])
 			)
@@ -64,7 +64,7 @@ class VaultInLiquidationNotification extends BaseUserNotification implements Sho
 				'data' => [
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,
-					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vaultDeeplink' => $this->vault->deeplink(),
 					'blockHeight'   => $this->vault->liquidationHeight,
 				],
 			])->useSecret($user->id);

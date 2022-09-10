@@ -23,6 +23,9 @@ class UserSetting extends Model
 		'ui_dashboard_collateralWaypoints_enabled',
 		'free_testcall_available',
 		'ui_dashboard_cards_carousel',
+		'inform_dusd_interest_rate',
+		'inform_dusd_interest_rate_above',
+		'inform_dusd_interest_rate_below',
 	];
 	protected $hidden = [
 		'id',

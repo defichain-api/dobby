@@ -26,6 +26,15 @@ class UserService
 				'summary_interval'                         => $request->hasSummaryInterval() ? $request->summaryInterval() : $userSetting->summary_interval,
 				'timezone'                                 => $request->hasTimezone() ? $request->timezone() : $userSetting->timezone,
 				'ui_privacy_enabled'                       => $request->hasUiPrivacyEnabled() ? $request->uiPrivacyEnabled() : $userSetting->ui_privacy_enabled,
+				'inform_dusd_interest_rate_below'          => $request->hasInformDusdInterestRateBelow()
+					? $request->informDusdInterestRateBelow()
+					: $userSetting->inform_dusd_interest_rate_below,
+				'inform_dusd_interest_rate_above'          => $request->hasInformDusdInterestRateAbove()
+					? $request->informDusdInterestRateAbove()
+					: $userSetting->inform_dusd_interest_rate_above,
+				'inform_dusd_interest_rate'          => $request->hasDusdInterestRate()
+					? $request->dusdInterestRate()
+					: $userSetting->inform_dusd_interest_rate,
 				'ui_dashboard_healthSummary_enabled'       => $request->hasUiDashboardHealthSummaryEnabled()
 					? $request->uiDashboardHealthSummaryEnabled()
 					: $userSetting->ui_dashboard_healthSummary_enabled,

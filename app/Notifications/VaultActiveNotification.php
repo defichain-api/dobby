@@ -32,7 +32,7 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 				__('notifications/telegram/active.message', [
 					'vault_id'       => str_truncate_middle($this->vault->vaultId, 15, '...'),
 					'vault_name'     => $this->vaultName ?? '',
-					'vault_deeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vault_deeplink' => $this->vault->deeplink(),
 					'original_state' => __(sprintf('vault/states.%s', $this->vaultOriginalState)),
 				])
 			)
@@ -72,7 +72,7 @@ class VaultActiveNotification extends BaseUserNotification implements ShouldQueu
 					'vaultId'       => $this->vault->vaultId,
 					'vaultName'     => $this->vaultName,
 					'stateBefore'   => $this->vaultOriginalState,
-					'vaultDeeplink' => sprintf(config('links.vault_info_deeplink'), $this->vault->vaultId),
+					'vaultDeeplink' => $this->vault->deeplink(),
 				],
 			])->useSecret($user->id);
 	}
