@@ -53,7 +53,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 				&& $trigger->cooldown(CooldownTypes::getType($gatewayType))->notPassed()) {
 				$this->components->info(sprintf(
 					'skip vault %s caused of cooldown (%s min rest time)',
-					$trigger->vault->vaultId,
+					$trigger->vaultId,
 					$trigger->cooldown(CooldownTypes::getType($gatewayType))->expiresAt()->diffInMinutes()
 				));
 
