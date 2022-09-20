@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Enum\CooldownTypes;
-use App\Enum\NotificationGatewayType;
 use App\Enum\VaultStates;
 use App\Models\NotificationTrigger;
 use App\Notifications\VaultNextRatioNotification;
@@ -49,8 +48,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 		$sendableTriggers->each(function (NotificationTrigger $trigger) {
 			$gatewayType = $trigger->gateways()->first()->type;
 
-			if ($gatewayType != NotificationGatewayType::WEBHOOK
-				&& $trigger->cooldown(CooldownTypes::getType($gatewayType))->notPassed()) {
+			if ($trigger->cooldown(CooldownTypes::getType($gatewayType))->notPassed()) {
 				$this->components->info(sprintf(
 					'skip vault %s caused of cooldown (%s min rest time)',
 					$trigger->vaultId,
