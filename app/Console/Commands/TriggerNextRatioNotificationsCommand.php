@@ -50,7 +50,8 @@ class TriggerNextRatioNotificationsCommand extends Command
 
 			if ($trigger->cooldown(CooldownTypes::getType($gatewayType))->notPassed()) {
 				$this->components->info(sprintf(
-					'skip vault %s caused of cooldown (%s min rest time)',
+					'trigger %s: skip vault %s caused of cooldown (%s min rest time)',
+					$trigger->id,
 					$trigger->vaultId,
 					$trigger->cooldown(CooldownTypes::getType($gatewayType))->expiresAt()->diffInMinutes()
 				));
@@ -70,6 +71,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 	{
 		$vault = $trigger->vault;
 		if ($trigger->gateways()->first()->count() == 0 || is_null($vault) || $vault->users()->count() == 0) {
+			$this->components->info(sprintf('skipped trigger %s: vault or user count zero', $trigger->id));
 			return;
 		}
 		$user = $vault->users()->where('id', $trigger->gateways()->first()->user->id)->first();
@@ -77,6 +79,8 @@ class TriggerNextRatioNotificationsCommand extends Command
 		try {
 			$trigger->notify(new VaultNextRatioNotification($vault, $user->pivot->name));
 		} catch (\Exception|\Throwable $e) {
+			$this->components->info(sprintf('notification not sent! vault %s (user %s)', $vault->vault_id, $user->id ??
+				'n/a'));
 			\Log::error('notification not sent', [
 				'vault'     => $vault->vault_id,
 				'user'      => $user?->id,
@@ -88,7 +92,8 @@ class TriggerNextRatioNotificationsCommand extends Command
 		}
 
 		$this->components->task(sprintf(
-				'notification (%s) - vault %s, next/trigger ratio %s/%s',
+				'trigger %s: notification (%s) - vault %s, next/trigger ratio %s/%s',
+				$trigger->id,
 				$gatewayType,
 				$trigger->vault->vaultId,
 				$trigger->vault->nextCollateralRatio,
