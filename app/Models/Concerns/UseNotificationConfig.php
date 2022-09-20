@@ -2,6 +2,7 @@
 
 namespace App\Models\Concerns;
 
+use App\Enum\NotificationGatewayType;
 use App\Models\Repository\NotificationGatewayRepository;
 
 trait UseNotificationConfig
@@ -12,6 +13,11 @@ trait UseNotificationConfig
 	public function routeNotificationForTelegram(): int
 	{
 		return app(NotificationGatewayRepository::class)->telegram($this)->value;
+	}
+
+	public function telegramGateway()
+	{
+		return $this->gateways()->where('type', NotificationGatewayType::TELEGRAM)->first();
 	}
 
 	/**
