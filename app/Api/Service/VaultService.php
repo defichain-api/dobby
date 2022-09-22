@@ -120,7 +120,7 @@ class VaultService
 		foreach ($colAmounts as $colAmount) {
 			// dUSD has no active price
 			if ($colAmount['symbol'] == 'DUSD') {
-				$nextPrice = 0.99;
+				$nextPrice = 1.2;
 			} else {
 				$nextPrice = $colAmount['activePrice']['next']['amount'] ?? 0;
 			}

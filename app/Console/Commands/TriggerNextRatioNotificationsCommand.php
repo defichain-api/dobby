@@ -36,6 +36,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 					&$sendableTriggers
 				) {
 					if ($trigger->gateways()->count() == 0) {
+						$trigger->delete();
 						return;
 					}
 					$elem = sprintf('%s_%s', $trigger->vaultId, $trigger->gateways()->first()->user->id);
@@ -72,6 +73,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 		$vault = $trigger->vault;
 		if ($trigger->gateways()->first()->count() == 0 || is_null($vault) || $vault->users()->count() == 0) {
 			$this->components->info(sprintf('skipped trigger %s: vault or user count zero', $trigger->id));
+
 			return;
 		}
 		$user = $vault->users()->where('id', $trigger->gateways()->first()->user->id)->first();
@@ -81,6 +83,16 @@ class TriggerNextRatioNotificationsCommand extends Command
 		} catch (\Exception|\Throwable $e) {
 			$this->components->info(sprintf('notification not sent! vault %s (user %s)', $vault->vault_id, $user->id ??
 				'n/a'));
+			if (\Str::contains($e->getMessage(), 'bot was blocked by the user')) {
+				$telegramGateway = $user->telegramGateway();
+				$this->components->info(sprintf(
+						'trigger %s and gateway %s deleted',
+						$trigger->id,
+						$telegramGateway->id)
+				);
+				$telegramGateway->delete();
+				$trigger->delete();
+			}
 			\Log::error('notification not sent', [
 				'vault'     => $vault->vault_id,
 				'user'      => $user?->id,
