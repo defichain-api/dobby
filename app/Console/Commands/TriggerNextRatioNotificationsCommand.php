@@ -36,6 +36,7 @@ class TriggerNextRatioNotificationsCommand extends Command
 					&$sendableTriggers
 				) {
 					if ($trigger->gateways()->count() == 0) {
+						$trigger->delete();
 						return;
 					}
 					$elem = sprintf('%s_%s', $trigger->vaultId, $trigger->gateways()->first()->user->id);
