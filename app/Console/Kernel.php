@@ -65,7 +65,7 @@ class Kernel extends ConsoleKernel
 			->withoutOverlapping();
 
 		$schedule->command(NotificationInterestRateCommand::class)
-			->dailyAt('06:00');
+			->everySixHours();
 
 		$schedule->command(SendLowBalanceMailCommand::class)
 			->everyFourHours()
