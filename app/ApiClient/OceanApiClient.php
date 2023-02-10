@@ -10,12 +10,19 @@ use GuzzleHttp\Exception\GuzzleException;
 class OceanApiClient implements BaseApiClient
 {
 	protected ClientInterface $client;
+	protected ClientInterface $fallbackClient;
 
 	public function __construct()
 	{
 		$this->client = new Client([
 			'base_uri'        => config('defichain_ocean.base_uri'),
 			'timeout'         => 45,
+			'connect_timeout' => 15,
+		]);
+
+		$this->fallbackClient = new Client([
+			'base_uri'        => config('defichain_ocean.base_uri_fallback'),
+			'timeout'         => 65,
 			'connect_timeout' => 20,
 		]);
 	}
@@ -31,8 +38,12 @@ class OceanApiClient implements BaseApiClient
 
 		try {
 			$response = $this->client->get($path);
-		} catch (GuzzleException $e) {
-			throw OceanApiException::message('loadVaultsForPage', $e);
+		} catch (GuzzleException) {
+			try {
+				$response = $this->fallbackClient->get($path);
+			} catch (GuzzleException $e) {
+				throw OceanApiException::message('loadVaultsForPage', $e);
+			}
 		}
 
 		return json_decode($response->getBody()->getContents(), true);
@@ -45,8 +56,12 @@ class OceanApiClient implements BaseApiClient
 	{
 		try {
 			$response = $this->client->get(sprintf(config('defichain_ocean.vaults.id'), $address));
-		} catch (GuzzleException $e) {
-			throw OceanApiException::message('multiple_vault', $e);
+		} catch (GuzzleException) {
+			try {
+				$response = $this->fallbackClient->get(sprintf(config('defichain_ocean.vaults.id'), $address));
+			} catch (GuzzleException $e) {
+				throw OceanApiException::message('multiple_vault', $e);
+			}
 		}
 
 		return json_decode($response->getBody()->getContents(), true)['data'];
@@ -59,8 +74,12 @@ class OceanApiClient implements BaseApiClient
 	{
 		try {
 			$response = $this->client->get(config('defichain_ocean.loan_schemes.get'));
-		} catch (GuzzleException $e) {
-			throw OceanApiException::message('loan_scheme', $e);
+		} catch (GuzzleException) {
+			try {
+				$response = $this->fallbackClient->get(config('defichain_ocean.loan_schemes.get'));
+			} catch (GuzzleException $e) {
+				throw OceanApiException::message('loan_scheme', $e);
+			}
 		}
 
 		return json_decode($response->getBody()->getContents(), true)['data'];
@@ -73,8 +92,12 @@ class OceanApiClient implements BaseApiClient
 	{
 		try {
 			$response = $this->client->get(config('defichain_ocean.fixed_interval_prices.get'));
-		} catch (GuzzleException $e) {
-			throw OceanApiException::message('fixed_interval_prices', $e);
+		} catch (GuzzleException) {
+			try {
+				$response = $this->fallbackClient->get(config('defichain_ocean.fixed_interval_prices.get'));
+			} catch (GuzzleException $e) {
+				throw OceanApiException::message('fixed_interval_prices', $e);
+			}
 		}
 
 		return json_decode($response->getBody()->getContents(), true)['data'];
@@ -87,8 +110,12 @@ class OceanApiClient implements BaseApiClient
 	{
 		try {
 			$response = $this->client->get(config('defichain_ocean.stats.get'));
-		} catch (GuzzleException $e) {
-			throw OceanApiException::message('stats', $e);
+		} catch (GuzzleException) {
+			try {
+				$response = $this->fallbackClient->get(config('defichain_ocean.stats.get'));
+			} catch (GuzzleException $e) {
+				throw OceanApiException::message('stats', $e);
+			}
 		}
 
 		return json_decode($response->getBody()->getContents(), true)['data'];
@@ -118,8 +145,12 @@ class OceanApiClient implements BaseApiClient
 	{
 		try {
 			$response = $this->client->get(config('defichain_ocean.vaults.dusd_loan'));
-		} catch (GuzzleException $e) {
-			throw OceanApiException::message('dusd_interest_rate', $e);
+		} catch (GuzzleException) {
+			try {
+				$response = $this->fallbackClient->get(config('defichain_ocean.vaults.dusd_loan'));
+			} catch (GuzzleException $e) {
+				throw OceanApiException::message('dusd_interest_rate', $e);
+			}
 		}
 
 		$interestRate = (float) json_decode($response->getBody()->getContents(), true)['data']['interest'];
