@@ -2,6 +2,7 @@
 
 namespace App\Api\Service;
 
+use App\Api\Exceptions\OceanApiException;
 use App\ApiClient\OceanApiClient;
 use App\Models\LoanScheme;
 use App\Models\User;
@@ -139,7 +140,11 @@ class VaultService
 	protected function calculateDusdActiveValue(): float
 	{
 		// load ocean api and fetch the current block height
-		$blockHeight = app(OceanApiClient::class)->currentBlockHeight();
+		try {
+			$blockHeight = app(OceanApiClient::class)->currentBlockHeight();
+		} catch (OceanApiException) {
+			return 1.0;
+		}
 		if ($blockHeight >= 2877281 + 115200) {
 			return 1.00;
 		}
