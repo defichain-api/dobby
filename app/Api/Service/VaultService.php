@@ -2,8 +2,6 @@
 
 namespace App\Api\Service;
 
-use App\Api\Exceptions\OceanApiException;
-use App\ApiClient\OceanApiClient;
 use App\Models\LoanScheme;
 use App\Models\User;
 use App\Models\Vault;
@@ -122,7 +120,7 @@ class VaultService
 		foreach ($colAmounts as $colAmount) {
 			// dUSD has no active price
 			if ($colAmount['symbol'] == 'DUSD') {
-				$nextPrice = $this->calculateDusdActiveValue();
+				$nextPrice = 1.0;
 			} else {
 				$nextPrice = $colAmount['activePrice']['next']['amount'] ?? 0;
 			}
@@ -130,29 +128,6 @@ class VaultService
 		}
 
 		return $nextAmount;
-	}
-
-	/**
-	 * helper function to calculate the next collateral value
-	 * starting from block 2877281, the value of dUSD will be reduced by $0.005 every 2880 blocks
-	 * to a total of 115,200 blocks (equals ~40 days)
-	 */
-	protected function calculateDusdActiveValue(): float
-	{
-		// load ocean api and fetch the current block height
-		try {
-			$blockHeight = app(OceanApiClient::class)->currentBlockHeight();
-		} catch (OceanApiException) {
-			return 1.0;
-		}
-		if ($blockHeight >= 2877281 + 115200) {
-			return 1.00;
-		}
-
-		$blocksPassed = $blockHeight - 2877281;
-		$ticks = floor($blocksPassed / 2880);
-
-		return 1.2 - ($ticks * 0.005);
 	}
 
 	protected function nextLoanValue(array $loanAmounts): float
